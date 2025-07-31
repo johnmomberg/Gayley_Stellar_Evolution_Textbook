@@ -150,7 +150,7 @@ def _(
             text_y = np.sqrt(y1*y2)
         ax.text(
             x1 + width/2, text_y, #np.sqrt(y1*y2),
-            substage.plot_text,
+            substage.flowchart_text,
             ha='center', va='center',
             fontsize=text_fontsize, color=text_color
         )
@@ -210,7 +210,7 @@ def _(
                 draw_substage_box(
                     ax, 
                     substage, 
-                    bg_color=substage.history_plot_color, 
+                    bg_color=substage.flowchart_color, 
                     bg_alpha=0.2, 
                     border_color="black", 
                     border_linewidth=1, 
@@ -225,7 +225,7 @@ def _(
                     draw_substage_box(
                         ax, 
                         substage, 
-                        bg_color=substage.history_plot_color, 
+                        bg_color=substage.flowchart_color, 
                         bg_alpha=1.0, 
                         border_color="black", 
                         border_linewidth=2, 
@@ -237,7 +237,7 @@ def _(
                     draw_substage_box(
                         ax, 
                         substage, 
-                        bg_color=substage.history_plot_color, 
+                        bg_color=substage.flowchart_color, 
                         bg_alpha=0.2, 
                         border_color="black", 
                         border_linewidth=1, 
@@ -253,7 +253,7 @@ def _(
                     draw_substage_box(
                         ax, 
                         substage, 
-                        bg_color=substage.history_plot_color, 
+                        bg_color=substage.flowchart_color, 
                         bg_alpha=1.0, 
                         border_color="black", 
                         border_linewidth=2, 
@@ -264,7 +264,7 @@ def _(
                     draw_substage_box(
                         ax, 
                         substage, 
-                        bg_color=substage.history_plot_color, 
+                        bg_color=substage.flowchart_color, 
                         bg_alpha=0.2, 
                         border_color="black", 
                         border_linewidth=1, 
@@ -345,24 +345,24 @@ def _(
             return [fig_HR, fig_radius] 
 
 
-    
+
         if plots_dropdown.value == 1: # Composition 
-        
+
             fig_profile = plotting.plot_profile_composition(profile, history) 
             if flowchart_mode_radio.value == 1: 
-                strings = ["Interior composition of a", model_selected.parent_substage.mode1_desc, "star"] 
+                strings = ["Interior composition of a", model_selected.parent_substage.mode1_interior_plot_title, "star"] 
             if flowchart_mode_radio.value == 2: 
-                strings = ["Interior composition of a", model_selected.parent_substage.mode2_desc, "star"] 
-            colors = ['black', model_selected.parent_substage.history_plot_color, 'black']
+                strings = ["Interior composition of a", model_selected.parent_substage.mode2_interior_plot_title, "star"] 
+            colors = ['black', model_selected.parent_substage.flowchart_color, 'black']
             plotting.colored_title(fig_profile, strings, colors, fontsize=20)
-        
+
             fig_history = plotting.plot_history_centercomposition(history, modelnum_now = modelnum_selected) 
             fig_history = plotting.label_substage(fig_history, model_selected, history)
-    
+
             return [fig_profile, fig_history] 
 
 
-    
+
         if plots_dropdown.value == 2: # Heat transport 
             return [
                 plotting.plot_profile_convection(profile, history), 

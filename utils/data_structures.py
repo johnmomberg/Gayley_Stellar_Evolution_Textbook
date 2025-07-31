@@ -55,28 +55,27 @@ class SubStage:
     Represents a specific substage of stellar evolution,
     containing all UI text and the data needed to locate examples.
     """
-    # --- Core Identity ---
+
     id: str  # A unique string identifier, e.g., "ms_convective_core"
     parent_stage: ParentStage # A direct link to the Enum 
 
-    # --- Physical Boundaries ---
-    mass_min: float # Minimum mass that exhibits this substage 
-    mass_max: float # Maximum mass that exhibits this substage 
-
-    # --- Data Links ---
-    models: list[SubStageModel] # A list of blueprints for finding this phase at different masses
-
-    # --- UI and Descriptive Text ---
-    plot_text: str      # Text for the flowchart box (e.g., "Conv. core\n+ rad. env.") 
+    flowchart_text: str      # Text for the flowchart box (e.g., "Conv. core\n+ rad. env.") 
+    flowchart_color: str 
     
     mode1_abbrev: str   # Mode1: Choose mass and compare evolutionary phases. Abbreviation goes inside the tab
     mode1_desc: str     # Full description of phase is displayed below the tabs element when this tab is selected 
+    mode1_interior_plot_title: str 
     
     mode2_abbrev: str   # Mode2: Choose an evolutionary phase and compare masses. Abbreviation goes inside the tab
     mode2_desc: str     # Full description of phase is displayed below the tabs element when this tab is selected 
+    mode2_interior_plot_title: str 
 
-    history_plot_label: str | None = None 
-    history_plot_color: str | None = None 
+    mass_min: float # Minimum mass that exhibits this substage 
+    mass_max: float # Maximum mass that exhibits this substage 
+
+    models: list[SubStageModel] # A list of blueprints for finding this phase at different masses
+
+
 
     @property
     def mode2_abbrev_with_massrange(self) -> str:
@@ -97,16 +96,22 @@ class SubStage:
 
 
 
-hayashi_substage = SubStage(
+hayashi_substage = SubStage( 
+
     id="hayashi",
     parent_stage=ParentStage.HAYASHI, 
-    plot_text = "Hayashi", 
+    
+    flowchart_text = "Hayashi", 
+    flowchart_color="tab:blue", 
+    
     mode1_abbrev="Hayashi", 
     mode1_desc="Hayashi track", 
+    mode1_interior_plot_title = "Hayashi_track", 
+    
     mode2_abbrev="Hayashi", 
     mode2_desc="Hayashi track", 
-    # history_plot_label="Hayashi track", 
-    history_plot_color="tab:blue", 
+    mode2_interior_plot_title = "Hayashi track", 
+
     mass_min=0.1, 
     mass_max=6.0, 
     models=[ 
@@ -140,15 +145,21 @@ hayashi_substage = SubStage(
 
 
 henyey_substage = SubStage(
+
     id="henyey",
     parent_stage=ParentStage.HENYEY, 
-    plot_text = "Henyey", 
+
+    flowchart_text = "Henyey", 
+    flowchart_color="tab:orange", 
+
     mode1_abbrev="Henyey", 
     mode1_desc="Henyey track", 
+    mode1_interior_plot_title="", 
+
     mode2_abbrev="Heyney", 
     mode2_desc="Henyey track", 
-    # history_plot_label="Henyey track", 
-    history_plot_color="tab:orange", 
+    mode2_interior_plot_title="", 
+    
     mass_min=0.3, 
     mass_max=6.0, 
     models=[
@@ -157,15 +168,21 @@ henyey_substage = SubStage(
 
 
 low_ms_substage = SubStage(
+    
     id="low_ms",
     parent_stage=ParentStage.MAIN_SEQUENCE, 
-    plot_text = "Main sequence \n(fully convective)", 
+
+    flowchart_text = "Main sequence \n(fully convective)", 
+    flowchart_color="tab:orange", 
+    
     mode1_abbrev="MS", 
     mode1_desc="Main sequence (fully convective)", 
+    mode1_interior_plot_title="", 
+    
     mode2_abbrev="Fully convective", 
     mode2_desc="Fully convective", 
-    # history_plot_label="Main sequence", 
-    history_plot_color="tab:orange", 
+    mode2_interior_plot_title="", 
+    
     mass_min=0.1, 
     mass_max=0.3, 
     models=[
@@ -179,16 +196,22 @@ low_ms_substage = SubStage(
 )
 
 
-med_ms_substage = SubStage(    
+med_ms_substage = SubStage( 
+
     id="med_ms",
     parent_stage=ParentStage.MAIN_SEQUENCE, 
-    plot_text = "Main sequence \n(rad. core \n+ conv. env.)",     
+    
+    flowchart_text = "Main sequence \n(rad. core \n+ conv. env.)",     
+    flowchart_color="tab:red", 
+    
     mode1_abbrev="MS", 
     mode1_desc="Main sequence (radiative core + convective envelope)", 
+    mode1_interior_plot_title="", 
+    
     mode2_abbrev="Rad. core + conv. env.", 
     mode2_desc="Radiative core + convective envelope", 
-    # history_plot_label="Main sequence", 
-    history_plot_color="tab:red", 
+    mode2_interior_plot_title="", 
+    
     mass_min=0.3, 
     mass_max=1.5, 
     models=[
@@ -209,16 +232,22 @@ med_ms_substage = SubStage(
 )
 
 
-hi_ms_substage = SubStage(    
+hi_ms_substage = SubStage( 
+
     id="hi_ms",
     parent_stage=ParentStage.MAIN_SEQUENCE, 
-    plot_text = "Main sequence \n(conv. core \n+ rad. env.)", 
+    
+    flowchart_text = "Main sequence \n(conv. core \n+ rad. env.)", 
+    flowchart_color="tab:purple", 
+    
     mode1_abbrev="MS", 
     mode1_desc="Main sequence (convective core + radiative envelope)", 
+    mode1_interior_plot_title="", 
+    
     mode2_abbrev="Conv. core + rad. env.", 
     mode2_desc="Convective core + radiative envelope", 
-    # history_plot_label="Main sequence", 
-    history_plot_color="tab:purple", 
+    mode2_interior_plot_title="", 
+    
     mass_min=1.5, 
     mass_max=6.0, 
     models=[
@@ -233,15 +262,21 @@ hi_ms_substage = SubStage(
 
 
 subgiant_substage = SubStage( 
+
     id="subgiant", 
     parent_stage=ParentStage.POST_MAIN_SEQUENCE, 
-    plot_text="Subgiant", 
+    
+    flowchart_text="Subgiant", 
+    flowchart_color="tab:purple", 
+    
     mode1_abbrev="Subgiant", 
     mode1_desc="Subgiant", 
+    mode1_interior_plot_title="", 
+    
     mode2_abbrev="Subgiant", 
     mode2_desc="Subgiant", 
-    # history_plot_label="Subgiant", 
-    history_plot_color="tab:purple", 
+    mode2_interior_plot_title="", 
+    
     mass_min=0.3, 
     mass_max=1.5, 
     models=[
@@ -262,15 +297,21 @@ subgiant_substage = SubStage(
 
 
 hertzsprung_gap_substage = SubStage( 
+
     id="hertzsprung_gap", 
     parent_stage=ParentStage.POST_MAIN_SEQUENCE, 
-    plot_text="Hertzsprung gap", 	
+    
+    flowchart_text="Hertzsprung gap", 	
+    flowchart_color="tab:red", 
+    
     mode1_abbrev="Hertzsprung gap", 
     mode1_desc="Hertzsprung gap", 
+    mode1_interior_plot_title="", 
+    
     mode2_abbrev="Hertzsprung gap", 
     mode2_desc="Hertzsprung gap", 
-    # history_plot_label="Hertzsprung gap", 
-    history_plot_color="tab:red", 
+    mode2_interior_plot_title="", 
+    
     mass_min=1.5, 
     mass_max=6.0, 
     models=[
@@ -285,15 +326,21 @@ hertzsprung_gap_substage = SubStage(
 
 
 red_giant_substage = SubStage( 
+
     id="red_giant", 
     parent_stage=ParentStage.RED_GIANT_BRANCH, 
-    plot_text="Red giant", 	
+    
+    flowchart_text="Red giant", 	
+    flowchart_color="tab:gray", 
+    
     mode1_abbrev="RG", 
     mode1_desc="Red giant", 
+    mode1_interior_plot_title="", 
+    
     mode2_abbrev="RG", 
     mode2_desc="Red giant", 
-    history_plot_label="Red giant", 
-    history_plot_color="tab:gray", 
+    mode2_interior_plot_title="", 
+    
     mass_min=0.3, 
     mass_max=6.0, 
     models=[
@@ -320,15 +367,21 @@ red_giant_substage = SubStage(
 
 
 he_flash_substage=SubStage( 
+
     id="he_flash", 
     parent_stage=ParentStage.HELIUM_IGNITION, 
-    plot_text="Helium flash", 	
+    
+    flowchart_text="Helium flash", 	
+    flowchart_color="tab:olive", 
+    
     mode1_abbrev="He flash", 
     mode1_desc="Helium ignition (unstable; helium flash)", 
+    mode1_interior_plot_title="", 
+    
     mode2_abbrev="Unstable", 
     mode2_desc="Unstable helium ignition (helium flash)", 
-    # history_plot_label="Helium flash", 
-    history_plot_color="tab:olive", 
+    mode2_interior_plot_title="", 
+    
     mass_min=2.0, 
     mass_max=6.0, 
     models=[
@@ -337,15 +390,21 @@ he_flash_substage=SubStage(
 
 
 he_stable_substage=SubStage(
+    
     id="he_stable", 
     parent_stage=ParentStage.HELIUM_IGNITION, 
-    plot_text="Helium ignites \nstably", 	
+    
+    flowchart_text="Helium ignites \nstably", 	
+    flowchart_color="tab:cyan", 
+    
     mode1_abbrev="He ign.", 
     mode1_desc="Helium ignition (stable)", 
+    mode1_interior_plot_title="", 
+    
     mode2_abbrev="Stable", 
     mode2_desc="Stable helium ignition", 
-    # history_plot_label="Helium ign.", 
-    history_plot_color="tab:cyan", 
+    mode2_interior_plot_title="", 
+    
     mass_min=0.8, 
     mass_max=2.0, 
     models=[
@@ -353,16 +412,22 @@ he_stable_substage=SubStage(
 )
 
 
-he_ms_substage=SubStage(
+he_ms_substage=SubStage( 
+
     id="he_ms", 
     parent_stage=ParentStage.HELIUM_MAIN_SEQUENCE, 
-    plot_text="Helium main \nsequence", 	
+    
+    flowchart_text="Helium main \nsequence", 	
+    flowchart_color="tab:pink", 
+    
     mode1_abbrev="He MS", 
     mode1_desc="Helium main sequence", 
+    mode1_interior_plot_title="", 
+    
     mode2_abbrev="He MS", 
     mode2_desc="Helium main sequence", 
-    # history_plot_label="Helium main sequence", 
-    history_plot_color="tab:pink", 
+    mode2_interior_plot_title="", 
+    
     mass_min=0.8, 
     mass_max=6.0, 
     models=[
@@ -382,16 +447,22 @@ he_ms_substage=SubStage(
 )
 
 
-agb_substage=SubStage(
+agb_substage=SubStage( 
+
     id="agb", 
     parent_stage=ParentStage.ASYMPTOTIC_GIANT_BRANCH, 
-    plot_text="Asymptotic \ngiant", 	
+    
+    flowchart_text="Asymptotic \ngiant", 	
+    flowchart_color="tab:brown", 
+    
     mode1_abbrev="AGB", 
     mode1_desc="Asymptotic giant", 
+    mode1_interior_plot_title="", 
+    
     mode2_abbrev="AGB", 
     mode2_desc="Asymptotic giant", 
-    # history_plot_label="AGB", 
-    history_plot_color="tab:brown", 
+    mode2_interior_plot_title="", 
+    
     mass_min=0.8, 
     mass_max=6.0, 
     models=[
@@ -411,16 +482,23 @@ agb_substage=SubStage(
 )
 
 
-he_wd_substage=SubStage(
+he_wd_substage=SubStage( 
+
     id="he_wd", 
     parent_stage=ParentStage.WHITE_DWARF, 
-    plot_text="Helium \nwhite dwarf", 	
+    
+    flowchart_text="Helium \nwhite dwarf", 	
+    flowchart_color="tab:olive", 
+    
     mode1_abbrev="He WD", 
     mode1_desc="Helium white dwarf", 
+    mode1_interior_plot_title="", 
+    
     mode2_abbrev="He WD", 
     mode2_desc="Helium white dwarf", 
-    # history_plot_label="Helium white dwarf", 
-    history_plot_color="tab:olive", 
+    mode2_interior_plot_title="", 
+    
+
     mass_min = 0.1, 
     mass_max = 0.8,
     models=[
@@ -440,16 +518,22 @@ he_wd_substage=SubStage(
 )
 
 
-co_wd_substage=SubStage(
+co_wd_substage=SubStage( 
+    
     id="co_wd", 
     parent_stage=ParentStage.WHITE_DWARF, 
-    plot_text="Carbon + \noxygen \nwhite dwarf", 	
+    
+    flowchart_text="Carbon + \noxygen \nwhite dwarf", 	
+    flowchart_color="tab:green", 
+    
     mode1_abbrev="C+O WD", 
     mode1_desc="Carbon + oxygen white dwarf", 
+    mode1_interior_plot_title="", 
+    
     mode2_abbrev="C+O WD", 
     mode2_desc="Carbon + oxygen white dwarf",   
-    # history_plot_label="Carbon + oxygen white dwarf", 
-    history_plot_color="tab:green", 
+    mode2_interior_plot_title="", 
+    
     mass_min = 0.8, 
     mass_max = 6.0,
     models=[
