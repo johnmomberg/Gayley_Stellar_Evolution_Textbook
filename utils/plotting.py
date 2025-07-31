@@ -93,10 +93,6 @@ def ax_setup_hr_diagram(ax):
     ax.invert_xaxis() 
     ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda val, _: f"{10**val:.0f}"))
 
-    # Old 
-    # xtick_labels = np.array([3_000, 5_000, 10_000, 20_000, 40_000, 60_000]) 
-    # ax.set_xticks(np.log10(xtick_labels), xtick_labels) 
-
     # Y axis: Luminosity 
     ax.set_ylabel("Luminosity ($L_{{sun}}$)")
     ax.set_ylim((-3, 7))
