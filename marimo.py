@@ -100,7 +100,16 @@ def _():
 
 
 
-    return data_structures, load_data, mo, mpatches, np, plotting, plt
+    return (
+        data_structures,
+        importlib,
+        load_data,
+        mo,
+        mpatches,
+        np,
+        plotting,
+        plt,
+    )
 
 
 @app.cell
@@ -128,8 +137,8 @@ def _(
         text_color, text_fontsize, text_y=None):
 
         # Define rectangle bounds
-        x1 = substage.parent_stage.flowchart_x + 0.03 
-        x2 = substage.parent_stage.flowchart_x+1 - 0.03
+        x1 = substage.parent_stage.flowchart_x + 0.02 
+        x2 = substage.parent_stage.flowchart_x+1 - 0.02 
         y1 = substage.mass_min
         y2 = substage.mass_max
         width = x2 - x1
@@ -301,6 +310,7 @@ def _(mo):
 def _(
     flowchart_mode_radio,
     histories_dict,
+    importlib,
     model_selected,
     plots_dropdown,
     plotting,
@@ -311,7 +321,7 @@ def _(
 
 
 
-
+    importlib.reload(plotting)
 
 
     def create_fig2_list(): 
@@ -336,9 +346,13 @@ def _(
         profile = profiles_dict[(mass_selected, modelnum_selected)]
         history = histories_dict[mass_selected]
 
+
+    
         if plots_dropdown.value == None: 
             return [make_error_figure(message="Select a parameter from the dropdown menu to visualize using plots")] 
 
+
+    
         if plots_dropdown.value == 0: # HR diagram, radius  
             fig_HR = make_error_figure(message="HR diagram")
             fig_radius = plotting.plot_history_radius(history, modelnum_now = modelnum_selected)

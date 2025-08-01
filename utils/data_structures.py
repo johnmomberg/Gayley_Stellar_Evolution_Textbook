@@ -106,7 +106,7 @@ hayashi_substage = SubStage(
     
     mode1_abbrev="Hayashi", 
     mode1_desc="Hayashi track", 
-    mode1_interior_plot_title = "Hayashi_track", 
+    mode1_interior_plot_title = "Hayashi track", 
     
     mode2_abbrev="Hayashi", 
     mode2_desc="Hayashi track", 
@@ -154,11 +154,11 @@ henyey_substage = SubStage(
 
     mode1_abbrev="Henyey", 
     mode1_desc="Henyey track", 
-    mode1_interior_plot_title="", 
+    mode1_interior_plot_title="Henyey track", 
 
     mode2_abbrev="Heyney", 
     mode2_desc="Henyey track", 
-    mode2_interior_plot_title="", 
+    mode2_interior_plot_title="Henyey track", 
     
     mass_min=0.3, 
     mass_max=6.0, 
@@ -177,11 +177,11 @@ low_ms_substage = SubStage(
     
     mode1_abbrev="MS", 
     mode1_desc="Main sequence (fully convective)", 
-    mode1_interior_plot_title="", 
+    mode1_interior_plot_title="low-mass MS", 
     
     mode2_abbrev="Fully convective", 
     mode2_desc="Fully convective", 
-    mode2_interior_plot_title="", 
+    mode2_interior_plot_title="fully convective MS", 
     
     mass_min=0.1, 
     mass_max=0.3, 
@@ -206,11 +206,11 @@ med_ms_substage = SubStage(
     
     mode1_abbrev="MS", 
     mode1_desc="Main sequence (radiative core + convective envelope)", 
-    mode1_interior_plot_title="", 
+    mode1_interior_plot_title="intermediate-mass MS", 
     
     mode2_abbrev="Rad. core + conv. env.", 
     mode2_desc="Radiative core + convective envelope", 
-    mode2_interior_plot_title="", 
+    mode2_interior_plot_title="rad. core + conv. env MS", 
     
     mass_min=0.3, 
     mass_max=1.5, 
@@ -242,11 +242,11 @@ hi_ms_substage = SubStage(
     
     mode1_abbrev="MS", 
     mode1_desc="Main sequence (convective core + radiative envelope)", 
-    mode1_interior_plot_title="", 
+    mode1_interior_plot_title="high-mass MS", 
     
     mode2_abbrev="Conv. core + rad. env.", 
     mode2_desc="Convective core + radiative envelope", 
-    mode2_interior_plot_title="", 
+    mode2_interior_plot_title="conv. core + rad. env. MS", 
     
     mass_min=1.5, 
     mass_max=6.0, 
@@ -271,11 +271,11 @@ subgiant_substage = SubStage(
     
     mode1_abbrev="Subgiant", 
     mode1_desc="Subgiant", 
-    mode1_interior_plot_title="", 
+    mode1_interior_plot_title="Subgiant", 
     
     mode2_abbrev="Subgiant", 
     mode2_desc="Subgiant", 
-    mode2_interior_plot_title="", 
+    mode2_interior_plot_title="Subgiant", 
     
     mass_min=0.3, 
     mass_max=1.5, 
@@ -306,11 +306,11 @@ hertzsprung_gap_substage = SubStage(
     
     mode1_abbrev="Hertzsprung gap", 
     mode1_desc="Hertzsprung gap", 
-    mode1_interior_plot_title="", 
+    mode1_interior_plot_title="Hertzsprung gap", 
     
     mode2_abbrev="Hertzsprung gap", 
     mode2_desc="Hertzsprung gap", 
-    mode2_interior_plot_title="", 
+    mode2_interior_plot_title="Hertzsprung gap", 
     
     mass_min=1.5, 
     mass_max=6.0, 
@@ -335,11 +335,11 @@ red_giant_substage = SubStage(
     
     mode1_abbrev="RG", 
     mode1_desc="Red giant", 
-    mode1_interior_plot_title="", 
+    mode1_interior_plot_title="Red giant", 
     
     mode2_abbrev="RG", 
     mode2_desc="Red giant", 
-    mode2_interior_plot_title="", 
+    mode2_interior_plot_title="Red giant", 
     
     mass_min=0.3, 
     mass_max=6.0, 
@@ -376,11 +376,11 @@ he_flash_substage=SubStage(
     
     mode1_abbrev="He flash", 
     mode1_desc="Helium ignition (unstable; helium flash)", 
-    mode1_interior_plot_title="", 
+    mode1_interior_plot_title="He flash", 
     
     mode2_abbrev="Unstable", 
     mode2_desc="Unstable helium ignition (helium flash)", 
-    mode2_interior_plot_title="", 
+    mode2_interior_plot_title="He flash", 
     
     mass_min=2.0, 
     mass_max=6.0, 
@@ -399,11 +399,11 @@ he_stable_substage=SubStage(
     
     mode1_abbrev="He ign.", 
     mode1_desc="Helium ignition (stable)", 
-    mode1_interior_plot_title="", 
+    mode1_interior_plot_title="He ign. (stable)", 
     
     mode2_abbrev="Stable", 
     mode2_desc="Stable helium ignition", 
-    mode2_interior_plot_title="", 
+    mode2_interior_plot_title="He ign. (stable)", 
     
     mass_min=0.8, 
     mass_max=2.0, 
@@ -422,11 +422,11 @@ he_ms_substage=SubStage(
     
     mode1_abbrev="He MS", 
     mode1_desc="Helium main sequence", 
-    mode1_interior_plot_title="", 
+    mode1_interior_plot_title="He MS", 
     
     mode2_abbrev="He MS", 
     mode2_desc="Helium main sequence", 
-    mode2_interior_plot_title="", 
+    mode2_interior_plot_title="He MS", 
     
     mass_min=0.8, 
     mass_max=6.0, 
@@ -457,11 +457,11 @@ agb_substage=SubStage(
     
     mode1_abbrev="AGB", 
     mode1_desc="Asymptotic giant", 
-    mode1_interior_plot_title="", 
+    mode1_interior_plot_title="AGB", 
     
     mode2_abbrev="AGB", 
     mode2_desc="Asymptotic giant", 
-    mode2_interior_plot_title="", 
+    mode2_interior_plot_title="AGB", 
     
     mass_min=0.8, 
     mass_max=6.0, 
@@ -492,11 +492,11 @@ he_wd_substage=SubStage(
     
     mode1_abbrev="He WD", 
     mode1_desc="Helium white dwarf", 
-    mode1_interior_plot_title="", 
+    mode1_interior_plot_title="He WD", 
     
     mode2_abbrev="He WD", 
     mode2_desc="Helium white dwarf", 
-    mode2_interior_plot_title="", 
+    mode2_interior_plot_title="He WD", 
     
 
     mass_min = 0.1, 
@@ -528,11 +528,11 @@ co_wd_substage=SubStage(
     
     mode1_abbrev="C+O WD", 
     mode1_desc="Carbon + oxygen white dwarf", 
-    mode1_interior_plot_title="", 
+    mode1_interior_plot_title="C+O WD", 
     
     mode2_abbrev="C+O WD", 
     mode2_desc="Carbon + oxygen white dwarf",   
-    mode2_interior_plot_title="", 
+    mode2_interior_plot_title="C+O WD", 
     
     mass_min = 0.8, 
     mass_max = 6.0,

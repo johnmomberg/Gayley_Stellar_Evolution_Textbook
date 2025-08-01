@@ -711,8 +711,8 @@ def label_substage(fig, model_selected, history):
         ax.axvspan(
             history.star_age[model_selected.model_start-1], 
             history.star_age[model_selected.model_end-1], 
-            color=model_selected.parent_substage.history_plot_color, alpha=0.1, 
-            label=model_selected.parent_substage.history_plot_label) 
+            color=model_selected.parent_substage.flowchart_color, alpha=0.1, 
+            label=model_selected.parent_substage.flowchart_text) 
         ax.legend() 
     return fig
 
