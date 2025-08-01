@@ -2,3 +2,4 @@
 /__marimo__
 /__pycache__
 /utils/__pycache__
+*.pyc
