@@ -5,6 +5,187 @@ app = marimo.App(width="medium")
 
 
 @app.cell
+def _(mo):
+    full_title = mo.md("<h1>Stellar Evolution Flowchart</h1>") 
+    return (full_title,)
+
+
+@app.cell
+def _(mo):
+    # Flowchart comparison mode tabs 
+    comparison_mode_title = mo.md("<h2>Choose comparison mode</h2>") 
+    comparison_mode_dict = {"No selection": "", "Select mass first": "", "Select stage first": ""}
+    comparison_mode_tabs = mo.ui.tabs(comparison_mode_dict) 
+
+    return comparison_mode_dict, comparison_mode_tabs, comparison_mode_title
+
+
+@app.cell
+def _(
+    comparison_mode_dict,
+    comparison_mode_tabs,
+    mo,
+    mode1_massrange_dropdown,
+    mode2_parentstage_dropdown,
+):
+    # String that appears depending on what comparison mode is selected. Includes a dropdown selector. 
+    comparison_mode1_str = mo.md(f"View the evolution of a {mode1_massrange_dropdown} mass star") 
+    comparison_mode2_str = mo.md(f"Compare how stars of different masses experience the {mode2_parentstage_dropdown} stage") 
+
+    comparison_mode_str = "\u200b" 
+    if comparison_mode_tabs.value == list(comparison_mode_dict.keys())[1]: 
+        comparison_mode_str = comparison_mode1_str 
+    if comparison_mode_tabs.value == list(comparison_mode_dict.keys())[2]: 
+        comparison_mode_str = comparison_mode2_str 
+    return (comparison_mode_str,)
+
+
+@app.cell
+def _(mo):
+    # Plot mode radio selector, string displayed next to each option with dropdown selectors 
+
+    plot_mode_title = mo.md("<h2>Choose data displayed in bottom plot</h2>") 
+
+    # Plot mode radio selector. Empty because the strings are calculated and displayed next to the empty selector 
+    plot_mode_radio = mo.ui.radio(options={"": 0, " ": 1, "  ": 2}) 
+
+    # plot_mode_radio option 0 
+    HR_diagram_str = mo.md("HR diagram")
+
+    # plot_mode_radio option 1 
+    history_plot_options = {"Option1": 1, "Option2": 2, "Option3": 3}
+    history_plot_dropdown = mo.ui.dropdown(options=history_plot_options, value=list(history_plot_options.keys())[0] )
+    history_str = mo.md(f"History: {history_plot_dropdown} vs time") 
+
+    # plot_mode_radio option 2 
+    profile_plot_options = {"Option1": 1, "Option2": 2, "Option3": 3}
+    profile_plot_dropdown = mo.ui.dropdown(options=profile_plot_options, value=list(profile_plot_options.keys())[0] )
+    profile_plot_x_options = {"mass coordinate": 1, "radius coordinate": 2}
+    profile_plot_x_dropdown = mo.ui.dropdown(options=profile_plot_x_options, value=list(profile_plot_x_options.keys())[0] )
+    profile_str = mo.md(f"Interior profile: {profile_plot_dropdown} vs {profile_plot_x_dropdown} of a _____ star")
+
+
+    return (
+        HR_diagram_str,
+        history_str,
+        plot_mode_radio,
+        plot_mode_title,
+        profile_str,
+    )
+
+
+@app.cell
+def _(
+    comparison_mode_dict,
+    comparison_mode_tabs,
+    data_structures,
+    mo,
+    mode1_massrange_dropdown,
+    mode2_parentstage_dropdown,
+):
+    # Available substages tabs 
+
+    substages_available_title = mo.md("<h2>Cycle between available substages</h2>") 
+
+
+
+    # Find all substages that exist within the currently selected mass range 
+    if comparison_mode_tabs.value == list(comparison_mode_dict.keys())[1] and mode1_massrange_dropdown.value is not None:
+        m_low, m_high = map(float, mode1_massrange_dropdown.value.split('-')) 
+        available_substages = [
+            s for s in data_structures.SUBSTAGES_LIST
+            if not (s.mass_max <= m_low or s.mass_min >= m_high)
+        ]
+        available_substages_options = {sub.mode1_abbrev: sub.mode1_desc for sub in available_substages}
+        available_substages_tabs = mo.ui.tabs(available_substages_options)#, value=list(available_substages_options.keys())[0]) 
+
+    # Find all substages that belong to the currently selected parent stage
+    elif comparison_mode_tabs.value == list(comparison_mode_dict.keys())[2] and mode2_parentstage_dropdown.value is not None:
+        selected_parent_stage = mode2_parentstage_dropdown.value 
+        available_substages = [
+            s for s in data_structures.SUBSTAGES_LIST
+            if s.parent_stage.name == selected_parent_stage.name 
+        ] 
+        if available_substages: 
+            available_substages_options = {sub.mode2_abbrev_with_massrange: sub.mode2_desc_with_massrange for sub in available_substages} 
+            available_substages_tabs = mo.ui.tabs(available_substages_options, value=list(available_substages_options.keys())[0]) 
+        else: 
+            available_substages_tabs = "" 
+
+    # No selection 
+    else: 
+        available_substages_tabs = "" 
+
+
+    return (
+        available_substages,
+        available_substages_tabs,
+        m_high,
+        m_low,
+        substages_available_title,
+    )
+
+
+@app.cell
+def _(
+    HR_diagram_str,
+    available_substages_tabs,
+    comparison_mode_str,
+    comparison_mode_tabs,
+    comparison_mode_title,
+    full_title,
+    history_str,
+    mo,
+    plot_mode_radio,
+    plot_mode_title,
+    profile_str,
+    substages_available_title,
+):
+    # Full mode/plot selection interface 
+
+    full_interface = mo.vstack(
+        [
+            full_title, 
+            "\u200b", 
+        
+            comparison_mode_title, 
+            comparison_mode_tabs, 
+            comparison_mode_str, 
+            "\u200b", 
+
+            plot_mode_title, 
+            mo.hstack(
+                [
+                    plot_mode_radio, 
+                    mo.vstack(
+                        [
+                            HR_diagram_str, 
+                            history_str, 
+                            profile_str
+                        ], 
+                        gap=0)
+                ], 
+                gap=0, align="center"), 
+            "\u200b", 
+        
+            substages_available_title, 
+            available_substages_tabs  
+        ], 
+        gap=0.7 
+    ) 
+
+    return (full_interface,)
+
+
+@app.cell
+def _(full_interface):
+
+    full_interface 
+
+    return
+
+
+@app.cell
 def _():
     # To do: 
 
@@ -26,51 +207,64 @@ def _():
 
 
 @app.cell
-def _(
-    fig1,
-    fig2_list,
-    flowchart_mode_radio,
-    lower_tabs,
-    mo,
-    mode1_massrange_dropdown,
-    mode2_parentstage_dropdown,
-    plots_dropdown,
-    upper_dropdown_vstack,
-):
+def _():
     # MAIN 
 
 
+    # mo.vstack([
+    #     mo.md("<h2>Choose comparison mode</h2>"), 
+    #     mo.hstack([flowchart_mode_radio, upper_dropdown_vstack], gap=1), 
+    #     "\u200b", 
 
-    mo.vstack([
-        mo.md("<h2>1: Choose comparison mode</h2>"), 
-        mo.hstack([flowchart_mode_radio, upper_dropdown_vstack], gap=1), 
-        "\u200b", 
+    #     mo.md("<h2>Stellar Evolution Flowchart</h2>"), 
+    #     mo.mpl.interactive(fig1), 
+    #     "\u200b", 
 
-        {
-            0: "\u200b", 
-            1: mo.md(f"<h2>2: View evolution of a {mode1_massrange_dropdown.value} mass star</h2>"), 
-            2: mo.md(f"<h2>2: Compare stars of different masses during the {mode2_parentstage_dropdown.value.full_name} stage</h2>")
-        }[flowchart_mode_radio.value], 
-        lower_tabs,  
-        "\u200b", 
+    #     {
+    #         0: "\u200b", 
+    #         1: mo.md(f"<h2>Select data shown in secondary plot:</h2>"), 
+    #         2: mo.md(f"<h2>Select data shown in secondary plot:</h2>")  
+    #     }[flowchart_mode_radio.value], 
 
-        {
-            0: "\u200b", 
-            1: mo.md(f"<h2>3: Choose parameter to visualize:</h2>"), 
-            2: mo.md(f"<h2>3: Choose parameter to visualize:</h2>")  
-        }[flowchart_mode_radio.value], 
+    #     {
+    #         0: "\u200b", 
+    #         1: plots_dropdown, 
+    #         2: plots_dropdown  
+    #     }[flowchart_mode_radio.value], 
 
-        {
-            0: "\u200b", 
-            1: plots_dropdown, 
-            2: plots_dropdown  
-        }[flowchart_mode_radio.value],    
-        "\u200b",
+    # ])
 
-        mo.mpl.interactive(fig1),  
-        mo.vstack([mo.mpl.interactive(fig2) for fig2 in fig2_list]), 
 
-    ])
+    # mo.vstack([
+    #     mo.md("<h2>1: Choose comparison mode</h2>"), 
+    #     mo.hstack([flowchart_mode_radio, upper_dropdown_vstack], gap=1), 
+    #     "\u200b", 
+
+    #     {
+    #         0: "\u200b", 
+    #         1: mo.md(f"<h2>2: View evolution of a {mode1_massrange_dropdown.value} mass star</h2>"), 
+    #         2: mo.md(f"<h2>2: Compare stars of different masses during the {mode2_parentstage_dropdown.value.full_name} stage</h2>")
+    #     }[flowchart_mode_radio.value], 
+    #     lower_tabs,  
+    #     "\u200b", 
+
+    #     {
+    #         0: "\u200b", 
+    #         1: mo.md(f"<h2>3: Choose parameter to visualize:</h2>"), 
+    #         2: mo.md(f"<h2>3: Choose parameter to visualize:</h2>")  
+    #     }[flowchart_mode_radio.value], 
+
+    #     {
+    #         0: "\u200b", 
+    #         1: plots_dropdown, 
+    #         2: plots_dropdown  
+    #     }[flowchart_mode_radio.value],    
+    #     "\u200b",
+
+    #     mo.mpl.interactive(fig1),  
+    #     mo.vstack([mo.mpl.interactive(fig2) for fig2 in fig2_list]), 
+
+    # ])
 
     return
 
@@ -286,23 +480,43 @@ def _(
 
 
     fig1 = draw_flowchart()
-    return (fig1,)
+    return
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(mo):
     # Interior plots dropdown 
 
 
     plots_list = {
         "HR Diagram": 0, 
-        "Composition": 1, 
-        "Heat transport": 2, 
-        "Fusion": 3,  
+        "Composition at center vs time": 1, 
+        "Radius vs time": 1, 
+        "Fusion rate vs time": 2, 
+        "Composition across interior during ___ stage": 1, 
+        "Heat transport across interior during ___ stage": 2, 
+        "Fusion rate across interior during ___ stage": 3,  
         "Degeneracy": 4, 
     }
 
+    plots_list = {
+        "History Plots": {
+            "HR Diagram": 0,
+            "Composition at center vs time": 1,
+            "Radius vs time": 1,
+            "Fusion rate vs time": 2,
+        },
+        "Interior Plots": {
+            "Composition across interior during ___ stage": 1,
+            "Heat transport across interior during ___ stage": 2,
+            "Fusion rate across interior during ___ stage": 3,
+            "Degeneracy across interior during ___ stage": 4,
+        }
+    }
+
+
     plots_dropdown = mo.ui.dropdown(options=plots_list) 
+
     return (plots_dropdown,)
 
 
@@ -335,8 +549,6 @@ def _(
 
         if model_selected == None: 
             return [make_error_figure(message="Select a mass range and evolutionary stage to view plot")] 
-        # if len(datapair_selected) == 0: 
-        #     return [make_error_figure(message="No data available for this selection")] 
 
         # Select first item in datapairs list 
         mass_selected = model_selected.mass 
@@ -347,12 +559,12 @@ def _(
         history = histories_dict[mass_selected]
 
 
-    
+
         if plots_dropdown.value == None: 
             return [make_error_figure(message="Select a parameter from the dropdown menu to visualize using plots")] 
 
 
-    
+
         if plots_dropdown.value == 0: # HR diagram, radius  
             fig_HR = make_error_figure(message="HR diagram")
             fig_radius = plotting.plot_history_radius(history, modelnum_now = modelnum_selected)
@@ -400,7 +612,7 @@ def _(
 
     print(fig2_list) 
 
-    return (fig2_list,)
+    return
 
 
 @app.cell(hide_code=True)
@@ -495,63 +707,51 @@ def _(data_structures, mo):
 
 
 @app.cell(hide_code=True)
-def _(
-    data_structures,
-    flowchart_mode_radio,
-    mo,
-    mode1_massrange_dropdown,
-    mode2_parentstage_dropdown,
-):
-    # Create UI (upper_dropdown_vstack and lower_tabs) 
+def _():
+    # # Create UI (upper_dropdown_vstack and lower_tabs) 
 
 
 
-    if flowchart_mode_radio.value == 1 and mode1_massrange_dropdown.value is not None:
-        # Find all substages that exist within the currently selected mass range 
-        m_low, m_high = map(float, mode1_massrange_dropdown.value.split('-')) 
-        available_substages = [
-            s for s in data_structures.SUBSTAGES_LIST
-            if not (s.mass_max <= m_low or s.mass_min >= m_high)
-        ]
-        upper_dropdown_vstack = mo.vstack(["\u200b", mo.md(f"{mode1_massrange_dropdown}"), "\u200b"], gap=0.1) 
+    # if flowchart_mode_radio.value == 1 and mode1_massrange_dropdown.value is not None:
+    #     # Find all substages that exist within the currently selected mass range 
+    #     m_low, m_high = map(float, mode1_massrange_dropdown.value.split('-')) 
+    #     available_substages = [
+    #         s for s in data_structures.SUBSTAGES_LIST
+    #         if not (s.mass_max <= m_low or s.mass_min >= m_high)
+    #     ]
+    #     upper_dropdown_vstack = mo.vstack(["\u200b", mo.md(f"{mode1_massrange_dropdown}"), "\u200b"], gap=0.1) 
 
-        # Create the tabs using the data from the filtered substages
-        tabs_options = {sub.mode1_abbrev: sub.mode1_desc for sub in available_substages}
-        lower_tabs = mo.ui.tabs(tabs_options, value=next(iter(tabs_options)))
-
-
-
-    elif flowchart_mode_radio.value == 2 and mode2_parentstage_dropdown.value is not None:
-        # Find all substages that belong to the currently selected parent stage
-        selected_parent_stage = mode2_parentstage_dropdown.value 
-        available_substages = [
-            s for s in data_structures.SUBSTAGES_LIST
-            if s.parent_stage.name == selected_parent_stage.name 
-        ] 
-        upper_dropdown_vstack = mo.vstack(["\u200b", "\u200b", mo.md(f"{mode2_parentstage_dropdown}")], gap=0.1)
-
-        # Create the tabs using the data from the filtered substages
-        if available_substages: 
-            tabs_options = {sub.mode2_abbrev_with_massrange: sub.mode2_desc_with_massrange for sub in available_substages} 
-            lower_tabs = mo.ui.tabs(tabs_options, value=next(iter(tabs_options)))
-        else: 
-            lower_tabs = "" 
+    #     # Create the tabs using the data from the filtered substages
+    #     tabs_options = {sub.mode1_abbrev: sub.mode1_desc for sub in available_substages}
+    #     lower_tabs = mo.ui.tabs(tabs_options, value=next(iter(tabs_options)))
 
 
 
-    else: # No selection
-        upper_dropdown_vstack = mo.vstack(["\u200b", "\u200b", "\u200b"], gap=0.1)
-        lower_tabs = "" 
+    # elif flowchart_mode_radio.value == 2 and mode2_parentstage_dropdown.value is not None:
+    #     # Find all substages that belong to the currently selected parent stage
+    #     selected_parent_stage = mode2_parentstage_dropdown.value 
+    #     available_substages = [
+    #         s for s in data_structures.SUBSTAGES_LIST
+    #         if s.parent_stage.name == selected_parent_stage.name 
+    #     ] 
+    #     upper_dropdown_vstack = mo.vstack(["\u200b", "\u200b", mo.md(f"{mode2_parentstage_dropdown}")], gap=0.1)
+
+    #     # Create the tabs using the data from the filtered substages
+    #     if available_substages: 
+    #         tabs_options = {sub.mode2_abbrev_with_massrange: sub.mode2_desc_with_massrange for sub in available_substages} 
+    #         lower_tabs = mo.ui.tabs(tabs_options, value=next(iter(tabs_options)))
+    #     else: 
+    #         lower_tabs = "" 
 
 
 
-    return (
-        available_substages,
-        lower_tabs,
-        m_high,
-        m_low,
-        upper_dropdown_vstack,
-    )
+    # else: # No selection
+    #     upper_dropdown_vstack = mo.vstack(["\u200b", "\u200b", "\u200b"], gap=0.1)
+    #     lower_tabs = "" 
+
+
+
+    return
 
 
 @app.cell(hide_code=True)
