@@ -247,7 +247,27 @@ def plot_HR_diagram(history, modelnum=-1, T_max=-1, T_min=-1, logL_min=-1, logL_
 
 
 
+def add_colored_title(fig, strings, colors, fontsize, y=0.95, spacing_pts=10):
 
+    ax = fig.axes[0]  
+    ax.set_title("") 
+    fontprops = FontProperties(family='DejaVu Sans', size=fontsize)
+
+    def get_text_width(text, fontprops):
+        tp = TextPath((0, 0), text, prop=fontprops)
+        return tp.get_extents().width
+    
+    tp_widths = [get_text_width(p, fontprops) for p in strings]
+    total_width_pts = sum(tp_widths) + spacing_pts * (len(strings) - 1)
+
+    fig_width_in = fig.get_figwidth()
+    pts_to_fig_frac = 1 / (fig_width_in * 72)
+
+    x = 0.5 - total_width_pts * pts_to_fig_frac / 2
+    for part, color, width in zip(strings, colors, tp_widths):
+        fig.text(x, y, part, fontproperties=fontprops,
+                 color=color, ha='left', va='center')
+        x += width * pts_to_fig_frac + spacing_pts * pts_to_fig_frac
 
 
 
@@ -263,13 +283,16 @@ def create_profile_plot(profile, history, plot_func, ylabel, ylim, yscale, title
     # The specific plotting logic (composition, fusion, convection, etc)
     plot_func(ax, profile, history) 
 
-    # Set xlabel (mass) and xlim  
-    ax.set_xlabel("Location inside star (mass coordinate ($M_{{sun}}$))", fontsize=18, labelpad=0)
-    ax.set_xlim(0, 1.001*np.max(profile.mass))
+    x_arr = profile.mass 
+    x_units_str = "(mass coordinate ($M_{{sun}}$))"
+
+    # Set xlabel (mass or radius) and xlim  
+    ax.set_xlabel(f"Location inside star {x_units_str}", fontsize=18, labelpad=0)
+    ax.set_xlim(0, 1.001*np.max(x_arr))
 
     # Add extra labels to left side (core) and right side (surface) of plot 
     xticks = ax.get_xticks() 
-    xticks = np.append(xticks, np.max(profile.mass))
+    xticks = np.append(xticks, np.max(x_arr))
     xtick_labels = [
         "0\n(Core)" if round(xticks[i], 2) == 0 else
         f"\n(Surface)" if i == len(xticks)-1 else
@@ -278,7 +301,7 @@ def create_profile_plot(profile, history, plot_func, ylabel, ylim, yscale, title
     ]
     ax.set_xticks(xticks)
     ax.set_xticklabels(xtick_labels)
-    ax.set_xlim(0, 1.001*np.max(profile.mass))
+    ax.set_xlim(0, 1.001*np.max(x_arr))
 
     # Set ylabel yscale  
     ax.set_ylabel(ylabel, fontsize=18, labelpad=14) 
@@ -723,28 +746,6 @@ def label_substage(fig, model_selected, history):
 
 
 
-
-def colored_title(fig, strings, colors, fontsize, y=0.95, spacing_pts=10):
-
-    ax = fig.axes[0]  
-    ax.set_title("") 
-    fontprops = FontProperties(family='DejaVu Sans', size=fontsize)
-
-    def get_text_width(text, fontprops):
-        tp = TextPath((0, 0), text, prop=fontprops)
-        return tp.get_extents().width
-    
-    tp_widths = [get_text_width(p, fontprops) for p in strings]
-    total_width_pts = sum(tp_widths) + spacing_pts * (len(strings) - 1)
-
-    fig_width_in = fig.get_figwidth()
-    pts_to_fig_frac = 1 / (fig_width_in * 72)
-
-    x = 0.5 - total_width_pts * pts_to_fig_frac / 2
-    for part, color, width in zip(strings, colors, tp_widths):
-        fig.text(x, y, part, fontproperties=fontprops,
-                 color=color, ha='left', va='center')
-        x += width * pts_to_fig_frac + spacing_pts * pts_to_fig_frac
 
 
 
