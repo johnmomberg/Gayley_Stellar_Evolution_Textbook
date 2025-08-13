@@ -54,11 +54,19 @@ PLOTMODE_OPTIONS = [PLOTMODE_HRDIAGRAM, PLOTMODE_HISTORY, PLOTMODE_PROFILE]
 # History plots: Composition, radius, or fusion vs time 
 @dataclass 
 class HistoryPlotOption(OptionBase): 
-    pass 
+    plot_func: Callable  
 
-HISTORYPLOT_COMPOSITION = HistoryPlotOption(display="Center composition")
-HISTORYPLOT_RADIUS = HistoryPlotOption(display="Radius")
-HISTORYPLOT_FUSION = HistoryPlotOption(display="Fusion rate")
+HISTORYPLOT_COMPOSITION = HistoryPlotOption(
+    display="Center composition", 
+    plot_func=plotting.plot_history_centercomposition) 
+
+HISTORYPLOT_RADIUS = HistoryPlotOption(
+    display="Radius", 
+    plot_func=plotting.plot_history_radius) 
+
+HISTORYPLOT_FUSION = HistoryPlotOption(
+    display="Fusion rate", 
+    plot_func=plotting.plot_history_fusion)
 
 HISTORYPLOT_OPTIONS = [HISTORYPLOT_COMPOSITION, HISTORYPLOT_RADIUS, HISTORYPLOT_FUSION]
 

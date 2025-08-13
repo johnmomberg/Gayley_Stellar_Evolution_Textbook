@@ -78,7 +78,6 @@ def _():
     # Comparison of de broglie wavelength to interparticle spacing 
 
     # Rewrite implementation of add_substage_highlight and add_colored_title 
-    # Add add_substage_highlight to all history plots 
 
     # Make loading of profiles/histories dynamic: only load after you need them, then save as you go so you dont have to reload any 
 
@@ -166,7 +165,7 @@ def _(mo, ui_options):
     history_plot_dropdown = ui_options.create_dropdown(ui_options.HISTORYPLOT_OPTIONS)
     history_str = mo.md(f"History: {history_plot_dropdown} vs time") 
 
-    return (history_str,)
+    return history_plot_dropdown, history_str
 
 
 @app.cell
@@ -482,6 +481,7 @@ def _(
 def _(
     comparison_mode_radio,
     histories_dict,
+    history_plot_dropdown,
     importlib,
     model_selected,
     plot_mode_radio,
@@ -534,7 +534,8 @@ def _(
         # History plots 
         if plot_mode_radio.value == ui_options.PLOTMODE_HISTORY: 
 
-            fig2 = plotting.plot_history_radius(history, modelnum_selected)
+            selected_plot_func = history_plot_dropdown.value.plot_func 
+            fig2 = selected_plot_func(history, modelnum_selected) 
             plotting.add_substage_highlight(fig2, model_selected, history)
             return fig2 
 
