@@ -6,7 +6,6 @@ from typing import Optional
 
 
 
-
 class ParentStage(Enum):
     """Defines the primary, high-level stages of stellar evolution."""
     HAYASHI = ("Hayashi", "Hayashi track", 0) 

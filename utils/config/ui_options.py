@@ -1,9 +1,11 @@
 # Define all available options in all dropdown/radio selectors 
 
 import marimo as mo 
-import utils.plotting as plotting 
 from dataclasses import dataclass
 from typing import Callable
+
+import utils.plotting.history_plotting as history_plotting 
+import utils.plotting.profile_plotting as profile_plotting 
 
 
 
@@ -58,15 +60,15 @@ class HistoryPlotOption(OptionBase):
 
 HISTORYPLOT_COMPOSITION = HistoryPlotOption(
     display="Center composition", 
-    plot_func=plotting.plot_history_centercomposition) 
+    plot_func=history_plotting.plot_history_centercomposition) 
 
 HISTORYPLOT_RADIUS = HistoryPlotOption(
     display="Radius", 
-    plot_func=plotting.plot_history_radius) 
+    plot_func=history_plotting.plot_history_radius) 
 
 HISTORYPLOT_FUSION = HistoryPlotOption(
     display="Fusion rate", 
-    plot_func=plotting.plot_history_fusion)
+    plot_func=history_plotting.plot_history_fusion)
 
 HISTORYPLOT_OPTIONS = [HISTORYPLOT_COMPOSITION, HISTORYPLOT_RADIUS, HISTORYPLOT_FUSION]
 
@@ -82,27 +84,27 @@ class ProfilePlotOption(OptionBase):
 
 PROFILEPLOT_COMPOSITION = ProfilePlotOption(
     display="Composition", 
-    plot_func=plotting.plot_profile_composition, 
+    plot_func=profile_plotting.plot_profile_composition, 
     title_str="Compostion in interior of a")
 
 PROFILEPLOT_CONVECTION = ProfilePlotOption(
     display="Convection", 
-    plot_func=plotting.plot_profile_convection, 
+    plot_func=profile_plotting.plot_profile_convection, 
     title_str="Convective regions in interior of a")
 
 PROFILEPLOT_TEMP = ProfilePlotOption(
     display="Temperature (degeneracy)", 
-    plot_func=plotting.plot_profile_temp, 
+    plot_func=profile_plotting.plot_profile_temp, 
     title_str="Temperature in interior of a")
 
 PROFILEPLOT_TEMPGRAD = ProfilePlotOption(
     display="Temperature gradient (heat transport)", 
-    plot_func=plotting.plot_profile_tempgrad, 
+    plot_func=profile_plotting.plot_profile_tempgrad, 
     title_str="Temperature gradient in interior of a")
 
 PROFILEPLOT_FUSION = ProfilePlotOption(
     display="Fusion rate", 
-    plot_func=plotting.plot_profile_fusion, 
+    plot_func=profile_plotting.plot_profile_fusion, 
     title_str="Fusion in interior of a")
 
 PROFILEPLOT_OPTIONS = [PROFILEPLOT_COMPOSITION, PROFILEPLOT_CONVECTION, PROFILEPLOT_TEMP, PROFILEPLOT_TEMPGRAD, PROFILEPLOT_FUSION]

@@ -25,12 +25,9 @@ def _(
 
     full_interface = mo.vstack(
         [
-            mo.mpl.interactive(fig1), 
-            "\u200b", 
-
             full_title, 
             "\u200b", 
-
+        
             plot_mode_title, 
             mo.hstack(
                 [
@@ -52,6 +49,7 @@ def _(
             available_substages_tabs, 
             "\u200b", 
 
+            mo.mpl.interactive(fig1), 
             mo.mpl.interactive(fig2), 
 
         ], 
@@ -74,14 +72,14 @@ def _():
 
     # Plots to make work: 
     # HR diagram 
-    # History: composition, radius, fusion  
     # Comparison of de broglie wavelength to interparticle spacing 
-
-    # Rewrite implementation of add_substage_highlight and add_colored_title 
 
     # Make loading of profiles/histories dynamic: only load after you need them, then save as you go so you dont have to reload any 
 
     # Rewrite profile and history plotting functions with the boilerplate function so that the way they are used actually makes sense 
+
+    # Add an option for history plot to be either scaled linearly with time or to evenly space the substages, to make it easier to see the interesting properties that happen all near the end of the star's life
+
 
     return
 
@@ -89,7 +87,7 @@ def _():
 @app.cell
 def _(mo):
     # Title 
-    full_title = mo.md("<h1>Stellar Evolution Flowchart</h1>") 
+    full_title = mo.md("<h1>Stellar Evolution Interactive Tool</h1>") 
 
     return (full_title,)
 
@@ -97,23 +95,23 @@ def _(mo):
 @app.cell
 def _(mo, ui_options):
     # Comparison mode radio 
-    comparison_mode_title = mo.md("<h2>Choose star visualized in bottom plot</h2>") 
+    comparison_mode_title = mo.md("<h2>Choose mass/evolutionary stage highlighted by secondary plot</h2>") 
     comparison_mode_radio = ui_options.create_radio(ui_options.COMPAREMODE_OPTIONS) 
 
     return comparison_mode_radio, comparison_mode_title
 
 
 @app.cell
-def _(data_structures, mo):
+def _(mo, stellar_evolution_data):
     # Stage and mass selector dropdowns used by comparison mode string 
 
     # Mode1 
-    unique_masses = sorted({m for s in data_structures.SUBSTAGES_LIST for m in [s.mass_min, s.mass_max]})
+    unique_masses = sorted({m for s in stellar_evolution_data.SUBSTAGES_LIST for m in [s.mass_min, s.mass_max]})
     mode1_massrange_options = [f"{unique_masses[i]:.1f}-{unique_masses[i+1]:.1f}" for i in range(len(unique_masses)-1)]
     mode1_massrange_dropdown = mo.ui.dropdown(mode1_massrange_options, value=next(iter(mode1_massrange_options)))
 
     # Mode2 
-    mode2_parentstage_options = {stage.full_name: stage for stage in data_structures.ParentStage}
+    mode2_parentstage_options = {stage.full_name: stage for stage in stellar_evolution_data.ParentStage}
     mode2_parentstage_dropdown = mo.ui.dropdown(options=mode2_parentstage_options, value=next(iter(mode2_parentstage_options))) 
 
     return mode1_massrange_dropdown, mode2_parentstage_dropdown, unique_masses
@@ -145,7 +143,7 @@ def _(
 @app.cell
 def _(mo, ui_options):
     # Plot mode radio selector 
-    plot_mode_title = mo.md("<h2>Choose variable displayed in bottom plot</h2>") 
+    plot_mode_title = mo.md("<h2>Choose secondary plot</h2>") 
     plot_mode_radio = ui_options.create_radio(ui_options.PLOTMODE_OPTIONS)
 
     return plot_mode_radio, plot_mode_title
@@ -210,9 +208,9 @@ def _(
 @app.cell
 def _(
     comparison_mode_radio,
-    data_structures,
     mode1_massrange_dropdown,
     mode2_parentstage_dropdown,
+    stellar_evolution_data,
     ui_options,
 ):
     # Identify available substages 
@@ -225,13 +223,13 @@ def _(
 
     elif comparison_mode_radio.value == ui_options.COMPAREMODE_MASSFIRST: 
         available_substages = [
-            s for s in data_structures.SUBSTAGES_LIST 
+            s for s in stellar_evolution_data.SUBSTAGES_LIST 
             if not (s.mass_max <= selected_massrange[0] 
                     or s.mass_min >= selected_massrange[1])]
 
     elif comparison_mode_radio.value == ui_options.COMPAREMODE_STAGEFIRST: 
         available_substages = [
-            s for s in data_structures.SUBSTAGES_LIST 
+            s for s in stellar_evolution_data.SUBSTAGES_LIST 
             if s.parent_stage.name == selected_parentstage.name] 
 
     return available_substages, selected_massrange
@@ -304,11 +302,11 @@ def _(
 def _(
     available_substages,
     comparison_mode_radio,
-    data_structures,
     mpatches,
     np,
     plt,
     selected_massrange,
+    stellar_evolution_data,
     substage_selected,
     ui_options,
     unique_masses,
@@ -364,7 +362,7 @@ def _(
 
         if comparison_mode_radio.value==ui_options.COMPAREMODE_NOSELECTION: 
             custom_yticks = unique_masses 
-            custom_xtick_labels = [parent_stage.short_name for parent_stage in data_structures.ParentStage]
+            custom_xtick_labels = [parent_stage.short_name for parent_stage in stellar_evolution_data.ParentStage]
 
         if comparison_mode_radio.value==ui_options.COMPAREMODE_MASSFIRST: 
             custom_yticks = [selected_massrange[0], selected_massrange[1]] 
@@ -372,7 +370,7 @@ def _(
                 parent_stage.short_name 
                 if parent_stage in [stage.parent_stage for stage in available_substages] 
                 else "" 
-                for parent_stage in data_structures.ParentStage
+                for parent_stage in stellar_evolution_data.ParentStage
             ]
 
         if comparison_mode_radio.value==ui_options.COMPAREMODE_STAGEFIRST: 
@@ -381,7 +379,7 @@ def _(
                 parent_stage.short_name 
                 if parent_stage in [stage.parent_stage for stage in available_substages] 
                 else "" 
-                for parent_stage in data_structures.ParentStage
+                for parent_stage in stellar_evolution_data.ParentStage
             ]
 
         # Y axis: Mass
@@ -397,13 +395,13 @@ def _(
         # X axis: Evolution
         ax.set_xlabel("Evolutionary phase", fontsize=18, labelpad=14)
         ax.set_xlim(0, 9)
-        custom_xticks = np.arange(0, len(data_structures.ParentStage)) + 0.5
+        custom_xticks = np.arange(0, len(stellar_evolution_data.ParentStage)) + 0.5
         ax.set_xticks(custom_xticks)
         ax.set_xticklabels(custom_xtick_labels, fontsize=14)
 
 
         if comparison_mode_radio.value==ui_options.COMPAREMODE_NOSELECTION: 
-            for substage in data_structures.SUBSTAGES_LIST: 
+            for substage in stellar_evolution_data.SUBSTAGES_LIST: 
                 draw_substage_box(
                     ax, 
                     substage, 
@@ -482,13 +480,13 @@ def _(
     comparison_mode_radio,
     histories_dict,
     history_plot_dropdown,
-    importlib,
+    history_plotting,
     model_selected,
     plot_mode_radio,
-    plotting,
     plt,
     profile_plot_dropdown,
     profile_plot_x_dropdown,
+    profile_plotting,
     profiles_dict,
     ui_options,
 ):
@@ -497,7 +495,6 @@ def _(
 
 
 
-    importlib.reload(plotting)
 
 
 
@@ -536,7 +533,7 @@ def _(
 
             selected_plot_func = history_plot_dropdown.value.plot_func 
             fig2 = selected_plot_func(history, modelnum_selected) 
-            plotting.add_substage_highlight(fig2, model_selected, history)
+            history_plotting.add_substage_highlight(fig2, model_selected, history)
             return fig2 
 
 
@@ -562,7 +559,7 @@ def _(
             title_colors_list = ['black', substage_color, 'black'] 
 
             # Add colored region to title 
-            plotting.add_colored_title(fig2, title_str_list, title_colors_list, fontsize=20) 
+            profile_plotting.add_colored_title(fig2, title_str_list, title_colors_list, fontsize=20) 
             return fig2
 
 
@@ -577,32 +574,13 @@ def _(
 
 
 
-    #     if plots_dropdown.value == 1: # Composition 
-
-    #         fig_profile = plotting.plot_profile_composition(profile, history) 
-    #         if flowchart_mode_radio.value == 1: 
-    #             strings = ["Interior composition of a", model_selected.parent_substage.mode1_interior_plot_title, "star"] 
-    #         if flowchart_mode_radio.value == 2: 
-    #             strings = ["Interior composition of a", model_selected.parent_substage.mode2_interior_plot_title, "star"] 
-    #         colors = ['black', model_selected.parent_substage.flowchart_color, 'black']
-    #         plotting.colored_title(fig_profile, strings, colors, fontsize=20)
-
-    #         fig_history = plotting.plot_history_centercomposition(history, modelnum_now = modelnum_selected) 
-    #         fig_history = plotting.label_substage(fig_history, model_selected, history)
-
-    #         return [fig_profile, fig_history] 
-
-
-
-
-
 
 
     return (fig2,)
 
 
 @app.cell
-def _(data_structures, load_data, mo):
+def _(load_data, mo, stellar_evolution_data):
     # Preload profiles and histories 
 
     fast_load = False  
@@ -621,7 +599,7 @@ def _(data_structures, load_data, mo):
     # Get list of all models and masses that need to be loaded  
     models_list = [] 
     mass_list = [] 
-    for substage in data_structures.SUBSTAGES_LIST: 
+    for substage in stellar_evolution_data.SUBSTAGES_LIST: 
         for model in substage.models: 
             models_list.append(model)  
             if model.mass not in mass_list: 
@@ -665,37 +643,41 @@ def _(data_structures, load_data, mo):
 
 @app.cell
 def _():
-    # Imports 
-    import marimo as mo
-    import mesa_reader as mr 
+    # Standard packages 
     import importlib 
     import os 
     import numpy as np 
-
     import matplotlib.pyplot as plt
-    plt.style.use('default') # Make sure the plots appear with a white background, even if the user is in dark mode 
     import matplotlib.patches as mpatches
 
-    import utils.constants as constants 
-    import utils.data_structures as data_structures 
-    import utils.load_data as load_data 
-    import utils.plotting as plotting 
-    import utils.ui_options as ui_options 
+    # Nonstandard packages 
+    import marimo as mo
+    import mesa_reader as mr 
 
-    importlib.reload(constants) 
-    importlib.reload(data_structures)
+    # Packages I wrote 
+    import utils.load_data as load_data 
+    import utils.plotting.history_plotting as history_plotting 
+    import utils.plotting.profile_plotting as profile_plotting 
+    import utils.config.stellar_evolution_data as stellar_evolution_data 
+    import utils.config.ui_options as ui_options 
+
     importlib.reload(load_data)
-    importlib.reload(plotting)
-    importlib.reload(ui_options)
+    importlib.reload(history_plotting) 
+    importlib.reload(profile_plotting) 
+    importlib.reload(stellar_evolution_data) 
+    importlib.reload(ui_options) 
+
+    plt.style.use('default') # Make sure the plots appear with a white background, even if the user is in dark mode 
+
     return (
-        data_structures,
-        importlib,
+        history_plotting,
         load_data,
         mo,
         mpatches,
         np,
-        plotting,
         plt,
+        profile_plotting,
+        stellar_evolution_data,
         ui_options,
     )
 
