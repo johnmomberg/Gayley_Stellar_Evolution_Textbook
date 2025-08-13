@@ -5,193 +5,6 @@ app = marimo.App(width="medium")
 
 
 @app.cell
-def _(mo):
-    # Title 
-
-    full_title = mo.md("<h1>Stellar Evolution Flowchart</h1>") 
-    return (full_title,)
-
-
-@app.cell
-def _(marimo_dropdown_constants, mo):
-    # Comparison mode radio and dropdowns 
-
-    # Flowchart comparison mode radio  
-    comparison_mode_title = mo.md("<h2>Choose star visualized in bottom plot</h2>") 
-    comparison_mode_dict = {
-        "No selection": marimo_dropdown_constants.comparison_mode0, 
-        "Select mass first": marimo_dropdown_constants.comparison_mode1, 
-        "Select stage first": marimo_dropdown_constants.comparison_mode2 
-    }
-    comparison_mode_radio = mo.ui.radio(comparison_mode_dict, value=list(comparison_mode_dict.keys())[0]) 
-
-    return comparison_mode_radio, comparison_mode_title
-
-
-@app.cell
-def _(data_structures, mo):
-    # Mode1 
-    unique_masses = sorted({m for s in data_structures.SUBSTAGES_LIST for m in [s.mass_min, s.mass_max]})
-    mode1_massrange_options = [f"{unique_masses[i]:.1f}-{unique_masses[i+1]:.1f}" for i in range(len(unique_masses)-1)]
-    mode1_massrange_dropdown = mo.ui.dropdown(mode1_massrange_options, value=next(iter(mode1_massrange_options)))
-
-    # Mode2 
-    mode2_parentstage_options = {stage.full_name: stage for stage in data_structures.ParentStage}
-    mode2_parentstage_dropdown = mo.ui.dropdown(options=mode2_parentstage_options, value=next(iter(mode2_parentstage_options))) 
-
-    return mode1_massrange_dropdown, mode2_parentstage_dropdown, unique_masses
-
-
-@app.cell
-def _(
-    comparison_mode_radio,
-    marimo_dropdown_constants,
-    mo,
-    mode1_massrange_dropdown,
-    mode2_parentstage_dropdown,
-):
-    # Comparison mode string 
-
-    # String that appears depending on what comparison mode is selected. Includes a dropdown selector. 
-    comparison_mode1_str = mo.md(f"View the evolution of a {mode1_massrange_dropdown} mass star: ") 
-    comparison_mode2_str = mo.md(f"Compare how stars of different masses experience the {mode2_parentstage_dropdown} stage: ") 
-
-    comparison_mode_str = "\u200b" 
-    if comparison_mode_radio.value == marimo_dropdown_constants.comparison_mode1: 
-        comparison_mode_str = comparison_mode1_str 
-    if comparison_mode_radio.value == marimo_dropdown_constants.comparison_mode2: 
-        comparison_mode_str = comparison_mode2_str 
-    return (comparison_mode_str,)
-
-
-@app.cell
-def _(marimo_dropdown_constants, mo):
-    # Plot mode radio selector. Empty because the strings are calculated and displayed next to the empty selector 
-    plot_mode_title = mo.md("<h2>Choose variable displayed in bottom plot</h2>") 
-    plot_mode_dict = {
-        "": marimo_dropdown_constants.plot_mode_HR_diagram, 
-        " ": marimo_dropdown_constants.plot_mode_history, 
-        "  ": marimo_dropdown_constants.plot_mode_profile
-    }
-    plot_mode_radio = mo.ui.radio(options=plot_mode_dict, value=list(plot_mode_dict.keys())[0] ) 
-
-    return plot_mode_radio, plot_mode_title
-
-
-@app.cell
-def _(marimo_dropdown_constants, mo):
-    # option 0: HR Diagram 
-    HR_diagram_str = mo.md("HR diagram")
-
-
-
-    # option 1: history vs time  
-    history_plot_options = {
-        "Center composition": marimo_dropdown_constants.history_composition, 
-        "Radius": marimo_dropdown_constants.history_radius, 
-        "Fusion rate": marimo_dropdown_constants.history_fusion 
-
-    }
-    history_plot_dropdown = mo.ui.dropdown(options=history_plot_options, value=list(history_plot_options.keys())[0] )
-    history_str = mo.md(f"History: {history_plot_dropdown} vs time") 
-
-    return HR_diagram_str, history_plot_dropdown, history_str
-
-
-@app.cell
-def _(marimo_dropdown_constants, mo):
-
-    # option 2: Interior profile 
-    profile_plot_options = {
-        "Composition": marimo_dropdown_constants.profile_composition, 
-        "Convection": marimo_dropdown_constants.profile_convection, 
-        "Temperature gradient (heat transport)": marimo_dropdown_constants.profile_tempgrad, 
-        "Temperature (degeneracy)": marimo_dropdown_constants.profile_temp, 
-        "Fusion rate": marimo_dropdown_constants.profile_fusion, 
-    } 
-    profile_plot_dropdown = mo.ui.dropdown(options=profile_plot_options, value=list(profile_plot_options.keys())[0] )
-
-    return (profile_plot_dropdown,)
-
-
-@app.cell
-def _(marimo_dropdown_constants, mo):
-
-    # X coord of interior: Either mass coord or radius coord 
-    profile_plot_x_options = {
-        "mass coordinate": marimo_dropdown_constants.profile_x_mass, 
-        "radius coordinate": marimo_dropdown_constants.profile_x_radius
-    }
-    profile_plot_x_dropdown = mo.ui.dropdown(options=profile_plot_x_options, value=list(profile_plot_x_options.keys())[0] )
-
-    return (profile_plot_x_dropdown,)
-
-
-@app.cell
-def _(
-    comparison_mode_radio,
-    marimo_dropdown_constants,
-    mo,
-    profile_plot_dropdown,
-    profile_plot_x_dropdown,
-    substage_selected,
-):
-    # Create string to show profile information 
-    substage_selected_str = "______"
-    if comparison_mode_radio.value==marimo_dropdown_constants.comparison_mode1: 
-        substage_selected_str = substage_selected.mode1_interior_plot_title 
-    if comparison_mode_radio.value==marimo_dropdown_constants.comparison_mode2: 
-        substage_selected_str = substage_selected.mode2_interior_plot_title 
-    profile_str = mo.md(f"Interior profile: {profile_plot_dropdown} vs {profile_plot_x_dropdown} of a **{substage_selected_str}** star")
-
-    return (profile_str,)
-
-
-@app.cell
-def _(
-    comparison_mode_radio,
-    data_structures,
-    marimo_dropdown_constants,
-    mo,
-    mode1_massrange_dropdown,
-    mode2_parentstage_dropdown,
-):
-    # Available substages tabs 
-
-
-
-    # Find all substages that exist within the currently selected mass range 
-    if comparison_mode_radio.value == marimo_dropdown_constants.comparison_mode1 and mode1_massrange_dropdown.value is not None:
-        m_low, m_high = map(float, mode1_massrange_dropdown.value.split('-')) 
-        available_substages = [
-            s for s in data_structures.SUBSTAGES_LIST
-            if not (s.mass_max <= m_low or s.mass_min >= m_high)
-        ]
-        available_substages_options = {sub.mode1_abbrev: sub.mode1_desc for sub in available_substages}
-        available_substages_tabs = mo.ui.tabs(available_substages_options, value=list(available_substages_options.keys())[0]) 
-
-    # Find all substages that belong to the currently selected parent stage
-    elif comparison_mode_radio.value == marimo_dropdown_constants.comparison_mode2 and mode2_parentstage_dropdown.value is not None:
-        selected_parent_stage = mode2_parentstage_dropdown.value 
-        available_substages = [
-            s for s in data_structures.SUBSTAGES_LIST
-            if s.parent_stage.name == selected_parent_stage.name 
-        ] 
-        if available_substages: 
-            available_substages_options = {sub.mode2_abbrev_with_massrange: sub.mode2_desc_with_massrange for sub in available_substages} 
-            available_substages_tabs = mo.ui.tabs(available_substages_options, value=list(available_substages_options.keys())[0]) 
-        else: 
-            available_substages_tabs = "" 
-
-    # No selection 
-    else: 
-        available_substages_tabs = "" 
-
-
-    return available_substages, available_substages_tabs, m_high, m_low
-
-
-@app.cell
 def _(
     HR_diagram_str,
     available_substages_tabs,
@@ -253,114 +66,252 @@ def _(
     return
 
 
-@app.cell(hide_code=True)
-def _(
-    available_substages,
-    available_substages_tabs,
-    comparison_mode_radio,
-    m_high,
-    m_low,
-    marimo_dropdown_constants,
-):
-    # Choose substage selected and model used to represent this substage in bottom plot 
-
-    substage_selected = None 
-    model_selected = None 
-
-    if comparison_mode_radio.value == marimo_dropdown_constants.comparison_mode1 and len(available_substages)>0: 
-        substage_selected = [s for s in available_substages if s.mode1_abbrev==available_substages_tabs.value][0] 
-        if len(substage_selected.models) > 0: 
-            model_selected = [model for model in substage_selected.models if m_low<=model.mass<=m_high][0]
-        else: 
-            model_selected = None 
-
-    if comparison_mode_radio.value == marimo_dropdown_constants.comparison_mode2 and len(available_substages)>0: 
-        substage_selected = [s for s in available_substages if s.mode2_abbrev_with_massrange==available_substages_tabs.value][0]
-        if len(substage_selected.models) > 0: 
-            model_selected = next((model for model in substage_selected.models if model.is_default==True), None) 
-            if model_selected is None: 
-                model_selected = substage_selected.models[0]
-        else: 
-            model_selected = None 
-
-
-
-
-    return model_selected, substage_selected
-
-
-@app.cell(hide_code=True)
+@app.cell
 def _():
     # To do: 
 
-
-    # Add labels showing regions of time plots 
-    # Add code to other time plots 
-
-    # Add title color code used by composition plot to other ones 
-
-    # Reorder user interface 
-
     # Fix ylims of fusion vs time plot 
 
-    # Fix HR diagram plot 
+    # Plots to make work: 
+    # HR diagram 
+    # History: composition, radius, fusion  
+    # Comparison of de broglie wavelength to interparticle spacing 
+
+    # Rewrite implementation of add_substage_highlight and add_colored_title 
+    # Add add_substage_highlight to all history plots 
 
     # Make loading of profiles/histories dynamic: only load after you need them, then save as you go so you dont have to reload any 
+
+    # Rewrite profile and history plotting functions with the boilerplate function so that the way they are used actually makes sense 
 
     return
 
 
-@app.cell(hide_code=True)
-def _():
-    # Imports 
-    import marimo as mo
-    import mesa_reader as mr 
-    import importlib 
-    import os 
-    import numpy as np 
+@app.cell
+def _(mo):
+    # Title 
+    full_title = mo.md("<h1>Stellar Evolution Flowchart</h1>") 
 
-    import matplotlib.pyplot as plt
-    plt.style.use('default') # Make sure the plots appear with a white background, even if the user is in dark mode 
-    import matplotlib.patches as mpatches
-
-    import utils.constants as constants 
-    import utils.data_structures as data_structures 
-    import utils.load_data as load_data 
-    import utils.plotting as plotting 
-    import utils.marimo_dropdown_constants as marimo_dropdown_constants
-
-    importlib.reload(constants) 
-    importlib.reload(data_structures)
-    importlib.reload(load_data)
-    importlib.reload(plotting)
-    importlib.reload(marimo_dropdown_constants)
+    return (full_title,)
 
 
-    return (
-        data_structures,
-        importlib,
-        load_data,
-        marimo_dropdown_constants,
-        mo,
-        mpatches,
-        np,
-        plotting,
-        plt,
-    )
+@app.cell
+def _(mo, ui_options):
+    # Comparison mode radio 
+    comparison_mode_title = mo.md("<h2>Choose star visualized in bottom plot</h2>") 
+    comparison_mode_radio = ui_options.create_radio(ui_options.COMPAREMODE_OPTIONS) 
+
+    return comparison_mode_radio, comparison_mode_title
 
 
-@app.cell(hide_code=True)
+@app.cell
+def _(data_structures, mo):
+    # Stage and mass selector dropdowns used by comparison mode string 
+
+    # Mode1 
+    unique_masses = sorted({m for s in data_structures.SUBSTAGES_LIST for m in [s.mass_min, s.mass_max]})
+    mode1_massrange_options = [f"{unique_masses[i]:.1f}-{unique_masses[i+1]:.1f}" for i in range(len(unique_masses)-1)]
+    mode1_massrange_dropdown = mo.ui.dropdown(mode1_massrange_options, value=next(iter(mode1_massrange_options)))
+
+    # Mode2 
+    mode2_parentstage_options = {stage.full_name: stage for stage in data_structures.ParentStage}
+    mode2_parentstage_dropdown = mo.ui.dropdown(options=mode2_parentstage_options, value=next(iter(mode2_parentstage_options))) 
+
+    return mode1_massrange_dropdown, mode2_parentstage_dropdown, unique_masses
+
+
+@app.cell
+def _(
+    comparison_mode_radio,
+    mo,
+    mode1_massrange_dropdown,
+    mode2_parentstage_dropdown,
+    ui_options,
+):
+    # Comparison mode string 
+
+    # String that appears depending on what comparison mode is selected. Includes a dropdown selector. 
+    comparison_mode1_str = mo.md(f"View the evolution of a {mode1_massrange_dropdown} mass star: ") 
+    comparison_mode2_str = mo.md(f"Compare how stars of different masses experience the {mode2_parentstage_dropdown} stage: ") 
+
+    comparison_mode_str = "\u200b" 
+    if comparison_mode_radio.value == ui_options.COMPAREMODE_MASSFIRST: 
+        comparison_mode_str = comparison_mode1_str 
+    if comparison_mode_radio.value == ui_options.COMPAREMODE_STAGEFIRST: 
+        comparison_mode_str = comparison_mode2_str 
+
+    return (comparison_mode_str,)
+
+
+@app.cell
+def _(mo, ui_options):
+    # Plot mode radio selector 
+    plot_mode_title = mo.md("<h2>Choose variable displayed in bottom plot</h2>") 
+    plot_mode_radio = ui_options.create_radio(ui_options.PLOTMODE_OPTIONS)
+
+    return plot_mode_radio, plot_mode_title
+
+
+@app.cell
+def _(mo):
+    # Plot mode option 0: HR Diagram 
+    HR_diagram_str = mo.md("HR diagram")
+
+    return (HR_diagram_str,)
+
+
+@app.cell
+def _(mo, ui_options):
+    # Plot mode option 1: history vs time  
+    history_plot_dropdown = ui_options.create_dropdown(ui_options.HISTORYPLOT_OPTIONS)
+    history_str = mo.md(f"History: {history_plot_dropdown} vs time") 
+
+    return (history_str,)
+
+
+@app.cell
+def _(ui_options):
+    # Plot mode option 2: Interior profile 
+    profile_plot_dropdown = ui_options.create_dropdown(ui_options.PROFILEPLOT_OPTIONS) 
+
+    return (profile_plot_dropdown,)
+
+
+@app.cell
+def _(ui_options):
+    # Plot mode option 2: X coord to represeent location within interior 
+    profile_plot_x_dropdown = ui_options.create_dropdown(ui_options.PROFILEXAXIS_OPTIONS)
+
+    return (profile_plot_x_dropdown,)
+
+
+@app.cell
+def _(
+    comparison_mode_radio,
+    mo,
+    profile_plot_dropdown,
+    profile_plot_x_dropdown,
+    substage_selected,
+    ui_options,
+):
+    # Plot mode option 2: Add that together to create string with all profile dropdowns 
+    substage_selected_str = "______" 
+
+    if comparison_mode_radio.value == ui_options.COMPAREMODE_MASSFIRST: 
+        substage_selected_str = substage_selected.mode1_interior_plot_title 
+
+    if comparison_mode_radio.value == ui_options.COMPAREMODE_STAGEFIRST: 
+        substage_selected_str = substage_selected.mode2_interior_plot_title 
+
+    profile_str = mo.md(f"Interior profile: {profile_plot_dropdown} vs {profile_plot_x_dropdown} of a **{substage_selected_str}** star")
+
+    return (profile_str,)
+
+
+@app.cell
+def _(
+    comparison_mode_radio,
+    data_structures,
+    mode1_massrange_dropdown,
+    mode2_parentstage_dropdown,
+    ui_options,
+):
+    # Identify available substages 
+
+    selected_massrange = [float(num) for num in mode1_massrange_dropdown.value.split('-')] 
+    selected_parentstage = mode2_parentstage_dropdown.value 
+
+    if comparison_mode_radio.value == ui_options.COMPAREMODE_NOSELECTION: 
+        available_substages = []
+
+    elif comparison_mode_radio.value == ui_options.COMPAREMODE_MASSFIRST: 
+        available_substages = [
+            s for s in data_structures.SUBSTAGES_LIST 
+            if not (s.mass_max <= selected_massrange[0] 
+                    or s.mass_min >= selected_massrange[1])]
+
+    elif comparison_mode_radio.value == ui_options.COMPAREMODE_STAGEFIRST: 
+        available_substages = [
+            s for s in data_structures.SUBSTAGES_LIST 
+            if s.parent_stage.name == selected_parentstage.name] 
+
+    return available_substages, selected_massrange
+
+
+@app.cell
+def _(available_substages, comparison_mode_radio, mo, ui_options):
+    # Create available substage tab selector (if there are any available substages)
+
+    if len(available_substages) == 0: 
+        available_substages_tabs = "" 
+
+    elif comparison_mode_radio.value == ui_options.COMPAREMODE_MASSFIRST: 
+        available_substages_options = {sub.mode1_abbrev: sub.mode1_desc for sub in available_substages}
+        available_substages_tabs = mo.ui.tabs(available_substages_options, value=list(available_substages_options.keys())[0]) 
+
+    elif comparison_mode_radio.value == ui_options.COMPAREMODE_STAGEFIRST: 
+        available_substages_options = {sub.mode2_abbrev_with_massrange: sub.mode2_desc_with_massrange for sub in available_substages} 
+        available_substages_tabs = mo.ui.tabs(available_substages_options, value=list(available_substages_options.keys())[0]) 
+
+    return (available_substages_tabs,)
+
+
+@app.cell
+def _(
+    available_substages,
+    available_substages_tabs,
+    comparison_mode_radio,
+    ui_options,
+):
+    # Identify available substage tab that is currently selected (if there are any available substages)
+
+    if len(available_substages) == 0: 
+        substage_selected = None 
+
+    elif comparison_mode_radio.value == ui_options.COMPAREMODE_MASSFIRST: 
+        substage_selected = [s for s in available_substages if s.mode1_abbrev==available_substages_tabs.value][0] 
+
+    elif comparison_mode_radio.value == ui_options.COMPAREMODE_STAGEFIRST: 
+        substage_selected = [s for s in available_substages if s.mode2_abbrev_with_massrange==available_substages_tabs.value][0]
+
+    return (substage_selected,)
+
+
+@app.cell
+def _(
+    comparison_mode_radio,
+    selected_massrange,
+    substage_selected,
+    ui_options,
+):
+    # Identify model used to represent selected substage 
+
+    if substage_selected is None: 
+        model_selected = None 
+
+    elif len(substage_selected.models) == 0: 
+        model_selected = None 
+
+    elif comparison_mode_radio.value == ui_options.COMPAREMODE_MASSFIRST: 
+        model_selected = next((m for m in substage_selected.models if selected_massrange[0]<=m.mass<=selected_massrange[1]), None)
+
+    elif comparison_mode_radio.value == ui_options.COMPAREMODE_STAGEFIRST: 
+        model_selected = next((m for m in substage_selected.models if m.is_default), substage_selected.models[0])
+
+    return (model_selected,)
+
+
+@app.cell
 def _(
     available_substages,
     comparison_mode_radio,
     data_structures,
-    m_high,
-    m_low,
-    marimo_dropdown_constants,
     mpatches,
     np,
     plt,
+    selected_massrange,
     substage_selected,
+    ui_options,
     unique_masses,
 ):
     # Draw the flowchart
@@ -412,12 +363,12 @@ def _(
         fig, ax = plt.subplots(figsize=(15, 5))
         fig.subplots_adjust(top=0.95, bottom=0.16, left=0.07, right=1)
 
-        if comparison_mode_radio.value==marimo_dropdown_constants.comparison_mode0: 
+        if comparison_mode_radio.value==ui_options.COMPAREMODE_NOSELECTION: 
             custom_yticks = unique_masses 
             custom_xtick_labels = [parent_stage.short_name for parent_stage in data_structures.ParentStage]
 
-        if comparison_mode_radio.value==marimo_dropdown_constants.comparison_mode1: 
-            custom_yticks = [m_low, m_high] 
+        if comparison_mode_radio.value==ui_options.COMPAREMODE_MASSFIRST: 
+            custom_yticks = [selected_massrange[0], selected_massrange[1]] 
             custom_xtick_labels = [
                 parent_stage.short_name 
                 if parent_stage in [stage.parent_stage for stage in available_substages] 
@@ -425,7 +376,7 @@ def _(
                 for parent_stage in data_structures.ParentStage
             ]
 
-        if comparison_mode_radio.value==marimo_dropdown_constants.comparison_mode2: 
+        if comparison_mode_radio.value==ui_options.COMPAREMODE_STAGEFIRST: 
             custom_yticks = sorted({m for substage in available_substages for m in (substage.mass_min, substage.mass_max)})
             custom_xtick_labels = [
                 parent_stage.short_name 
@@ -452,7 +403,7 @@ def _(
         ax.set_xticklabels(custom_xtick_labels, fontsize=14)
 
 
-        if comparison_mode_radio.value==marimo_dropdown_constants.comparison_mode0: 
+        if comparison_mode_radio.value==ui_options.COMPAREMODE_NOSELECTION: 
             for substage in data_structures.SUBSTAGES_LIST: 
                 draw_substage_box(
                     ax, 
@@ -466,7 +417,7 @@ def _(
                 )
 
 
-        if comparison_mode_radio.value==marimo_dropdown_constants.comparison_mode1: 
+        if comparison_mode_radio.value==ui_options.COMPAREMODE_MASSFIRST: 
             for substage in available_substages: 
                 if substage.id == substage_selected.id: 
                     draw_substage_box(
@@ -478,7 +429,7 @@ def _(
                         border_linewidth=2, 
                         text_color="black", 
                         text_fontsize=12, 
-                        text_y=np.sqrt(m_low*m_high)
+                        text_y=np.sqrt(selected_massrange[0]*selected_massrange[1])
                     ) 
                 else: 
                     draw_substage_box(
@@ -490,11 +441,11 @@ def _(
                         border_linewidth=1, 
                         text_color="black", 
                         text_fontsize=12, 
-                        text_y=np.sqrt(m_low*m_high)
+                        text_y=np.sqrt(selected_massrange[0]*selected_massrange[1])
                     )
 
 
-        if comparison_mode_radio.value==marimo_dropdown_constants.comparison_mode2: 
+        if comparison_mode_radio.value==ui_options.COMPAREMODE_STAGEFIRST: 
             for substage in available_substages: 
                 if substage.id == substage_selected.id: 
                     draw_substage_box(
@@ -531,9 +482,7 @@ def _(
 def _(
     comparison_mode_radio,
     histories_dict,
-    history_plot_dropdown,
     importlib,
-    marimo_dropdown_constants,
     model_selected,
     plot_mode_radio,
     plotting,
@@ -541,16 +490,9 @@ def _(
     profile_plot_dropdown,
     profile_plot_x_dropdown,
     profiles_dict,
+    ui_options,
 ):
     # Create figure showing interior plot 
-
-
-
-
-
-
-    # Rewrite this cell 
-    # Rewrite implementation of label_substage and colored_title 
 
 
 
@@ -574,7 +516,7 @@ def _(
             return make_error_figure()
 
 
-    
+
         # Otherwise, load history and profile for selected mass/modelnum from preloaded dictionaries 
         mass_selected = model_selected.mass 
         modelnum_selected = model_selected.model_example 
@@ -582,56 +524,43 @@ def _(
         history = histories_dict[mass_selected]
 
 
-    
+
         # HR Diagram 
-        if plot_mode_radio.value == marimo_dropdown_constants.plot_mode_HR_diagram: 
+        if plot_mode_radio.value == ui_options.PLOTMODE_HRDIAGRAM: 
             return make_error_figure("HR diagram not yet implemented")
 
 
 
         # History plots 
-        if plot_mode_radio.value == marimo_dropdown_constants.plot_mode_history: 
+        if plot_mode_radio.value == ui_options.PLOTMODE_HISTORY: 
 
-            if history_plot_dropdown.value == marimo_dropdown_constants.history_composition: 
-                return make_error_figure("Center composition vs time")
+            fig2 = plotting.plot_history_radius(history, modelnum_selected)
+            plotting.add_substage_highlight(fig2, model_selected, history)
+            return fig2 
 
-            if history_plot_dropdown.value == marimo_dropdown_constants.history_radius: 
-                return make_error_figure("Radius vs time")
 
-            if history_plot_dropdown.value == marimo_dropdown_constants.history_fusion: 
-                return make_error_figure("Fusion vs time")
-
-    
 
         # Interior profile plots 
-        if plot_mode_radio.value == marimo_dropdown_constants.plot_mode_profile:
+        if plot_mode_radio.value == ui_options.PLOTMODE_PROFILE:
 
-            # Choose which plotting function to use based on which profile plot is selected 
-            figure_options = {
-                marimo_dropdown_constants.profile_composition: plotting.plot_profile_composition,
-                marimo_dropdown_constants.profile_convection: plotting.plot_profile_convection,
-                marimo_dropdown_constants.profile_tempgrad: plotting.plot_profile_tempgrad,
-                marimo_dropdown_constants.profile_temp: plotting.plot_profile_temp, 
-                marimo_dropdown_constants.profile_fusion: plotting.plot_profile_fusion, 
-            }
-            selected_plot_func = figure_options[profile_plot_dropdown.value]
-            selected_x_axis = profile_plot_x_dropdown.value         
-            fig2 = selected_plot_func(profile, history, )#x_axis=selected_x_axis) 
+            # Create profile plot depending on selected options in dropdown 
+            selected_plot_func = profile_plot_dropdown.value.plot_func 
+            selected_x_axis = profile_plot_x_dropdown.value  
+            fig2 = selected_plot_func(profile, history, profilexaxis_option=selected_x_axis) 
 
-            # Add colored text to title of profile plots 
-            profile_str_options = {
-                marimo_dropdown_constants.profile_composition: "Interior composition of a", 
-                marimo_dropdown_constants.profile_convection: "Heat transport regions inside a", 
-                marimo_dropdown_constants.profile_tempgrad: "Temperature gradient across interior of a", 
-                marimo_dropdown_constants.profile_temp: "Interior temperature profile of a", 
-                marimo_dropdown_constants.profile_fusion: "Fusion rate across interior of a", 
-            }
-            substage_str_options = {
-                marimo_dropdown_constants.comparison_mode1: model_selected.parent_substage.mode1_interior_plot_title,
-                marimo_dropdown_constants.comparison_mode2: model_selected.parent_substage.mode2_interior_plot_title
-            }
-            title_str_list = [profile_str_options[profile_plot_dropdown.value], substage_str_options[comparison_mode_radio.value], "star"]
-            title_colors_list = ['black', model_selected.parent_substage.flowchart_color, 'black']
+            # List of strings used in the title (i.e., "Interior composition of a" + "Subgiant" (with red text) + "star")
+            if comparison_mode_radio.value == ui_options.COMPAREMODE_MASSFIRST: 
+                substage_str = model_selected.parent_substage.mode1_interior_plot_title
+            if comparison_mode_radio.value == ui_options.COMPAREMODE_STAGEFIRST: 
+                substage_str = model_selected.parent_substage.mode2_interior_plot_title
+            profile_str = profile_plot_dropdown.value.title_str
+            title_str_list = [profile_str, substage_str, "star"]  
+
+            # List of colors used in title (i.e., "black" + "red" + "black") 
+            substage_color = model_selected.parent_substage.flowchart_color 
+            title_colors_list = ['black', substage_color, 'black'] 
+
+            # Add colored region to title 
             plotting.add_colored_title(fig2, title_str_list, title_colors_list, fontsize=20) 
             return fig2
 
@@ -642,65 +571,8 @@ def _(
     fig2 = create_fig2() 
 
 
-    # comparison_mode_radio.value == 
-    # comparison_mode0 
-    # comparison_mode1
-    # comparison_mode2
-
-    # plot_mode_radio.value == 
-    # plot_mode_HR_diagram
-    # plot_mode_history
-    # plot_mode_profile
-
-    # history_plot_dropdown.value == 
-    # history_composition
-    # history_radius 
-    # history_fusion
-
-    # profile_plot_dropdown.value == 
-    # profile_composition
-    # profile_convection 
-    # profile_tempgrad
-    # profile_temp
-
-    # profile_x_plot_dropdown.value == 
-    # profile_x_mass
-    # profile_x_radius 
 
 
-
-
-    # def create_fig2_list(): 
-
-    #     def make_error_figure(message="Error"):
-    #         fig, ax = plt.subplots(figsize=(5, 3))
-    #         ax.text(0.5, 0.5, message, ha="center", va="center", fontsize=12, color="gray")
-    #         ax.axis("off")
-    #         fig.tight_layout()
-    #         return fig
-
-    #     if model_selected == None: 
-    #         return [make_error_figure(message="Select a mass range and evolutionary stage to view plot")] 
-
-    #     # Select first item in datapairs list 
-    #     mass_selected = model_selected.mass 
-    #     modelnum_selected = model_selected.model_example 
-
-    #     # Load history and profile for selected mass/modelnum from preloaded dictionaries 
-    #     profile = profiles_dict[(mass_selected, modelnum_selected)]
-    #     history = histories_dict[mass_selected]
-
-
-
-    #     if plots_dropdown.value == None: 
-    #         return [make_error_figure(message="Select a parameter from the dropdown menu to visualize using plots")] 
-
-
-
-    #     if plots_dropdown.value == 0: # HR diagram, radius  
-    #         fig_HR = make_error_figure(message="HR diagram")
-    #         fig_radius = plotting.plot_history_radius(history, modelnum_now = modelnum_selected)
-    #         return [fig_HR, fig_radius] 
 
 
 
@@ -721,21 +593,6 @@ def _(
 
 
 
-    #     if plots_dropdown.value == 2: # Heat transport 
-    #         return [
-    #             plotting.plot_profile_convection(profile, history), 
-    #             plotting.plot_profile_tempgrad(profile, history) ] 
-
-    #     if plots_dropdown.value == 3: # Fusion 
-    #         fig_profile = plotting.plot_profile_fusion(profile, history)
-    #         fig_history = plotting.plot_history_fusion(history, modelnum_now = modelnum_selected) 
-    #         return [fig_profile, fig_history] 
-
-    #     if plots_dropdown.value == 4: # Degeneracy 
-    #         return [
-    #             plotting.plot_profile_temp(profile, history), 
-    #             make_error_figure(message="Comparison of de broglie wavelength to interparticle spacing") ] 
-
 
 
 
@@ -743,7 +600,7 @@ def _(
     return (fig2,)
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(data_structures, load_data, mo):
     # Preload profiles and histories 
 
@@ -803,6 +660,43 @@ def _(data_structures, load_data, mo):
 
 
     return histories_dict, profiles_dict
+
+
+@app.cell
+def _():
+    # Imports 
+    import marimo as mo
+    import mesa_reader as mr 
+    import importlib 
+    import os 
+    import numpy as np 
+
+    import matplotlib.pyplot as plt
+    plt.style.use('default') # Make sure the plots appear with a white background, even if the user is in dark mode 
+    import matplotlib.patches as mpatches
+
+    import utils.constants as constants 
+    import utils.data_structures as data_structures 
+    import utils.load_data as load_data 
+    import utils.plotting as plotting 
+    import utils.ui_options as ui_options 
+
+    importlib.reload(constants) 
+    importlib.reload(data_structures)
+    importlib.reload(load_data)
+    importlib.reload(plotting)
+    importlib.reload(ui_options)
+    return (
+        data_structures,
+        importlib,
+        load_data,
+        mo,
+        mpatches,
+        np,
+        plotting,
+        plt,
+        ui_options,
+    )
 
 
 if __name__ == "__main__":
