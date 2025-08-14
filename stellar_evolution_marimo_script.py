@@ -68,7 +68,11 @@ def _(
 def _():
     # To do: 
 
+    # Rewrite history functions using new ProfilePlot class organization but called HistoryPlot 
+
     # Fix ylims of fusion vs time plot 
+    # Bring ylim-setting code into its own function: one for log plots and one for linear plots 
+    # Apply to temperature/KE per particle plots 
 
     # Plots to make work: 
     # HR diagram 
@@ -76,9 +80,10 @@ def _():
 
     # Make loading of profiles/histories dynamic: only load after you need them, then save as you go so you dont have to reload any 
 
-    # Rewrite profile and history plotting functions with the boilerplate function so that the way they are used actually makes sense 
-
     # Add an option for history plot to be either scaled linearly with time or to evenly space the substages, to make it easier to see the interesting properties that happen all near the end of the star's life
+    # How to deal with helium ignition: give an option called is_instantaneous=True which overrides the need for a model_start and model_end. Instead, it uses the model_example and plots a LINE at that point rather than an axhspan, and the even spacing ignores it. 
+
+
 
 
     return
@@ -544,7 +549,7 @@ def _(
             # Create profile plot depending on selected options in dropdown 
             selected_plot_func = profile_plot_dropdown.value.plot_func 
             selected_x_axis = profile_plot_x_dropdown.value  
-            fig2 = selected_plot_func(profile, history, profilexaxis_option=selected_x_axis) 
+            fig2 = selected_plot_func(profile, selected_x_axis, history)
 
             # List of strings used in the title (i.e., "Interior composition of a" + "Subgiant" (with red text) + "star")
             if comparison_mode_radio.value == ui_options.COMPAREMODE_MASSFIRST: 
@@ -567,7 +572,6 @@ def _(
 
 
     fig2 = create_fig2() 
-
 
 
 
