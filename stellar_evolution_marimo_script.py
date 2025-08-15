@@ -83,7 +83,7 @@ def _():
     # Add an option for history plot to be either scaled linearly with time or to evenly space the substages, to make it easier to see the interesting properties that happen all near the end of the star's life
     # How to deal with helium ignition: give an option called is_instantaneous=True which overrides the need for a model_start and model_end. Instead, it uses the model_example and plots a LINE at that point rather than an axhspan, and the even spacing ignores it. 
 
-
+    # Add a fourth option to comparison_mode_selector that lets the user type in the filepath to a MESA file and then provides a dropdown of all available profiles which they can select from. 
 
 
     return
@@ -485,7 +485,6 @@ def _(
     comparison_mode_radio,
     histories_dict,
     history_plot_dropdown,
-    history_plotting,
     model_selected,
     plot_mode_radio,
     plt,
@@ -537,8 +536,8 @@ def _(
         if plot_mode_radio.value == ui_options.PLOTMODE_HISTORY: 
 
             selected_plot_func = history_plot_dropdown.value.plot_func 
-            fig2 = selected_plot_func(history, modelnum_selected) 
-            history_plotting.add_substage_highlight(fig2, model_selected, history)
+            fig2 = selected_plot_func(history) 
+            # history_plotting.add_substage_highlight(fig2, model_selected, history) 
             return fig2 
 
 
@@ -674,7 +673,6 @@ def _():
     plt.style.use('default') # Make sure the plots appear with a white background, even if the user is in dark mode 
 
     return (
-        history_plotting,
         load_data,
         mo,
         mpatches,

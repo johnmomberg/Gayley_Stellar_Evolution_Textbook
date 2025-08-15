@@ -1,4 +1,5 @@
 import numpy as np 
+from dataclasses import dataclass 
 
 import matplotlib.pyplot as plt 
 import matplotlib.ticker as mticker 
@@ -10,13 +11,141 @@ import utils.config.plot_options as plot_options
 
 
 
+# Dataclass that holds plot parameters that need to be passed to HistoryPlot._setup() when initializing a plot 
+@dataclass
+class HistoryPlotConfigParams:
+    ylabel: str
+    ylim: tuple | None
+    yscale: str
+    title: str 
 
 
 
 
 
+# Class that holds all history plots so that the shared code can be held in a setup() function 
+class HistoryPlot:
 
 
+
+    # Code shared by all profile plots 
+    @staticmethod
+    def _setup(history, config): 
+
+        # Initialize figure 
+        fig, ax = plt.subplots(figsize=(10.7, 5))
+        fig.subplots_adjust(top=0.80, bottom=0.16, left=0.10, right=0.95)
+
+        # xlabel, xlim, xaxis formatter
+        ax.set_xlabel("Age (years)", fontsize=18, labelpad=14)
+        ax.xaxis.set_major_formatter(mticker.EngFormatter())
+        ax.set_xlim(0, np.nanmax(history.star_age))
+
+        # ylabel and yscale 
+        ax.set_ylabel(config.ylabel, fontsize=18, labelpad=14) 
+        ax.set_yscale(config.yscale) 
+    
+        # Set ylim 
+        # If ylim is None, do nothing because setting the ylims is handled by the individual plotting function 
+        # Useful when ylims need to be calculated rather than being a known constant value 
+        if config.ylim is not None: 
+            ax.set_ylim(config.ylim)
+            
+        # Title, subtitle 
+        ax.set_title(config.title, fontsize=20, pad=50)
+        ax.text(0.5, 1.14, f"{history.star_mass[0]:.1f} $M_{{sun}}$ star", 
+                transform=ax.transAxes, 
+                fontsize=12, ha='center')
+
+        # Grid, ticks 
+        ax.grid(alpha=0.5) 
+        ax.tick_params(labelsize=14) 
+        add_model_labels_time(ax, history) 
+
+        return fig, ax 
+    
+
+
+    # History plot: center composition vs time 
+    @classmethod
+    def composition(cls, history): 
+
+        # Setup 
+        config = HistoryPlotConfigParams(
+            ylabel="Composition (mass fraction)",
+            ylim=(0, 1),
+            yscale="linear",
+            title="Composition at center vs age")
+        fig, ax = cls._setup(history, config)
+        
+        # Loop through list of Isotope objects
+        for isotope in plot_options.ISOTOPES:
+            composition_history = getattr(history, isotope.history_key)
+
+            # Only plot profiles that are significant
+            if np.nanmax(composition_history) > 0.01:
+                ax.plot(
+                    history.star_age,
+                    composition_history,
+                    label=isotope.label,
+                    color=isotope.color,
+                    lw=3
+                )  
+
+        # Legend 
+        ax.legend(fontsize=14) 
+
+        return fig 
+    
+
+
+    # History plot: fusion rate vs time 
+    @classmethod
+    def fusion(cls, history): 
+
+        # Setup 
+        config = HistoryPlotConfigParams(
+            ylabel=f"Fusion rate ($L_{{sun}}$)",
+            ylim=None,
+            yscale="log",
+            title="Fusion rate vs age")
+        fig, ax = cls._setup(history, config)
+        
+        # 3 fusion rates: Hydrogen, helium, and everything else (aka metals) 
+        ax.plot(history.star_age, 10**history.log_LH, lw=2, label="Hydrogen", color="tab:blue")
+        ax.plot(history.star_age, 10**history.log_LHe, lw=2, label="Helium", color="tab:green")
+        ax.plot(history.star_age, 10**history.log_LZ, lw=2, label="Metals", color="tab:red")
+
+        # Use mass-luminosity relation on the MS to predict the range of fusion rates to use for y limits 
+        L_guess = helpers.mass_luminosity_relation(history.star_mass[0]) 
+        ax.set_ylim(
+            10**( np.log10(L_guess)-1 ), 
+            10**( np.log10(L_guess)+4 ) ) 
+        
+        # Legend 
+        ax.legend(fontsize=14) 
+
+        return fig 
+
+
+
+    # History plot: radius vs time 
+    @classmethod
+    def radius(cls, history): 
+
+        # Setup 
+        config = HistoryPlotConfigParams(
+            ylabel="Radius ($R_{{sun}}$)",
+            ylim=None,
+            yscale="log",
+            title="Radius vs age")
+        fig, ax = cls._setup(history, config)
+
+        # Plot radius vs age         
+        ax.plot(history.star_age, 10**history.log_R, lw=2) 
+
+        return fig 
+    
 
 
 
@@ -95,139 +224,5 @@ def add_substage_highlight(fig, model_selected, history):
             color=model_selected.parent_substage.flowchart_color, alpha=0.1, 
             label=model_selected.parent_substage.flowchart_text) 
         ax.legend() 
-
-
-
-
-
-# Reuse the same boilerplate for all history plots 
-def create_history_plot(history, plot_func, ylabel, ylim, yscale, title, modelnum_now=None): 
-
-    # Initialize figure 
-    fig, ax = plt.subplots(figsize=(10.7, 5))
-    fig.subplots_adjust(top=0.80, bottom=0.16, left=0.10, right=0.95)
-
-    # The specific plotting logic (radius, fusion rate, center composition, etc)
-    plot_func(ax, history) 
-
-    # Add dashed line to signify current time 
-    if modelnum_now is not None: 
-        ax.axvline(history.star_age[modelnum_now-1], color="black", ls="dotted", label="Current time") 
-
-    # xlabel, xlim, xaxis formatter
-    ax.set_xlabel("Age (years)", fontsize=18, labelpad=14)
-    ax.xaxis.set_major_formatter(mticker.EngFormatter())
-    ax.set_xlim(0, np.nanmax(history.star_age))
-
-    # ylabel, ylim, yscale 
-    ax.set_ylabel(ylabel, fontsize=18, labelpad=14) 
-    if ylim is not None: 
-        ax.set_ylim(ylim)
-    ax.set_yscale(yscale) 
-    
-    # Title, subtitle 
-    ax.set_title(title, fontsize=20, pad=50)
-    ax.text(0.5, 1.14, f"{history.star_mass[0]:.1f} $M_{{sun}}$ star", 
-             transform=ax.transAxes, 
-             fontsize=12, ha='center')
-
-    # Grid, legend, ticks 
-    ax.grid(alpha=0.5) 
-    ax.legend(fontsize=14) 
-    ax.tick_params(labelsize=14) 
-    add_model_labels_time(ax, history) 
-
-    return fig 
-    
-
-
-
-
-def plot_history_centercomposition(history, modelnum_now=None): 
-
-    def plot_func(ax, history): 
-
-        # Loop through list of Isotope objects
-        for isotope in plot_options.ISOTOPES:
-            # Use getattr() to dynamically access the correct attribute from the profile
-            composition_history = getattr(history, isotope.history_key)
-
-            # Only plot profiles that are significant
-            if np.nanmax(composition_history) > 0.01:
-                ax.plot(
-                    history.star_age,
-                    composition_history,
-                    label=isotope.label,
-                    color=isotope.color,
-                    lw=3
-                )  
-
-
-    return create_history_plot(
-        history=history, 
-        plot_func=plot_func, 
-        ylabel="Composition (by mass) at center", 
-        ylim=(0,1), 
-        yscale="linear", 
-        title="Composition at center vs age", 
-        modelnum_now=modelnum_now)
-
-
-
-
-
-def plot_history_radius(history, modelnum_now=None): 
-
-    def plot_func(ax, history): 
-        ax.plot(history.star_age, 10**history.log_R, lw=2) 
-
-
-    return create_history_plot(
-        history=history, 
-        plot_func=plot_func, 
-        ylabel="Radius ($R_{{sun}}$)", 
-        ylim=None, 
-        yscale="log", 
-        title="Overall radius vs age", 
-        modelnum_now=modelnum_now)
-
-
-
-
-
-def plot_history_fusion(history, modelnum_now=None): 
-
-    def plot_func(ax, history): 
-
-        ax.plot(history.star_age, 10**history.log_LH, lw=2, label="Hydrogen")
-        ax.plot(history.star_age, 10**history.log_LHe, lw=2, label="Helium")
-        ax.plot(history.star_age, 10**history.log_LZ, lw=2, label="Metals")
-
-    # Use ML relation on the MS to predict the range of fusion rates 
-    L_guess = helpers.mass_luminosity_relation(history.star_mass[0]) 
-    ylim = (   10**(np.log10(L_guess)-1),    10**(np.log10(L_guess)+4)   ) 
-
-    return create_history_plot(
-        history=history, 
-        plot_func=plot_func, 
-        ylabel=f"Fusion rate ($L_{{sun}}$)", 
-        ylim=ylim,  
-        yscale="log", 
-        title="Fusion rate vs age", 
-        modelnum_now=modelnum_now)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

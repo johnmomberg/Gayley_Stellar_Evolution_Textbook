@@ -68,8 +68,8 @@ class ProfilePlot:
         ax.set_yscale(config.yscale) 
 
         # Set ylim 
-        # If ylim is None, do nothing because setting the ylims is handled by the plotting function itself 
-        # Useful when ylims depend on the profile or need to be calculated rather than being a known constant value 
+        # If ylim is None, do nothing because setting the ylims is handled by the individual plotting function 
+        # Useful when ylims need to be calculated rather than being a known constant value 
         if config.ylim is not None: 
             ax.set_ylim(config.ylim[0], config.ylim[1]) 
 
@@ -97,7 +97,7 @@ class ProfilePlot:
 
         # Setup 
         config = ProfilePlotConfigParams(
-            ylabel="Mass fraction",
+            ylabel="Composition (mass fraction)",
             ylim=(0, 1),
             yscale="linear",
             title="Interior composition")

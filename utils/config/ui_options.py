@@ -60,15 +60,15 @@ class HistoryPlotOption(OptionBase):
 
 HISTORYPLOT_COMPOSITION = HistoryPlotOption(
     display="Center composition", 
-    plot_func=history_plotting.plot_history_centercomposition) 
+    plot_func=history_plotting.HistoryPlot.composition) 
 
 HISTORYPLOT_RADIUS = HistoryPlotOption(
     display="Radius", 
-    plot_func=history_plotting.plot_history_radius) 
+    plot_func=history_plotting.HistoryPlot.radius) 
 
 HISTORYPLOT_FUSION = HistoryPlotOption(
     display="Fusion rate", 
-    plot_func=history_plotting.plot_history_fusion)
+    plot_func=history_plotting.HistoryPlot.fusion)
 
 HISTORYPLOT_OPTIONS = [HISTORYPLOT_COMPOSITION, HISTORYPLOT_RADIUS, HISTORYPLOT_FUSION]
 
