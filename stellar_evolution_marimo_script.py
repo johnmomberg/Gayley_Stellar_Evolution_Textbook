@@ -11,14 +11,19 @@ def _(
     comparison_mode_radio,
     comparison_mode_str,
     comparison_mode_title,
-    fig1,
+    controls_subtitle,
     fig2,
+    flowchart,
+    flowchart_subtitle_hstack,
     full_title,
     history_str,
     mo,
     plot_mode_radio,
     plot_mode_title,
     profile_str,
+    secondary_plot_subtitle,
+    userguide_subtitle_hstack,
+    userguide_text,
 ):
     # MAIN 
 
@@ -27,7 +32,16 @@ def _(
         [
             full_title, 
             "\u200b", 
-        
+            mo.md("---"), 
+            "\u200b", 
+
+            userguide_subtitle_hstack, 
+            userguide_text, 
+            "\u200b", 
+            mo.md("---"), 
+            "\u200b", 
+
+            controls_subtitle, 
             plot_mode_title, 
             mo.hstack(
                 [
@@ -48,9 +62,19 @@ def _(
             comparison_mode_str, 
             available_substages_tabs, 
             "\u200b", 
+            mo.md("---"), 
+            "\u200b", 
 
-            mo.mpl.interactive(fig1), 
+            flowchart_subtitle_hstack, 
+            flowchart, 
+            "\u200b", 
+            mo.md("---"), 
+            "\u200b", 
+        
+            secondary_plot_subtitle, 
             mo.mpl.interactive(fig2), 
+            "\u200b", 
+            mo.md("---"), 
 
         ], 
         gap=0.7 
@@ -85,6 +109,11 @@ def _():
 
     # Add a fourth option to comparison_mode_selector that lets the user type in the filepath to a MESA file and then provides a dropdown of all available profiles which they can select from. 
 
+    # Add "we are here" to flowchart: mass and modelnum. Calc which substage the modelnum is within its boundaries. 
+
+    # Add "we are here" back to time plots 
+
+    # Add "1.0 M_sun star at 5 G years age (model number 296)" to profile plot titles
 
     return
 
@@ -98,9 +127,51 @@ def _(mo):
 
 
 @app.cell
+def _(mo):
+    # User Guide section header with switch to minimize it 
+    userguide_subtitle = mo.md("<h2>Tutorial/Documentation</h2>") 
+    userguide_switch = mo.ui.switch(value=True, label="Hide/show")
+    userguide_subtitle_hstack = mo.hstack([userguide_subtitle, userguide_switch], justify="space-between", align="center")
+ 
+    return userguide_subtitle_hstack, userguide_switch
+
+
+@app.cell
+def _(userguide_switch):
+    # User Guide text 
+
+    userguide_text = "" 
+    if userguide_switch.value == True: 
+        userguide_text = "To do: create user guide/tutorial/documentation for this app. "
+
+
+    return (userguide_text,)
+
+
+@app.cell
+def _(mo):
+    # Flowchart header with switch to minimize it 
+    flowchart_subtitle = mo.md("<h2>Flowchart</h2>") 
+    flowchart_switch = mo.ui.switch(value=True, label="Hide/show")
+    flowchart_subtitle_hstack = mo.hstack([flowchart_subtitle, flowchart_switch], justify="space-between", align="center")
+ 
+
+    return flowchart_subtitle_hstack, flowchart_switch
+
+
+@app.cell
+def _(mo):
+    # Other headers 
+    controls_subtitle = mo.md("<h2>Controls</h2>") 
+    secondary_plot_subtitle = mo.md("<h2>Secondary Plot</h2>") 
+
+    return controls_subtitle, secondary_plot_subtitle
+
+
+@app.cell
 def _(mo, ui_options):
     # Comparison mode radio 
-    comparison_mode_title = mo.md("<h2>Choose mass/evolutionary stage highlighted by secondary plot</h2>") 
+    comparison_mode_title = mo.md("<h3>Choose mass/evolutionary stage highlighted by secondary plot</h3>") 
     comparison_mode_radio = ui_options.create_radio(ui_options.COMPAREMODE_OPTIONS) 
 
     return comparison_mode_radio, comparison_mode_title
@@ -148,7 +219,7 @@ def _(
 @app.cell
 def _(mo, ui_options):
     # Plot mode radio selector 
-    plot_mode_title = mo.md("<h2>Choose secondary plot</h2>") 
+    plot_mode_title = mo.md("<h3>Choose secondary plot</h3>") 
     plot_mode_radio = ui_options.create_radio(ui_options.PLOTMODE_OPTIONS)
 
     return plot_mode_radio, plot_mode_title
@@ -307,6 +378,8 @@ def _(
 def _(
     available_substages,
     comparison_mode_radio,
+    flowchart_switch,
+    mo,
     mpatches,
     np,
     plt,
@@ -362,6 +435,10 @@ def _(
     # Function to draw the flowchart, updating highlights/labels based on selection
     def draw_flowchart():
 
+        # Allow flowchart to be minimized 
+        if flowchart_switch.value == False: 
+            return "" 
+    
         fig, ax = plt.subplots(figsize=(15, 5))
         fig.subplots_adjust(top=0.95, bottom=0.16, left=0.07, right=1)
 
@@ -473,11 +550,15 @@ def _(
                     ) 
 
 
-        return fig
+        return mo.mpl.interactive(fig)
 
 
-    fig1 = draw_flowchart()
-    return (fig1,)
+
+
+
+
+    flowchart = draw_flowchart()
+    return (flowchart,)
 
 
 @app.cell
@@ -493,6 +574,7 @@ def _(
     profile_plot_x_dropdown,
     profile_plotting,
     profiles_dict,
+    substage_selected,
     ui_options,
 ):
     # Create figure showing interior plot 
@@ -530,7 +612,7 @@ def _(
         # HR Diagram 
         if plot_mode_radio.value == ui_options.PLOTMODE_HRDIAGRAM: 
             hr = HR_diagram_plotting.HRDiagram() 
-            hr.add_path(history, label=f"{history.star_mass[0]:.1f} $M_{{sun}}$") 
+            hr.add_path(history, label=f"{history.star_mass[0]:.1f} $M_{{sun}}$", color=substage_selected.flowchart_color) 
             hr.legend() 
             fig2 = hr.fig 
             return fig2
