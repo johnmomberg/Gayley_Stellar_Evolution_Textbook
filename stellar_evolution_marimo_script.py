@@ -411,7 +411,7 @@ def _(
                     ax, 
                     substage, 
                     bg_color=substage.flowchart_color, 
-                    bg_alpha=0.2, 
+                    bg_alpha=1.0, 
                     border_color="black", 
                     border_linewidth=1, 
                     text_color="black", 

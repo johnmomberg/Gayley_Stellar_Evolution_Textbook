@@ -371,7 +371,7 @@ he_flash_substage=SubStage(
     parent_stage=ParentStage.HELIUM_IGNITION, 
     
     flowchart_text="Helium flash", 	
-    flowchart_color="tab:olive", 
+    flowchart_color="tab:cyan", 
     
     mode1_abbrev="He flash", 
     mode1_desc="Helium ignition (unstable; helium flash)", 
@@ -381,8 +381,8 @@ he_flash_substage=SubStage(
     mode2_desc="Unstable helium ignition (helium flash)", 
     mode2_interior_plot_title="He flash", 
     
-    mass_min=2.0, 
-    mass_max=6.0, 
+    mass_min=0.8, 
+    mass_max=2.0, 
     models=[
     ]
 )
@@ -394,7 +394,7 @@ he_stable_substage=SubStage(
     parent_stage=ParentStage.HELIUM_IGNITION, 
     
     flowchart_text="Helium ignites \nstably", 	
-    flowchart_color="tab:cyan", 
+    flowchart_color="tab:olive", 
     
     mode1_abbrev="He ign.", 
     mode1_desc="Helium ignition (stable)", 
@@ -404,8 +404,8 @@ he_stable_substage=SubStage(
     mode2_desc="Stable helium ignition", 
     mode2_interior_plot_title="He ign. (stable)", 
     
-    mass_min=0.8, 
-    mass_max=2.0, 
+    mass_min=2.0, 
+    mass_max=6.0, 
     models=[
     ]
 )
