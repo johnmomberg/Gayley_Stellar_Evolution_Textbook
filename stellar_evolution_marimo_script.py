@@ -482,6 +482,7 @@ def _(
 
 @app.cell
 def _(
+    HR_diagram_plotting,
     comparison_mode_radio,
     histories_dict,
     history_plot_dropdown,
@@ -528,10 +529,14 @@ def _(
 
         # HR Diagram 
         if plot_mode_radio.value == ui_options.PLOTMODE_HRDIAGRAM: 
-            return make_error_figure("HR diagram not yet implemented")
+            hr = HR_diagram_plotting.HRDiagram() 
+            hr.add_path(history, label=f"{history.star_mass[0]:.1f} $M_{{sun}}$") 
+            hr.legend() 
+            fig2 = hr.fig 
+            return fig2
 
 
-
+    
         # History plots 
         if plot_mode_radio.value == ui_options.PLOTMODE_HISTORY: 
 
@@ -661,18 +666,21 @@ def _():
     import utils.load_data as load_data 
     import utils.plotting.history_plotting as history_plotting 
     import utils.plotting.profile_plotting as profile_plotting 
+    import utils.plotting.HR_diagram_plotting as HR_diagram_plotting
     import utils.config.stellar_evolution_data as stellar_evolution_data 
     import utils.config.ui_options as ui_options 
 
     importlib.reload(load_data)
     importlib.reload(history_plotting) 
     importlib.reload(profile_plotting) 
+    importlib.reload(HR_diagram_plotting) 
     importlib.reload(stellar_evolution_data) 
     importlib.reload(ui_options) 
 
     plt.style.use('default') # Make sure the plots appear with a white background, even if the user is in dark mode 
 
     return (
+        HR_diagram_plotting,
         load_data,
         mo,
         mpatches,

@@ -8,6 +8,55 @@ import utils.config.plot_options as plot_options
 
 
 
+class HRDiagram: 
+
+    def __init__(self): 
+
+        self.fig, self.ax = plt.subplots(figsize=(10.7, 10.7))
+        
+        # X axis: Temperature 
+        self.ax.invert_xaxis() 
+        self.ax.set_xlabel("Effective Temperature (K)", fontsize=18, labelpad=14)
+        self.ax.set_xscale("log")
+        self.ax.set_xlim((70000, 2000))        
+        self.ax.xaxis.set_major_locator(mticker.LogLocator(base=10.0, subs=np.array([0.1, 0.2, 0.3, 0.5, 0.7]), numticks=10))
+        self.ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"{int(x):,}"))
+
+        # Y axis: Luminosity 
+        self.ax.set_ylabel("Luminosity ($L_{{sun}}$)", fontsize=18, labelpad=14)
+        self.ax.set_yscale("log")
+        self.ax.set_ylim((1e-3, 1e7))
+
+        # Grid, ticks, title 
+        self.ax.tick_params(labelsize=14, length=8) 
+        self.ax.grid(alpha=0.5, which="both")
+        self.ax.set_title("Evolutionary Path on HR Diagram", fontsize=20, pad=15) 
+
+
+
+    def add_path(self, history, color="tab:blue", label=None, lw=2): 
+        self.ax.plot(
+            10**history.log_Teff, 
+            10**history.log_L, 
+            color=color, 
+            label=label, 
+            lw=lw)
+
+
+
+    def legend(self): 
+        self.ax.legend(fontsize=14) 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -146,8 +195,9 @@ def plot_HR_diagram(history, modelnum=-1, T_max=-1, T_min=-1, logL_min=-1, logL_
     add_model_labels_hr_diagram(history) 
 
     if modelnum != -1: 
-        ax.scatter(history.log_Teff[modelnum-1], history.log_L[modelnum-1], 
-                   facecolors='none', edgecolors='mediumblue', s=200, linewidths=2, zorder=1000, label=f"Current pos ({modelnum})")
+        ax.scatter(
+            history.log_Teff[modelnum-1], history.log_L[modelnum-1], 
+            facecolors='none', edgecolors='mediumblue', s=200, linewidths=2, zorder=1000, label=f"Current pos ({modelnum})")
     
     ax.legend() 
 
