@@ -92,7 +92,6 @@ def _(
 def _():
     # To do: 
 
-    # Rewrite history functions using new ProfilePlot class organization but called HistoryPlot 
 
     # Fix ylims of fusion vs time plot 
     # Bring ylim-setting code into its own function: one for log plots and one for linear plots 
@@ -113,7 +112,9 @@ def _():
 
     # Add "we are here" back to time plots 
 
-    # Add "1.0 M_sun star at 5 G years age (model number 296)" to profile plot titles
+    # Add "1.0 M_sun star at 5 G years age (model number 296)" to profile plot titles 
+
+    # I don't like the way I'm currently finding the available substages. The dictionary key which is currently calculated like set_textcolor_css(sub.mode2_abbrev_with_massrange, sub.flowchart_color) should be an attribute of the substage class. for example, i have mode1_abbrev. i should have mode1_key which would replace mode1_abbrev_with_massrange and do whatever i need to to, such as appending the mass range. 
 
     return
 
@@ -259,16 +260,32 @@ def _(ui_options):
 
 
 @app.cell
+def _(mcolors):
+    # Convert from matlotlib color name (i.e., "dodgerblue") to the string used in CSS to set text color
+    def set_textcolor_css(text, mpl_color): 
+        css_color = mcolors.to_hex(mpl_color) 
+        colored_text = f"<span style='color:{css_color}'>{text}</span>" 
+        return colored_text 
+
+    return (set_textcolor_css,)
+
+
+@app.cell
 def _(
     comparison_mode_radio,
     mo,
     profile_plot_dropdown,
     profile_plot_x_dropdown,
+    set_textcolor_css,
     substage_selected,
     ui_options,
 ):
     # Plot mode option 2: Add that together to create string with all profile dropdowns 
+
+
+    # Default values (if no substage is selected): Display an empty white line 
     substage_selected_str = "______" 
+    substage_selected_color = "white"
 
     if comparison_mode_radio.value == ui_options.COMPAREMODE_MASSFIRST: 
         substage_selected_str = substage_selected.mode1_interior_plot_title 
@@ -276,7 +293,15 @@ def _(
     if comparison_mode_radio.value == ui_options.COMPAREMODE_STAGEFIRST: 
         substage_selected_str = substage_selected.mode2_interior_plot_title 
 
-    profile_str = mo.md(f"Interior profile: {profile_plot_dropdown} vs {profile_plot_x_dropdown} of a **{substage_selected_str}** star")
+    # Text color of substage's name in the displayed text should match its flowchart color 
+    if substage_selected: 
+        substage_selected_color = substage_selected.flowchart_color 
+
+
+    profile_str = mo.md(
+        f"Interior profile: {profile_plot_dropdown} vs {profile_plot_x_dropdown} of a "
+        f"{set_textcolor_css(substage_selected_str, substage_selected_color)} star" )
+
 
     return (profile_str,)
 
@@ -312,19 +337,40 @@ def _(
 
 
 @app.cell
-def _(available_substages, comparison_mode_radio, mo, ui_options):
+def _(
+    available_substages,
+    comparison_mode_radio,
+    mo,
+    set_textcolor_css,
+    ui_options,
+):
     # Create available substage tab selector (if there are any available substages)
 
     if len(available_substages) == 0: 
         available_substages_tabs = "" 
 
     elif comparison_mode_radio.value == ui_options.COMPAREMODE_MASSFIRST: 
-        available_substages_options = {sub.mode1_abbrev: sub.mode1_desc for sub in available_substages}
-        available_substages_tabs = mo.ui.tabs(available_substages_options, value=list(available_substages_options.keys())[0]) 
+    
+        available_substages_options = {
+            set_textcolor_css(sub.mode1_abbrev, sub.flowchart_color): 
+            sub.mode1_desc 
+            for sub in available_substages}
+    
+        available_substages_tabs = mo.ui.tabs(
+            available_substages_options, 
+            value=list(available_substages_options.keys())[0]) 
 
     elif comparison_mode_radio.value == ui_options.COMPAREMODE_STAGEFIRST: 
-        available_substages_options = {sub.mode2_abbrev_with_massrange: sub.mode2_desc_with_massrange for sub in available_substages} 
-        available_substages_tabs = mo.ui.tabs(available_substages_options, value=list(available_substages_options.keys())[0]) 
+    
+        available_substages_options = {
+            set_textcolor_css(sub.mode2_abbrev_with_massrange, sub.flowchart_color): 
+            sub.mode2_desc_with_massrange 
+            for sub in available_substages} 
+    
+        available_substages_tabs = mo.ui.tabs(
+            available_substages_options, 
+            value=list(available_substages_options.keys())[0]) 
+
 
     return (available_substages_tabs,)
 
@@ -334,6 +380,7 @@ def _(
     available_substages,
     available_substages_tabs,
     comparison_mode_radio,
+    set_textcolor_css,
     ui_options,
 ):
     # Identify available substage tab that is currently selected (if there are any available substages)
@@ -342,10 +389,16 @@ def _(
         substage_selected = None 
 
     elif comparison_mode_radio.value == ui_options.COMPAREMODE_MASSFIRST: 
-        substage_selected = [s for s in available_substages if s.mode1_abbrev==available_substages_tabs.value][0] 
+        substage_selected = [
+            s for s in available_substages 
+            if set_textcolor_css(s.mode1_abbrev, s.flowchart_color) == available_substages_tabs.value
+        ][0] 
 
     elif comparison_mode_radio.value == ui_options.COMPAREMODE_STAGEFIRST: 
-        substage_selected = [s for s in available_substages if s.mode2_abbrev_with_massrange==available_substages_tabs.value][0]
+        substage_selected = [
+            s for s in available_substages 
+            if set_textcolor_css(s.mode2_abbrev_with_massrange, s.flowchart_color) == available_substages_tabs.value
+        ][0]
 
     return (substage_selected,)
 
@@ -739,6 +792,7 @@ def _():
     import numpy as np 
     import matplotlib.pyplot as plt
     import matplotlib.patches as mpatches
+    import matplotlib.colors as mcolors 
 
     # Nonstandard packages 
     import marimo as mo
@@ -764,6 +818,7 @@ def _():
     return (
         HR_diagram_plotting,
         load_data,
+        mcolors,
         mo,
         mpatches,
         np,
