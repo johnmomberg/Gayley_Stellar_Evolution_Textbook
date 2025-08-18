@@ -70,7 +70,7 @@ def _(
             "\u200b", 
             mo.md("---"), 
             "\u200b", 
-        
+
             secondary_plot_subtitle, 
             mo.mpl.interactive(fig2), 
             "\u200b", 
@@ -91,6 +91,16 @@ def _(
 @app.cell
 def _():
     # To do: 
+
+
+    # HR DIAGRAM: 
+    # Add transparent tracks of available but un-selected substages for comparison 
+    # Add secondary axis on top showing OBAFGKM (spectral types) 
+
+
+
+
+
 
 
     # Fix ylims of fusion vs time plot 
@@ -119,7 +129,7 @@ def _():
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     # Title 
     full_title = mo.md("<h1>Stellar Evolution Interactive Tool</h1>") 
@@ -127,17 +137,17 @@ def _(mo):
     return (full_title,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     # User Guide section header with switch to minimize it 
     userguide_subtitle = mo.md("<h2>Tutorial/Documentation</h2>") 
     userguide_switch = mo.ui.switch(value=True, label="Hide/show")
     userguide_subtitle_hstack = mo.hstack([userguide_subtitle, userguide_switch], justify="space-between", align="center")
- 
+
     return userguide_subtitle_hstack, userguide_switch
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(userguide_switch):
     # User Guide text 
 
@@ -149,18 +159,18 @@ def _(userguide_switch):
     return (userguide_text,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     # Flowchart header with switch to minimize it 
     flowchart_subtitle = mo.md("<h2>Flowchart</h2>") 
     flowchart_switch = mo.ui.switch(value=True, label="Hide/show")
     flowchart_subtitle_hstack = mo.hstack([flowchart_subtitle, flowchart_switch], justify="space-between", align="center")
- 
+
 
     return flowchart_subtitle_hstack, flowchart_switch
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     # Other headers 
     controls_subtitle = mo.md("<h2>Controls</h2>") 
@@ -169,7 +179,7 @@ def _(mo):
     return controls_subtitle, secondary_plot_subtitle
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo, ui_options):
     # Comparison mode radio 
     comparison_mode_title = mo.md("<h3>Choose mass/evolutionary stage highlighted by secondary plot</h3>") 
@@ -178,7 +188,7 @@ def _(mo, ui_options):
     return comparison_mode_radio, comparison_mode_title
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo, stellar_evolution_data):
     # Stage and mass selector dropdowns used by comparison mode string 
 
@@ -194,7 +204,7 @@ def _(mo, stellar_evolution_data):
     return mode1_massrange_dropdown, mode2_parentstage_dropdown, unique_masses
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(
     comparison_mode_radio,
     mo,
@@ -217,7 +227,7 @@ def _(
     return (comparison_mode_str,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo, ui_options):
     # Plot mode radio selector 
     plot_mode_title = mo.md("<h3>Choose secondary plot</h3>") 
@@ -226,7 +236,7 @@ def _(mo, ui_options):
     return plot_mode_radio, plot_mode_title
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     # Plot mode option 0: HR Diagram 
     HR_diagram_str = mo.md("HR diagram")
@@ -234,7 +244,7 @@ def _(mo):
     return (HR_diagram_str,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo, ui_options):
     # Plot mode option 1: history vs time  
     history_plot_dropdown = ui_options.create_dropdown(ui_options.HISTORYPLOT_OPTIONS)
@@ -243,7 +253,7 @@ def _(mo, ui_options):
     return history_plot_dropdown, history_str
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(ui_options):
     # Plot mode option 2: Interior profile 
     profile_plot_dropdown = ui_options.create_dropdown(ui_options.PROFILEPLOT_OPTIONS) 
@@ -251,7 +261,7 @@ def _(ui_options):
     return (profile_plot_dropdown,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(ui_options):
     # Plot mode option 2: X coord to represeent location within interior 
     profile_plot_x_dropdown = ui_options.create_dropdown(ui_options.PROFILEXAXIS_OPTIONS)
@@ -259,7 +269,7 @@ def _(ui_options):
     return (profile_plot_x_dropdown,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mcolors):
     # Convert from matlotlib color name (i.e., "dodgerblue") to the string used in CSS to set text color
     def set_textcolor_css(text, mpl_color): 
@@ -270,7 +280,7 @@ def _(mcolors):
     return (set_textcolor_css,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(
     comparison_mode_radio,
     mo,
@@ -306,7 +316,7 @@ def _(
     return (profile_str,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(
     comparison_mode_radio,
     mode1_massrange_dropdown,
@@ -336,7 +346,7 @@ def _(
     return available_substages, selected_massrange
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(
     available_substages,
     comparison_mode_radio,
@@ -350,23 +360,23 @@ def _(
         available_substages_tabs = "" 
 
     elif comparison_mode_radio.value == ui_options.COMPAREMODE_MASSFIRST: 
-    
+
         available_substages_options = {
             set_textcolor_css(sub.mode1_abbrev, sub.flowchart_color): 
             sub.mode1_desc 
             for sub in available_substages}
-    
+
         available_substages_tabs = mo.ui.tabs(
             available_substages_options, 
             value=list(available_substages_options.keys())[0]) 
 
     elif comparison_mode_radio.value == ui_options.COMPAREMODE_STAGEFIRST: 
-    
+
         available_substages_options = {
             set_textcolor_css(sub.mode2_abbrev_with_massrange, sub.flowchart_color): 
             sub.mode2_desc_with_massrange 
             for sub in available_substages} 
-    
+
         available_substages_tabs = mo.ui.tabs(
             available_substages_options, 
             value=list(available_substages_options.keys())[0]) 
@@ -375,7 +385,7 @@ def _(
     return (available_substages_tabs,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(
     available_substages,
     available_substages_tabs,
@@ -403,7 +413,7 @@ def _(
     return (substage_selected,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(
     comparison_mode_radio,
     selected_massrange,
@@ -427,7 +437,7 @@ def _(
     return (model_selected,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(
     available_substages,
     comparison_mode_radio,
@@ -491,7 +501,7 @@ def _(
         # Allow flowchart to be minimized 
         if flowchart_switch.value == False: 
             return "" 
-    
+
         fig, ax = plt.subplots(figsize=(15, 5))
         fig.subplots_adjust(top=0.95, bottom=0.16, left=0.07, right=1)
 
@@ -620,6 +630,7 @@ def _(
     comparison_mode_radio,
     histories_dict,
     history_plot_dropdown,
+    importlib,
     model_selected,
     plot_mode_radio,
     plt,
@@ -633,6 +644,7 @@ def _(
     # Create figure showing interior plot 
 
 
+    importlib.reload(HR_diagram_plotting) 
 
 
 
@@ -666,12 +678,13 @@ def _(
         if plot_mode_radio.value == ui_options.PLOTMODE_HRDIAGRAM: 
             hr = HR_diagram_plotting.HRDiagram() 
             hr.add_path(history, label=f"{history.star_mass[0]:.1f} $M_{{sun}}$", color=substage_selected.flowchart_color) 
+            hr.label_spectraltypes() 
             hr.legend() 
             fig2 = hr.fig 
             return fig2
 
 
-    
+
         # History plots 
         if plot_mode_radio.value == ui_options.PLOTMODE_HISTORY: 
 
@@ -722,7 +735,7 @@ def _(
     return (fig2,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(load_data, mo, stellar_evolution_data):
     # Preload profiles and histories 
 
@@ -817,6 +830,7 @@ def _():
 
     return (
         HR_diagram_plotting,
+        importlib,
         load_data,
         mcolors,
         mo,

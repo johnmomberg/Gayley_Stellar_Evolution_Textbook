@@ -42,28 +42,32 @@ ISOTOPES = [
 
 
 # Define all spectral types for use with HR diagram plots 
-
-@dataclass 
+@dataclass
 class SpectralType: 
     """Represents a Spectral Type (O, B, etc) with its plotting properties.""" 
-    letter: str                     # "O", "B", "A" "F", "G", "K", or "M" 
-    temperature_range: tuple        # (lower bound, upper bound)    # From: https://en.wikipedia.org/wiki/Stellar_classification#Harvard_spectral_classification 
-    MS_mass_range: tuple            # (lower bound, upper bound)    # From: https://en.wikipedia.org/wiki/Stellar_classification#Harvard_spectral_classification 
-    color: str                      # Color used to represent this region on HR diagram 
+    letter: str             # "O", "B", "A" "F", "G", "K", or "M" 
+    temp_range: tuple       # (lower bound, upper bound)    # From: https://en.wikipedia.org/wiki/Stellar_classification#Harvard_spectral_classification 
+    MS_mass_range: tuple    # (lower bound, upper bound)    # From: https://en.wikipedia.org/wiki/Stellar_classification#Harvard_spectral_classification 
+    color: str              # Color used to represent this region on HR diagram 
+
+    @property
+    def temp_midpoint(self) -> int: 
+        midpoint = np.sqrt(self.temp_range[1]*self.temp_range[0]) 
+        if np.isfinite(midpoint) == False: 
+            midpoint = 1.2*self.temp_range[0] 
+        return midpoint 
+
+
 
 SPECTRAL_TYPES = [ 
-    SpectralType(letter="O", temperature_range=(33_000, np.infty), MS_mass_range=(16, np.infty), color="blue"), 
-    SpectralType(letter="B", temperature_range=(10_000, 33_000),   MS_mass_range=(2.1, 16),      color="dodgerblue"), 
-    SpectralType(letter="A", temperature_range=(7_300, 10_000),    MS_mass_range=(1.4, 2.1),     color="lightskyblue"), 
-    SpectralType(letter="F", temperature_range=(6_000, 7_300),     MS_mass_range=(1.04, 1.4),    color="silver"), 
-    SpectralType(letter="G", temperature_range=(5_300, 6_000),     MS_mass_range=(0.8, 1.04),    color="yellow"), 
-    SpectralType(letter="K", temperature_range=(3_900, 5_300),     MS_mass_range=(0.45, 0.8),    color="orange"), 
-    SpectralType(letter="M", temperature_range=(2_300, 3_900),     MS_mass_range=(0.08, 0.45),   color="red"), 
+    SpectralType(letter="O", temp_range=(33_000, np.infty), MS_mass_range=(16, np.infty), color="blue"), 
+    SpectralType(letter="B", temp_range=(10_000, 33_000),   MS_mass_range=(2.1, 16),      color="dodgerblue"), 
+    SpectralType(letter="A", temp_range=(7_300, 10_000),    MS_mass_range=(1.4, 2.1),     color="lightskyblue"), 
+    SpectralType(letter="F", temp_range=(6_000, 7_300),     MS_mass_range=(1.04, 1.4),    color="silver"), 
+    SpectralType(letter="G", temp_range=(5_300, 6_000),     MS_mass_range=(0.8, 1.04),    color="yellow"), 
+    SpectralType(letter="K", temp_range=(3_900, 5_300),     MS_mass_range=(0.45, 0.8),    color="orange"), 
+    SpectralType(letter="M", temp_range=(2_300, 3_900),     MS_mass_range=(0.08, 0.45),   color="red"), 
 ]
-
-
-
-
 
 
 
