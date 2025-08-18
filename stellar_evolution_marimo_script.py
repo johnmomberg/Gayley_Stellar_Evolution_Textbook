@@ -678,7 +678,7 @@ def _(
         if plot_mode_radio.value == ui_options.PLOTMODE_HRDIAGRAM: 
             hr = HR_diagram_plotting.HRDiagram() 
             hr.add_path(history, label=f"{history.star_mass[0]:.1f} $M_{{sun}}$", color=substage_selected.flowchart_color) 
-            hr.label_spectraltypes() 
+            # hr.label_spectraltypes() 
             hr.legend() 
             fig2 = hr.fig 
             return fig2

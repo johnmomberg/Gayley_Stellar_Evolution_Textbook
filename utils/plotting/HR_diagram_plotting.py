@@ -1,9 +1,101 @@
 import numpy as np 
+from fractions import Fraction 
 
 import matplotlib.pyplot as plt 
 import matplotlib.ticker as mticker 
 
 import utils.config.plot_options as plot_options 
+
+
+
+
+
+class CustomLogLocator(mticker.Locator):
+    def __init__(self, min_ticks=4):
+        self.min_ticks = min_ticks
+
+    def __call__(self):
+        vmin, vmax = self.axis.get_view_interval()
+        return calc_log_ticks(vmin, vmax)
+
+
+def calc_log_ticks(xmin, xmax):
+
+    def calc_next_depth(depth): 
+        if depth == 0: 
+            return 1 
+        exp = int(np.floor(np.log10(depth)))
+        mant = depth / (10**exp)  
+        if mant == 1: 
+            return int(depth*2) 
+        if mant == 2: 
+            return int(depth*2.5)
+        if mant == 5: 
+            return int(depth*2) 
+
+
+
+    start_exp = int(np.floor(np.log10(xmin)))
+    stop_exp = int(np.floor(np.log10(xmax)))
+    depth = 0 
+    f_max = 0.2   
+    f_min = 0.1 
+    length = np.log10(xmax / xmin) 
+    array = np.array([]) 
+    gaps = np.array([length]) 
+
+    while len(array) < 4 or (np.max(gaps)>f_max*length):
+
+        depth = calc_next_depth(depth) 
+
+        arrs = []
+        for k in range(start_exp, stop_exp+1):
+            base = 10**k
+            step = base / depth   # e.g. depth=2 → 500, depth=5 → 200
+            arr = np.arange(base, 10*base + step, step)
+            arrs.append(arr)
+
+        array = np.unique(np.concatenate(arrs))
+        array = array[(array >= xmin) & (array <= xmax)]
+        array = np.append(array, xmin)
+        array = np.append(array, xmax) 
+        array = np.unique(array) 
+        array = np.sort(array) 
+
+        gaps = np.log10(array[1:] / array[:-1]) 
+
+    while True:
+
+        gaps = [] 
+        for i in range(len(array)): 
+            if i==0: 
+                gap = np.log10(array[1]/array[0])
+            elif i==len(array)-1: 
+                gap = np.log10(array[i]/array[i-1])
+            else: 
+                next_gap = np.log10(array[i+1] / array[i])
+                prev_gap = np.log10(array[i] / array[i-1])
+                gap = np.min([next_gap, prev_gap])
+            gaps.append(gap)
+
+        if len(gaps) < 1 or np.min(gaps) >= f_min*length:
+            break 
+
+        array_too_close = array[np.where(gaps<f_min*length)]
+
+        exp = np.floor(np.log10(array_too_close)) 
+        mant = array_too_close / (10**exp) 
+        dec = np.array([round(x%1, 10) for x in mant])
+        denoms = np.array([Fraction(x).limit_denominator(100).denominator for x in dec])
+
+        array_least_significant = array_too_close[np.where(denoms==np.max(denoms))] 
+        ind_removal_candidates = np.array([np.where(array==x)[0][0] for x in array_least_significant]) 
+        ind_remove = np.where(array == array[ind_removal_candidates][np.argmin(np.array(gaps)[ind_removal_candidates])])[0][0]
+
+        array = np.delete(array, ind_remove)
+
+    return array 
+
 
 
 
@@ -15,14 +107,14 @@ class HRDiagram:
         self.fig, self.ax = plt.subplots(figsize=(10.7, 7))
 
         # X axis: Temperature 
-        self.ax.invert_xaxis() 
         self.ax.set_xlabel("Effective Temperature (K)", fontsize=18, labelpad=14)
         self.ax.set_xscale("log")
-        self.ax.set_xlim((70000, 2000)) 
-        # self.ax.xaxis.set_major_locator(mticker.LogLocator(base=10.0, subs=np.array([0.1, 0.2, 0.3, 0.5, 0.7]), numticks=10))
-        # self.ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"{int(x):,}")) 
-        self.ax.xaxis.set_major_locator(mticker.LogLocator(base=10.0, subs=[1.0, 2.0, 5.0]))
+        # self.ax.set_xlim((70000, 2000)) 
+        self.ax.set_xlim((20000, 70000))
+        self.ax.xaxis.set_major_locator(CustomLogLocator()) 
         self.ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"{int(x):,}")) 
+        self.ax.xaxis.set_minor_locator(mticker.NullLocator()) 
+        # self.ax.invert_xaxis() 
 
 
         # Y axis: Luminosity 
