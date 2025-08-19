@@ -1,7 +1,7 @@
 import marimo
 
 __generated_with = "0.13.15"
-app = marimo.App(width="medium")
+app = marimo.App(width="full")
 
 
 @app.cell
@@ -630,7 +630,6 @@ def _(
     comparison_mode_radio,
     histories_dict,
     history_plot_dropdown,
-    importlib,
     model_selected,
     plot_mode_radio,
     plt,
@@ -644,7 +643,6 @@ def _(
     # Create figure showing interior plot 
 
 
-    importlib.reload(HR_diagram_plotting) 
 
 
 
@@ -678,7 +676,7 @@ def _(
         if plot_mode_radio.value == ui_options.PLOTMODE_HRDIAGRAM: 
             hr = HR_diagram_plotting.HRDiagram() 
             hr.add_path(history, label=f"{history.star_mass[0]:.1f} $M_{{sun}}$", color=substage_selected.flowchart_color) 
-            # hr.label_spectraltypes() 
+            hr.label_spectraltypes() 
             hr.legend() 
             fig2 = hr.fig 
             return fig2
@@ -797,10 +795,9 @@ def _(load_data, mo, stellar_evolution_data):
     return histories_dict, profiles_dict
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _():
     # Standard packages 
-    import importlib 
     import os 
     import numpy as np 
     import matplotlib.pyplot as plt
@@ -811,36 +808,31 @@ def _():
     import marimo as mo
     import mesa_reader as mr 
 
+    plt.style.use('default') # Make sure the plots appear with a white background, even if the user is in dark mode 
+
+    return mcolors, mo, mpatches, np, plt
+
+
+@app.cell(hide_code=True)
+def _():
     # Packages I wrote 
     import utils.load_data as load_data 
+    return (load_data,)
+
+
+@app.cell(hide_code=True)
+def _():
     import utils.plotting.history_plotting as history_plotting 
     import utils.plotting.profile_plotting as profile_plotting 
     import utils.plotting.HR_diagram_plotting as HR_diagram_plotting
+    return HR_diagram_plotting, profile_plotting
+
+
+@app.cell(hide_code=True)
+def _():
     import utils.config.stellar_evolution_data as stellar_evolution_data 
     import utils.config.ui_options as ui_options 
-
-    importlib.reload(load_data)
-    importlib.reload(history_plotting) 
-    importlib.reload(profile_plotting) 
-    importlib.reload(HR_diagram_plotting) 
-    importlib.reload(stellar_evolution_data) 
-    importlib.reload(ui_options) 
-
-    plt.style.use('default') # Make sure the plots appear with a white background, even if the user is in dark mode 
-
-    return (
-        HR_diagram_plotting,
-        importlib,
-        load_data,
-        mcolors,
-        mo,
-        mpatches,
-        np,
-        plt,
-        profile_plotting,
-        stellar_evolution_data,
-        ui_options,
-    )
+    return stellar_evolution_data, ui_options
 
 
 if __name__ == "__main__":

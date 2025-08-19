@@ -10,16 +10,34 @@ import utils.config.plot_options as plot_options
 
 
 
-class CustomLogLocator(mticker.Locator):
-    def __init__(self, min_ticks=4):
-        self.min_ticks = min_ticks
+class MajorLogLocator(mticker.Locator):
+    def __init__(self):
+        pass 
 
     def __call__(self):
-        vmin, vmax = self.axis.get_view_interval()
-        return calc_log_ticks(vmin, vmax)
+        left, right = self.axis.get_view_interval() 
+        return calc_log_ticks(left, right)
 
 
-def calc_log_ticks(xmin, xmax):
+
+class MinorLogLocator(mticker.Locator):
+    def __init__(self):
+        pass 
+
+    def __call__(self):
+        left, right = self.axis.get_view_interval() 
+        return calc_log_ticks(left, right, remove_overlaps=False)
+
+
+
+
+
+# Do not ask me how this works. Too lazy to add comments right now 
+def calc_log_ticks(left, right, remove_overlaps=True):
+    xmin = np.min([left, right])
+    xmax = np.max([left, right])
+
+
 
     def calc_next_depth(depth): 
         if depth == 0: 
@@ -32,18 +50,50 @@ def calc_log_ticks(xmin, xmax):
             return int(depth*2.5)
         if mant == 5: 
             return int(depth*2) 
+        
+
+
+    def calc_gaps(input_array, minmax_func=np.min): 
+
+        # Get sorting indices
+        sort_idx = np.argsort(input_array)
+        sorted_array = input_array[sort_idx]
+
+        # Calculate gaps 
+        gaps = [] 
+        for i in range(len(sorted_array)): 
+            if i==0: 
+                gap = np.log10(sorted_array[1]/sorted_array[0])
+            elif i==len(sorted_array)-1: 
+                gap = np.log10(sorted_array[i]/sorted_array[i-1])
+            else: 
+                next_gap = np.log10(sorted_array[i+1] / sorted_array[i])
+                prev_gap = np.log10(sorted_array[i] / sorted_array[i-1])
+                gap = minmax_func([next_gap, prev_gap])
+            gaps.append(gap)
+        gaps = np.array(gaps)
+
+        # Invert the sorting to get back to original order
+        inverse_idx = np.argsort(sort_idx)
+        unsorted_gaps = gaps[inverse_idx]
+
+        return unsorted_gaps 
 
 
 
     start_exp = int(np.floor(np.log10(xmin)))
     stop_exp = int(np.floor(np.log10(xmax)))
     depth = 0 
-    f_max = 0.2   
-    f_min = 0.1 
+    f_max = 0.5  
+    f_min = 0.1
     length = np.log10(xmax / xmin) 
     array = np.array([]) 
     gaps = np.array([length]) 
 
+
+
+    # Keep subdividing until the largest gap between ticks is smaller than f_max 
+    # This will mean the smallest gaps are way too small, but we will remove those points in the next step 
     while len(array) < 4 or (np.max(gaps)>f_max*length):
 
         depth = calc_next_depth(depth) 
@@ -62,21 +112,23 @@ def calc_log_ticks(xmin, xmax):
         array = np.unique(array) 
         array = np.sort(array) 
 
-        gaps = np.log10(array[1:] / array[:-1]) 
+        gaps = calc_gaps(array, minmax_func=np.max) 
 
-    while True:
 
-        gaps = [] 
-        for i in range(len(array)): 
-            if i==0: 
-                gap = np.log10(array[1]/array[0])
-            elif i==len(array)-1: 
-                gap = np.log10(array[i]/array[i-1])
-            else: 
-                next_gap = np.log10(array[i+1] / array[i])
-                prev_gap = np.log10(array[i] / array[i-1])
-                gap = np.min([next_gap, prev_gap])
-            gaps.append(gap)
+
+    # First, check if we even want to remove overlapping points. 
+    # If this is for minor tick LINES, leave overlapping points in so the gridline spacing 
+    # matches what you would expect for a log plot, but for major tick LABELS, we don't want any text to overlap. 
+    # When removing overlapping points, prioritize keeping "nicer" numbers. 
+    # Example: If 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60 etc were the initial labels: 
+    # First get rid of 0.1 numbers (what's left: 6, 8, 10, 20, 40, etc)
+    # Then get rid of 0.2 numbers (what's left: 5, 10, 15, 20, 25)
+    # Then get rid of 0.5 numbers (what's left: 10, 100, 1000) 
+    # Prioritize keeping 0.0
+    # Keep removing points until no remaining labels are overlapping/too close 
+    while remove_overlaps==True:
+
+        gaps = calc_gaps(array) 
 
         if len(gaps) < 1 or np.min(gaps) >= f_min*length:
             break 
@@ -109,12 +161,13 @@ class HRDiagram:
         # X axis: Temperature 
         self.ax.set_xlabel("Effective Temperature (K)", fontsize=18, labelpad=14)
         self.ax.set_xscale("log")
-        # self.ax.set_xlim((70000, 2000)) 
-        self.ax.set_xlim((20000, 70000))
-        self.ax.xaxis.set_major_locator(CustomLogLocator()) 
+        self.ax.set_xlim((70000, 2000)) 
+        
+        self.ax.xaxis.set_major_locator(MajorLogLocator()) 
         self.ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"{int(x):,}")) 
-        self.ax.xaxis.set_minor_locator(mticker.NullLocator()) 
-        # self.ax.invert_xaxis() 
+
+        self.ax.xaxis.set_minor_locator(MinorLogLocator()) 
+        self.ax.xaxis.set_minor_formatter(mticker.NullFormatter())         
 
 
         # Y axis: Luminosity 
@@ -123,7 +176,7 @@ class HRDiagram:
         self.ax.set_ylim((1e-3, 1e7))
 
         # Grid, ticks, title 
-        self.ax.tick_params(labelsize=14, length=8, which="major") 
+        self.ax.tick_params(labelsize=14, length=10, which="major") 
         # self.ax.tick_params(length=0, which="minor") 
         self.ax.grid(alpha=0.5, which="both")
         self.ax.set_title("Evolutionary Path on HR Diagram", fontsize=20, pad=15) 
@@ -150,6 +203,9 @@ class HRDiagram:
         label_positions = [st.temp_midpoint for st in plot_options.SPECTRAL_TYPES] 
         labels = [st.letter for st in plot_options.SPECTRAL_TYPES]
         tick_positions = [st.temp_range[0] for st in plot_options.SPECTRAL_TYPES]
+
+        # for label_position in label_positions: 
+        #     if label_
 
         # Axis 1: ticks separating each spectral type
         ax_ticks = self.ax.secondary_xaxis(location="top")
