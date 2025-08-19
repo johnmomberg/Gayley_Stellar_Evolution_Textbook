@@ -60,7 +60,7 @@ class SpectralType:
 
 
 SPECTRAL_TYPES = [ 
-    SpectralType(letter="O", temp_range=(33_000, np.infty), MS_mass_range=(16, np.infty), color="blue"), 
+    SpectralType(letter="O", temp_range=(33_000, 999_999_999), MS_mass_range=(16, np.infty), color="blue"), 
     SpectralType(letter="B", temp_range=(10_000, 33_000),   MS_mass_range=(2.1, 16),      color="dodgerblue"), 
     SpectralType(letter="A", temp_range=(7_300, 10_000),    MS_mass_range=(1.4, 2.1),     color="lightskyblue"), 
     SpectralType(letter="F", temp_range=(6_000, 7_300),     MS_mass_range=(1.04, 1.4),    color="silver"), 

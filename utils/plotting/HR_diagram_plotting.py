@@ -152,6 +152,70 @@ def calc_log_ticks(left, right, remove_overlaps=True):
 
 
 
+
+
+
+class SpectralTypeBorderLocator(mticker.Locator):
+    def __init__(self):
+        pass 
+
+    def __call__(self):
+        tick_positions = [st.temp_range[0] for st in plot_options.SPECTRAL_TYPES]
+        return tick_positions 
+
+
+
+
+
+class SpectralTypeLabelLocator(mticker.Locator):
+    def __init__(self):
+        pass 
+
+    def __call__(self):
+        
+        window_left, window_right = self.axis.get_view_interval() 
+
+        label_positions = [] 
+
+        for spectral_type in plot_options.SPECTRAL_TYPES: 
+
+            st_mid = spectral_type.temp_midpoint 
+            st_right, st_left = spectral_type.temp_range 
+
+            if window_left > st_left and st_right > window_right: 
+                label_positions.append(st_mid)
+            elif window_left > st_left and st_left > window_right > st_right: 
+                label_positions.append(np.sqrt(st_left*window_right))
+            elif st_right > window_right and st_left > window_left > st_right: 
+                label_positions.append(np.sqrt(window_left*st_right))
+            elif st_left > window_left and window_right > st_right: 
+                label_positions.append(np.sqrt(window_left*window_right))
+            else: 
+                label_positions.append(2*window_left) 
+
+        return label_positions 
+
+
+
+
+
+
+class SpectralTypeLabelFormatter(mticker.Formatter):
+    def __init__(self):
+        pass 
+
+    def __call__(self, x, pos):
+        return plot_options.SPECTRAL_TYPES[pos].letter 
+
+
+
+
+
+
+
+
+
+
 class HRDiagram: 
 
     def __init__(self): 
@@ -200,26 +264,20 @@ class HRDiagram:
 
     def label_spectraltypes(self): 
 
-        label_positions = [st.temp_midpoint for st in plot_options.SPECTRAL_TYPES] 
-        labels = [st.letter for st in plot_options.SPECTRAL_TYPES]
-        tick_positions = [st.temp_range[0] for st in plot_options.SPECTRAL_TYPES]
-
-        # for label_position in label_positions: 
-        #     if label_
-
-        # Axis 1: ticks separating each spectral type
-        ax_ticks = self.ax.secondary_xaxis(location="top")
-        ax_ticks.set_xticks(tick_positions)
-        ax_ticks.set_xticklabels([]) 
-        ax_ticks.tick_params(axis="x", direction="out", length=15, which="major")  
-        ax_ticks.tick_params(axis="x", direction="out", length=0, which="minor")  
-
-        # Axis 2: labels ("O", "B", etc) in the gaps 
         ax_labels = self.ax.secondary_xaxis(location="top") 
-        ax_labels.set_xticks(label_positions)
-        ax_labels.set_xticklabels(labels)
-        ax_labels.tick_params(axis="x", length=0, which="both")   
 
+        # Major ticks = borders (long lines, no labels)
+        ax_labels.xaxis.set_major_locator(SpectralTypeBorderLocator())
+        ax_labels.xaxis.set_major_formatter(mticker.NullFormatter())
+        ax_labels.tick_params(length=20, which="major")
+
+        # Minor ticks = labels (no lines, but show text)
+        ax_labels.xaxis.set_minor_locator(SpectralTypeLabelLocator())
+        ax_labels.xaxis.set_minor_formatter(SpectralTypeLabelFormatter())
+        ax_labels.tick_params(length=0, which="minor")  
+
+        for spectral_type in plot_options.SPECTRAL_TYPES: 
+            plt.axvspan(spectral_type.temp_range[1], spectral_type.temp_range[0], color=spectral_type.color, alpha=0.05)
 
 
 
