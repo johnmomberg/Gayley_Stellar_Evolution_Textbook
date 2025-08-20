@@ -221,6 +221,8 @@ class HRDiagram:
     def __init__(self): 
 
         self.fig, self.ax = plt.subplots(figsize=(10.7, 7))
+        self.fig.subplots_adjust(top=0.87, bottom=0.15, left=0.12, right=0.96)
+
 
         # X axis: Temperature 
         self.ax.set_xlabel("Effective Temperature (K)", fontsize=18, labelpad=14)
@@ -247,13 +249,14 @@ class HRDiagram:
 
 
 
-    def add_path(self, history, color="tab:blue", label=None, lw=2): 
+    def add_path(self, history, color="tab:blue", label=None, lw=2, alpha=1): 
         self.ax.plot(
             10**history.log_Teff, 
             10**history.log_L, 
             color=color, 
             label=label, 
-            lw=lw)
+            lw=lw, 
+            alpha=alpha)
 
 
 
@@ -274,10 +277,25 @@ class HRDiagram:
         # Minor ticks = labels (no lines, but show text)
         ax_labels.xaxis.set_minor_locator(SpectralTypeLabelLocator())
         ax_labels.xaxis.set_minor_formatter(SpectralTypeLabelFormatter())
-        ax_labels.tick_params(length=0, which="minor")  
+        ax_labels.tick_params(length=0, which="minor", labelsize=14)  
 
         for spectral_type in plot_options.SPECTRAL_TYPES: 
             plt.axvspan(spectral_type.temp_range[1], spectral_type.temp_range[0], color=spectral_type.color, alpha=0.05)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

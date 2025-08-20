@@ -95,7 +95,6 @@ def _():
 
     # HR DIAGRAM: 
     # Add transparent tracks of available but un-selected substages for comparison 
-    # Add secondary axis on top showing OBAFGKM (spectral types) 
 
 
 
@@ -637,7 +636,6 @@ def _(
     profile_plot_x_dropdown,
     profile_plotting,
     profiles_dict,
-    substage_selected,
     ui_options,
 ):
     # Create figure showing interior plot 
@@ -675,7 +673,16 @@ def _(
         # HR Diagram 
         if plot_mode_radio.value == ui_options.PLOTMODE_HRDIAGRAM: 
             hr = HR_diagram_plotting.HRDiagram() 
-            hr.add_path(history, label=f"{history.star_mass[0]:.1f} $M_{{sun}}$", color=substage_selected.flowchart_color) 
+        
+            if comparison_mode_radio.value == ui_options.COMPAREMODE_MASSFIRST: 
+                colors = dict(zip(histories_dict.keys(), ["tab:blue", "tab:orange", "tab:green", "tab:red"]))
+                for mass_i, history_i in histories_dict.items(): 
+                    if mass_i == mass_selected: 
+                        hr.add_path(history_i, label=f"{history_i.star_mass[0]:.1f} $M_{{sun}}$", color=colors[mass_i])
+                    else: 
+                        hr.add_path(history_i, label=f"{history_i.star_mass[0]:.1f} $M_{{sun}}$", color=colors[mass_i], alpha=0.3)
+
+                
             hr.label_spectraltypes() 
             hr.legend() 
             fig2 = hr.fig 
