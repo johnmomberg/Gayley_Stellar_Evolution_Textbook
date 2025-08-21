@@ -9,9 +9,12 @@ data_folder = "C:/Users/johnm/Local Desktop/Gayley/MESA output files/"
 
 
 
-def load_history(M): 
+def load_history(M, MESA_folder_path=None): 
     
-    history_filepath = data_folder + f"M={M}" + "/trimmed_history.data"
+    if M!=None: 
+        history_filepath = data_folder + f"M={M}" + "/trimmed_history.data"
+    if MESA_folder_path!=None: 
+        history_filepath = MESA_folder_path + "/history.data"
     history = mr.MesaData(history_filepath)  
 
     # Set index, modelnum, and age where Zero Age Main Sequence (ZAMS) occurs in history  

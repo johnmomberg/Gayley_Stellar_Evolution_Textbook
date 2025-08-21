@@ -100,6 +100,11 @@ def _():
 
 
 
+    # Make marimo notebook available on github: 
+    # Take URL to this notebook on github, which is: 
+    # https://github.com/johnmomberg/Gayley_Stellar_Evolution_Textbook/blob/main/stellar_evolution_marimo_script.py 
+    # Replace the https://github.com/ part with https://marimo.app/github.com/ , which gives: 
+    # https://marimo.app/github.com/johnmomberg/Gayley_Stellar_Evolution_Textbook/blob/main/stellar_evolution_marimo_script.py 
 
 
     # Fix ylims of fusion vs time plot 
@@ -203,7 +208,7 @@ def _(mo, stellar_evolution_data):
     return mode1_massrange_dropdown, mode2_parentstage_dropdown, unique_masses
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(
     comparison_mode_radio,
     mo,
@@ -222,6 +227,8 @@ def _(
         comparison_mode_str = comparison_mode1_str 
     if comparison_mode_radio.value == ui_options.COMPAREMODE_STAGEFIRST: 
         comparison_mode_str = comparison_mode2_str 
+    if comparison_mode_radio.value == ui_options.COMPAREMODE_FREE: 
+        comparison_mode_str = "Hey" 
 
     return (comparison_mode_str,)
 
@@ -328,7 +335,7 @@ def _(
     selected_massrange = [float(num) for num in mode1_massrange_dropdown.value.split('-')] 
     selected_parentstage = mode2_parentstage_dropdown.value 
 
-    if comparison_mode_radio.value == ui_options.COMPAREMODE_NOSELECTION: 
+    if comparison_mode_radio.value == ui_options.COMPAREMODE_NOSELECTION or comparison_mode_radio.value == ui_options.COMPAREMODE_FREE: 
         available_substages = []
 
     elif comparison_mode_radio.value == ui_options.COMPAREMODE_MASSFIRST: 
