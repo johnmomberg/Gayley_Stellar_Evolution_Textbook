@@ -6,10 +6,12 @@ import itertools
 import functools 
 import numpy as np 
 import labellines 
+import scipy 
 
 from . import locators 
 from . import spectral_types 
 from ...data import phys_consts 
+from ... import misc 
 
 
 
@@ -125,7 +127,7 @@ class HRDiagram:
             ) / phys_consts.L_sun 
 
             # Add line to list 
-            line = self.ax.plot(temp_range, L_range, label=f"{radius:,g} $R_{{sun}}$", color="midnightblue", alpha=0.5, lw=0.8)
+            line = self.ax.plot(temp_range, L_range, label=f"{radius:,g} $R_{{sun}}$", color="black", alpha=0.5, lw=0.8)
             lines.append(line[0])
 
         # Add the labels twice: Once to the left side of the plot, and once to the right side  
@@ -434,7 +436,7 @@ class HRDiagram:
             y_sep = np.abs(point1[1]-point2[1]) 
             
             log_xlim = np.log10(xlim) 
-            log_ylim = np.log(ylim)
+            log_ylim = np.log10(ylim)
 
             log_xrange = max(log_xlim) - min(log_xlim) 
             log_yrange = max(log_ylim) - min(log_ylim) 
@@ -593,5 +595,94 @@ class HRDiagram:
         ax.callbacks.connect('xlim_changed', update_secondary_axis)
         ax.callbacks.connect('ylim_changed', update_secondary_axis)
         update_secondary_axis(ax)
+
+
+
+
+
+    def add_age_labels(self, history): 
+
+        # Find ages to place labels 
+        log_L_interp = scipy.interpolate.interp1d(history.star_age, history.log_L, bounds_error=False, fill_value=np.nan) 
+        log_T_interp = scipy.interpolate.interp1d(history.star_age, history.log_Teff, bounds_error=False, fill_value=np.nan) 
+        locator = mticker.MaxNLocator(
+            nbins=100, 
+            steps=[1, 2, 5], 
+        )
+        ages = locator.tick_values(0, np.max(history.star_age)) 
+        logx = log_T_interp(ages)
+        logy = log_L_interp(ages)
+
+        # Calculate text to display at each label 
+        labels = [f"{misc.to_engineering(age)}yr" for age in ages] 
+
+
+        # Check if too points are too close (the labels will overlap)
+        def calc_is_too_close(point1, point2, current_bounds): 
+
+            min_x_fractional_sep = 0.07 
+            min_y_fractional_sep = 0.07    
+
+            xlim, ylim = current_bounds 
+
+            x_sep = np.abs(point1[0]-point2[0]) 
+            y_sep = np.abs(point1[1]-point2[1]) 
+            
+            log_xlim = np.log10(xlim) 
+            log_ylim = np.log10(ylim)
+
+            log_xrange = max(log_xlim) - min(log_xlim) 
+            log_yrange = max(log_ylim) - min(log_ylim) 
+
+            # Check whether the two points are too close 
+            if x_sep < min_x_fractional_sep*log_xrange and y_sep < min_y_fractional_sep*log_yrange:
+                return True
+            else: 
+                return False  
+
+
+        # Decide which points to include labels for 
+        indices_plotted = [0]
+        for i in np.arange(1, len(logx)): 
+            too_close = calc_is_too_close((logx[indices_plotted[-1]],logy[indices_plotted[-1]]), (logx[i],logy[i]), (self.ax.get_xlim(), self.ax.get_ylim()))
+            if too_close == False: 
+                indices_plotted.append(i) 
+
+
+        # Plot points 
+        self.ax.scatter(
+            10**logx[indices_plotted], 
+            10**logy[indices_plotted], 
+            zorder=30, 
+            color="black", 
+            s=20 
+        ) 
+
+        # Plot text labels 
+        for ind in indices_plotted:
+            self.ax.annotate(
+                labels[ind],
+                xy=(10**logx[ind], 10**logy[ind]),          
+                xytext=(0, 15), 
+                textcoords="offset points", 
+                fontsize=9,
+                weight="bold",
+                ha='center',
+                va='bottom',
+                zorder=20,
+
+                bbox=dict(
+                    facecolor='white',
+                    edgecolor='black',
+                    alpha=0.5,
+                    boxstyle='round,pad=0.2'
+                ),
+
+                arrowprops=dict(
+                    arrowstyle='-|>',
+                    color='black', 
+                )
+            )
+
 
 

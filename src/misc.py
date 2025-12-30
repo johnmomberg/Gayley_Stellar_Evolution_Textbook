@@ -7,8 +7,11 @@ import matplotlib.patches as mpatches
 
 
 
-def to_engineering(x): 
+def to_engineering(x, num_sigfigs=3): 
 
+    if x==0: 
+        return "0"
+    
     exponent = int(np.floor(np.log10(x)))
     coeff = x / 10**exponent 
 
@@ -16,7 +19,18 @@ def to_engineering(x):
         exponent = exponent = exponent-1
         coeff = x / 10**exponent  
 
-    return f"{coeff} x 10^{exponent}" 
+    if exponent == 3: 
+        exponent_str = "k" 
+    elif exponent == 6: 
+        exponent_str = "M"
+    elif exponent == 9: 
+        exponent_str = "G" 
+    elif exponent == 12: 
+        exponent_str = "T"
+    else: 
+        exponent_str = f"x 10^{exponent}"
+
+    return f"{round_sigfigs(coeff, num_sigfigs)} {exponent_str}" 
 
 
 

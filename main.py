@@ -888,7 +888,7 @@ def _(
     return (flowchart,)
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(
     available_models,
     comparison_mode_radio,
@@ -931,7 +931,8 @@ def _(
             if comparison_mode_radio.value == src.data.marimo_ui_options.COMPAREMODE_MASSFIRST: 
 
                 hr.ax.set_title(f"Evolution of {model_selected.mass} $M_{{sun}}$ star across HR Diagram", fontsize=20, pad=50) 
-
+                hr.add_age_labels(history_selected) 
+            
                 for index, model in enumerate(available_models): 
 
                     if model.substage.parent_stage is None: 
@@ -963,8 +964,8 @@ def _(
                             label = f"{index}: {model.substage.mode1_abbrev}", 
                             alpha = 1, 
                             lw = 2 
-                        )
-
+                        ) 
+                    
                     # "No selection" selected: apply thicker lines to all, but not black border 
                     elif model_selected.substage.parent_stage is None: 
 
@@ -977,7 +978,7 @@ def _(
                             alpha = 1, 
                             lw = 2 
                         )
-
+                    
                     # Available for comparison but unselected substages: thinner linewidths 
                     else: 
 
@@ -994,6 +995,7 @@ def _(
             if comparison_mode_radio.value == src.data.marimo_ui_options.COMPAREMODE_STAGEFIRST: 
 
                 hr.ax.set_title(f"Location of {model_selected.substage.parent_stage.full_name} on HR Diagram", fontsize=20, pad=50) 
+                hr.add_age_labels(history_selected) 
 
                 for model in available_models: 
 
@@ -1033,6 +1035,8 @@ def _(
                             alpha = 1, 
                             lw = 2 
                         )
+
+
 
                     # Available for comparison but unselected substages: thicker linewidths but no black border 
                     else: 
