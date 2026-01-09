@@ -1,10 +1,10 @@
 # Interactive Stellar Evolution Visualizer 
 
-<br>
-
 > ⚠️ **Note:** This project is under active development. Some features may be incomplete and some known issues remain. See the **Issues** page for current limitations and known issues. Your feedback on this tool is greatly appreciated. Thank you! 
 
 <br>
+
+
 
 ## Quick Start
 
@@ -13,7 +13,9 @@ This tool uses MESA stellar models to create visualizations of the key propertie
 Click here to load the tool in your browser: https://marimo.app/github.com/johnmomberg/Interactive_Stellar_Evolution_Visualizer/blob/main/main.py 
 - To hide the code, click the button with **three boxes** in the bottom-right corner of the screen.
 
-<br>
+<br><br><br>
+
+
 
 ## How to give feedback  
 
@@ -23,7 +25,9 @@ There are several ways that you can give feedback (report a bug, make suggestion
 - Fill out this survey about your experience using this program:  
   https://docs.google.com/forms/d/e/1FAIpQLSfM8DIz6Jri5ruX6axiyvR9M9x5XapsTQQrbQr-yVbNdOL2TA/viewform?usp=header 
 
-<br>
+<br><br><br>
+
+
 
 ## Detailed Walkthrough / User Guide 
 
@@ -91,6 +95,8 @@ After uploading, the folder may not immediately appear in the file browser. To f
 
 If you are unfamiliar with MESA, but want to try it out for yourself, there is any easy way to generate your own MESA file in your web browser. Simply go to the following website: http://user.astro.wisc.edu/~townsend/static.php?ref=mesa-web-submit 
 
+<br>
+
 ### Flowchart 
 
 Below the controls section, you will see the **Evolutionary Flowchart**. This diagram gives an overview of stellar evolution as a whole and shows how stars of different masses evolve. 
@@ -112,12 +118,15 @@ Either way, the specific evolutionary stage selected will be additionally highli
 
 To minimize the flowchart, click the "Hide/show" slider. 
 
+<br>
+
 ### Plot 
 
 After making your selections in the Controls section, the requested plot will be generated and displayed in the Plot section. 
 
+<br><br><br>
 
-<br>
+
 
 ## Acknowledgements 
 
