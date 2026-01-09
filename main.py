@@ -6,7 +6,17 @@ app = marimo.App(width="full")
 
 @app.cell
 def _():
-    # NOTE: Click the button with 3 rectangles on the bottom right of the screen to hide the code 
+    # 
+    # 
+    # 
+    # 
+    # 
+    # NOTE: Click the button with 3 rectangles on the bottom right of the screen to hide the code. 
+    # 
+    # 
+    # 
+    # 
+    # 
     return
 
 
@@ -20,31 +30,17 @@ def _(mo):
     return (full_title,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
-    # User Guide section header "userguide_subtitle" with switch to minimize it "userguide_switch"
-    with mo.status.spinner(title="Creating User Guide section...") as _: 
-        userguide_subtitle = mo.md("<h2>User Guide</h2>") 
-        userguide_switch = mo.ui.switch(value=True, label="Hide / show")
-        userguide_subtitle_hstack = mo.hstack([userguide_subtitle, userguide_switch], justify="space-between", align="center")
-
-    return (userguide_switch,)
-
-
-@app.cell
-def _(mo, userguide_switch):
-    # User guide text (shows up if user guide is not minimized) "userguide_text"
+    # Add link to the Github under the title 
 
     with mo.status.spinner(title="Setting User Guide section text...") as _: 
-        userguide_text = "" 
-        if userguide_switch.value == True: 
-            github_URL = "https://github.com/johnmomberg/Interactive_Stellar_Evolution_Visualizer"
-            userguide_text = mo.md(
-                f"""
-                For detailed instructions on how to use this tool, see here: [{github_URL}]({github_URL}) 
-                """
-
-            )
+        github_URL = "https://github.com/johnmomberg/Interactive_Stellar_Evolution_Visualizer"
+        userguide_text = mo.md(
+            f"""
+            For detailed instructions on how to use this tool, see here: [{github_URL}]({github_URL}) 
+            """
+        )
 
 
     return (userguide_text,)
@@ -888,7 +884,7 @@ def _(
     return (flowchart,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(
     available_models,
     comparison_mode_radio,
@@ -932,7 +928,7 @@ def _(
 
                 hr.ax.set_title(f"Evolution of {model_selected.mass} $M_{{sun}}$ star across HR Diagram", fontsize=20, pad=50) 
                 hr.add_age_labels(history_selected) 
-            
+
                 for index, model in enumerate(available_models): 
 
                     if model.substage.parent_stage is None: 
@@ -965,7 +961,7 @@ def _(
                             alpha = 1, 
                             lw = 2 
                         ) 
-                    
+
                     # "No selection" selected: apply thicker lines to all, but not black border 
                     elif model_selected.substage.parent_stage is None: 
 
@@ -978,7 +974,7 @@ def _(
                             alpha = 1, 
                             lw = 2 
                         )
-                    
+
                     # Available for comparison but unselected substages: thinner linewidths 
                     else: 
 
@@ -1246,7 +1242,7 @@ async def _():
     )
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(
     HR_diagram_str,
     available_substages_tabs_title,
@@ -1277,11 +1273,6 @@ def _(
     full_interface = mo.vstack(
         [
             full_title, 
-            # "\u200b", 
-            # mo.md("---"), 
-            # "\u200b", 
-
-            # userguide_subtitle_hstack, 
             userguide_text, 
             "\u200b", 
             mo.md("---"), 
