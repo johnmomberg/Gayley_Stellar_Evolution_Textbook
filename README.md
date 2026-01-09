@@ -2,8 +2,9 @@
 
 ## Quick Start
 
-- Click here to load the tool in your browser:
-  https://marimo.app/github.com/johnmomberg/Interactive_Stellar_Evolution_Visualizer/blob/main/main.py 
+This tool uses MESA stellar models to create visualizations of the key properties of different types of stars. 
+
+Click here to load the tool in your browser: https://marimo.app/github.com/johnmomberg/Interactive_Stellar_Evolution_Visualizer/blob/main/main.py 
 - To hide the code, click the button with **three boxes** in the bottom-right corner of the screen.
 
 --- 
@@ -82,6 +83,8 @@ After uploading, the folder may not immediately appear in the file browser. To f
 2. Inside is another fake folder labeled **“Click Back Arrow to refresh file browser”**. This folder simply exists so that its title instructs you what to do next: Click the **back arrow** to return to the parent folder.  
 3. Entering and leaving a subfolder forces the file browser to refresh, and your uploaded folder should now be visible.
 
+If you are unfamiliar with MESA, but want to try it out for yourself, there is any easy way to generate your own MESA file in your web browser. Simply go to the following website: http://user.astro.wisc.edu/~townsend/static.php?ref=mesa-web-submit 
+
 ### Flowchart 
 
 Below the controls section, you will see the **Evolutionary Flowchart**. This diagram gives an overview of stellar evolution as a whole and shows how stars of different masses evolve. 
@@ -98,6 +101,7 @@ The right side of the flowchart shows the corresponding **spectral type** for ea
 The flowchart will highlight the evolutionary stages which are currently available for comparison, depending on the comparison mode selected. 
 - Select mass first: A horizontal row will be highlighted, corresponding to the mass you've selected
 - Select stage first: A vertical column will be highlighted, corresponding to the evolutionary stage you've selected
+
 Either way, the specific evolutionary stage selected will be additionally highlighted, with the other stages currently available for comparison highlighted as well but to a lesser degree. 
 
 To minimize the flowchart, click the "Hide/show" slider. 
@@ -113,9 +117,11 @@ After making your selections in the Controls section, the requested plot will be
 
 This project was funded by the OpenHawks Open Educational Resources (OER) Grant, provided by the University of Iowa Office of the Provost and the UI Libraries. 
 
+This project would not be possible without the MESA (Modules for Experimentes in Stellar Astrophysics) stellar evolution modeling software. For more information about MESA, see here: https://mesastar.org/ 
+
 I would like to thank Ken Gayley, my PhD advisor, for support and guidance throughout this project. 
 
-Next, I would like to thank Philip Griffin for introducing me to Marimo, which forms the backbone of the interactivity of this entire project. 
+Next, I would like to thank Philip Griffin for introducing me to Marimo, which forms the backbone of the interactivity of this entire project. For more information about Marimo, see here: https://marimo.io/ 
 
 Finally, I want to thank everyone who has helped me test this project and gave me feedback, including but not limited to: Andi Swirbul, Nathan Helvy, Scott Call, Chris Piker 
 
