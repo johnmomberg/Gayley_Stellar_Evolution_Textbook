@@ -117,7 +117,7 @@ After making your selections in the Controls section, the requested plot will be
 
 This project was funded by the OpenHawks Open Educational Resources (OER) Grant, provided by the University of Iowa Office of the Provost and the UI Libraries. 
 
-This project would not be possible without the MESA (Modules for Experimentes in Stellar Astrophysics) stellar evolution modeling software. For more information about MESA, see here: https://mesastar.org/ 
+This project would not be possible without the MESA (Modules for Experiments in Stellar Astrophysics) stellar evolution modeling software. For more information about MESA, see here: https://mesastar.org/ 
 
 I would like to thank Ken Gayley, my PhD advisor, for support and guidance throughout this project. 
 
