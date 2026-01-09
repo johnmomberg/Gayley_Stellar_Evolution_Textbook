@@ -1,4 +1,6 @@
-# Interactive Stellar Evolution Visualizer
+# Interactive Stellar Evolution Visualizer 
+
+> ⚠️ **Note:** This project is under active development. Some features may be incomplete and some known issues remain. See the **Issues** page for current limitations and known issues. Your feedback on this tool is greatly appreciated. Thank you! 
 
 ## Quick Start
 
