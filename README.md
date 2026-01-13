@@ -1,6 +1,6 @@
 # Interactive Stellar Evolution Visualizer 
 
-> ⚠️ **Note:** This project is under active development. Some features may be incomplete and some known issues remain. See the **Issues** page for current limitations and known issues. Your feedback on this tool is greatly appreciated. Thank you! 
+> ⚠️ **Note:** This project is under active development. Some features may be incomplete and some known issues remain. See the **Issues** page for current limitations and known issues. Your feedback is greatly appreciated. Thank you! 
 
 <br>
 
@@ -8,10 +8,16 @@
 
 ## Quick Start
 
-This tool uses MESA stellar models to create visualizations of the key properties of different types of stars. 
-
 Click here to load the tool in your browser: https://marimo.app/github.com/johnmomberg/Interactive_Stellar_Evolution_Visualizer/blob/main/main.py 
 - To hide the code, click the button with **three boxes** in the bottom-right corner of the screen.
+
+<br><br><br>
+
+
+
+## What is this tool? 
+
+This project is an interactive tool for visualizing stellar evolution. It uses models generated with MESA to represent different types of stars, and allows users to compare properties between masses (low mass vs high mass) as well as over time/evolutionary stage (pre-MS vs main sequence vs red giant, etc). It’s designed to be a supplemental resource for students and instructors in a course on stellar evolution. The goal is to provide users a way to visualize key properties of stars. If you're interested in using this resource in your own classroom, please reach out to me via email! I would love to hear your feedback. 
 
 <br><br><br>
 
