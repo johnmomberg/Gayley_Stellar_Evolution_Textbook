@@ -828,6 +828,43 @@ def circle_composition(profile, history, xaxis: xaxis_options.ProfileXAxisOption
 
 
 
+# WORK IN PROGRESS 
+# def circle_composition_log(profile, history, xaxis: xaxis_options.ProfileXAxisOption = xaxis_options.PROFILEXAXIS_RADIUS): 
+
+#     new_isotopes = [
+#         isotopes.PlotItem(
+#             profile_key=i.profile_key,
+#             profile_compute=lambda p: np.log10(p.log_D_ovr)
+#             history_key=i.history_key,
+#             label=i.label,
+#             color=i.color,
+#             cmap=i.cmap,
+#             show_initial_abundance=i.show_initial_abundance
+#         )
+#         for i in isotopes.CONVECTIONS
+#     ]
+    
+#     config = CirclePlotConfig( 
+#         isotopes = isotopes.ISOTOPES, 
+#         title = "Interior composition", 
+#         cutoff = -6, 
+#         vmin = -6, 
+#         vmax = 0, 
+#         # major_ticks = [0.2, 0.5, 0.8], 
+#         # major_tick_labels = ["20%", "50%", "80%"], 
+#         # minor_ticks = [i/10 for i in range(11)]
+#     )
+
+#     fig = full_circle_plot(  
+#         profile = profile, 
+#         history = history, 
+#         xaxis = xaxis, 
+#         config = config, 
+#     )  
+#     return fig 
+
+
+
 
 
 
@@ -886,7 +923,6 @@ def circle_convection(profile, history, xaxis: xaxis_options.ProfileXAxisOption 
 
 
 def circle_convection_log(profile, history, xaxis: xaxis_options.ProfileXAxisOption = xaxis_options.PROFILEXAXIS_RADIUS): 
-
 
     new_isotopes = [
         isotopes.PlotItem(
