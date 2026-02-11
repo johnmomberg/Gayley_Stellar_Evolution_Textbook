@@ -1207,7 +1207,7 @@ async def _():
     with mo.status.spinner(title="Importing packages...") as _: 
 
         # Manually install packages in requirements.txt (in order to install packages whose pip install ___ name does not match their import ___ name) 
-        import micropip
+        import micropip # type: ignore
         await micropip.install([x.strip() for x in open("requirements.txt","r").readlines()])
 
         import os 
