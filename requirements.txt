@@ -1,1 +1,3 @@
 matplotlib-label-lines
+mesa-reader
+scipy
