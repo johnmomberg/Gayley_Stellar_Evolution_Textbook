@@ -11,7 +11,7 @@ def _():
     # 
     # 
     # 
-    # NOTE: Click the button with 3 rectangles on the bottom right of the screen to hide the code. 
+    # NOTE: Type "CTRL + ." or click the button with 3 rectangles on the bottom right of the screen to hide the code. 
     # 
     # 
     # 
