@@ -140,11 +140,14 @@ This project was funded by the OpenHawks Open Educational Resources (OER) Grant,
 
 This project would not be possible without the MESA (Modules for Experiments in Stellar Astrophysics) stellar evolution modeling software. For more information about MESA, see here: https://mesastar.org/ 
 
+This project would also not be possible without Marimo, a python package that provides the interactivity for this project. For more information about Marimo, see here: https://marimo.io/ 
+
 I would like to thank Ken Gayley, my PhD advisor, for support and guidance throughout this project. 
 
-Next, I would like to thank Philip Griffin for introducing me to Marimo, which forms the backbone of the interactivity of this entire project. For more information about Marimo, see here: https://marimo.io/ 
+Finally, I want to thank everyone who has helped me test this project and gave me feedback, including but not limited to: Andi Swirbul, Nathan Helvy, Scott Call, Chris Piker, Philip Griffin, Jerry Wang, Kaili Cao, and more. Your feedback, comments and testing have been invaluable to this project. 
 
-Finally, I want to thank everyone who has helped me test this project and gave me feedback, including but not limited to: Andi Swirbul, Nathan Helvy, Scott Call, Chris Piker 
+## License 
 
+This open-access tool is covered by the CC BY-NC 4.0 license. This license enables reusers to distribute, remix, adapt, and build upon the material in any medium or format for noncommercial purposes only, and only so long as attribution is given to the creator. For more information, see here: https://creativecommons.org/licenses/by-nc/4.0/ 
 
 
