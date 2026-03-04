@@ -458,7 +458,7 @@ def full_circle_plot(
         history, 
         config: CirclePlotConfig, 
         xaxis: xaxis_options.ProfileXAxisOption = xaxis_options.PROFILEXAXIS_RADIUS, 
-        base_interior_height_in: float = 6.0, 
+        base_interior_height_in: float = 4.0, 
         r_core_view_relative: float = 1.25, 
         pad: Optional[Pad] = Pad(left = 0.4, bottom = 0.8, top = 0.4, right=0.1), 
         layout_params: Optional[LayoutParams] = None): 
@@ -535,10 +535,13 @@ def full_circle_plot(
     layout.extend_positions(len(relevant_isotopes)-1)
     width0, height0 = layout.compute_width_height()
     H_old = height0 
+    print(width0, height0)
+
 
     layout.apply_padding(pad)  
     fig_w, fig_h = layout.finalize_figsize_with_prepad(H_old, base_interior_height_in=base_interior_height_in)
     fig = plt.figure(figsize=(fig_w, fig_h)) 
+    print("FIGSIZE:", fig.get_size_inches())
 
 
 
