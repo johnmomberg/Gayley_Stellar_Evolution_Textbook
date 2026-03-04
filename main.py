@@ -1152,11 +1152,14 @@ def _(
 
                 # Add colored title 
                 if profile_plot_dropdown.value.line_or_circle == "circle": 
-                    src.plot.profile.profile.add_colored_title(fig2, title_str_list, title_colors_list, y=0.97, fontsize=11)             
+                    title_fontsize = fig2._suptitle.get_fontsize() 
+                    title_y = fig2._suptitle.get_position()[1] 
+                    src.plot.profile.profile.add_colored_title(fig2, title_str_list, title_colors_list, y=title_y, fontsize=title_fontsize)             
                 if profile_plot_dropdown.value.line_or_circle == "line": 
-                    src.plot.profile.profile.add_colored_title(fig2, title_str_list, title_colors_list, fontsize=20) 
+                    title_fontsize = fig2.axes[0].title.get_fontsize() 
+                    src.plot.profile.profile.add_colored_title(fig2, title_str_list, title_colors_list, fontsize=title_fontsize) 
 
-
+            
                 # Face color of figure with low alpha 
                 src.misc.set_bg_color(fig2, src.misc.blend_with_white(input_color=substage_selected_color, alpha=0.06))
 
@@ -1174,7 +1177,7 @@ def _(
                 fig2.patches.append(rect)
 
 
-
+        
             return mo.mpl.interactive(fig2) 
 
 
