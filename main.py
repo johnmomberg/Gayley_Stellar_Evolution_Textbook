@@ -1152,7 +1152,7 @@ def _(
 
                 # Add colored title 
                 if profile_plot_dropdown.value.line_or_circle == "circle": 
-                    src.plot.profile.profile.add_colored_title(fig2, title_str_list, title_colors_list, y=0.97, fontsize=18)             
+                    src.plot.profile.profile.add_colored_title(fig2, title_str_list, title_colors_list, y=0.97, fontsize=11)             
                 if profile_plot_dropdown.value.line_or_circle == "line": 
                     src.plot.profile.profile.add_colored_title(fig2, title_str_list, title_colors_list, fontsize=20) 
 

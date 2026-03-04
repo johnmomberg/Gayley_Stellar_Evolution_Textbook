@@ -460,7 +460,7 @@ def full_circle_plot(
         xaxis: xaxis_options.ProfileXAxisOption = xaxis_options.PROFILEXAXIS_RADIUS, 
         base_interior_height_in: float = 4.0, 
         r_core_view_relative: float = 1.25, 
-        pad: Optional[Pad] = Pad(left = 0.4, bottom = 0.8, top = 0.4, right=0.1), 
+        pad: Optional[Pad] = Pad(left = 0.4, bottom = 0.6, top = 0.4, right=0.1), 
         layout_params: Optional[LayoutParams] = None): 
 
 
@@ -535,13 +535,10 @@ def full_circle_plot(
     layout.extend_positions(len(relevant_isotopes)-1)
     width0, height0 = layout.compute_width_height()
     H_old = height0 
-    print(width0, height0)
-
 
     layout.apply_padding(pad)  
     fig_w, fig_h = layout.finalize_figsize_with_prepad(H_old, base_interior_height_in=base_interior_height_in)
     fig = plt.figure(figsize=(fig_w, fig_h)) 
-    print("FIGSIZE:", fig.get_size_inches())
 
 
 
@@ -551,7 +548,7 @@ def full_circle_plot(
     # Title (gets replaced if in mode 1 or 2)
     fig.suptitle(
         config.title, 
-        fontsize=18, 
+        fontsize=11, 
         x=0.5, 
         y=0.97, 
         ha="center", 
@@ -562,7 +559,7 @@ def full_circle_plot(
     fig.text(
         0.5, 0.93, 
         f"{profile.initial_mass_string} $M_{{sun}}$ at {profile.age_string} old", 
-        fontsize=12, ha='center')
+        fontsize=9, ha='center')
 
 
 
@@ -595,9 +592,9 @@ def full_circle_plot(
         # Determine location of color bar (located beneath plots)
         x_small_fig, y_small_fig = layout.layout_to_fig_coords(pos.small.x, pos.small.y) 
         width_colorbar_fig = layout.radius_to_fig_fraction(layout.params.r_big, option="width") * 0.70 
-        height_colorbar_fig = layout.radius_to_fig_fraction(layout.params.r_big, option="height") * 0.14   
+        height_colorbar_fig = layout.radius_to_fig_fraction(layout.params.r_big, option="height") * 0.07  
         x_colorbar_fig = x_small_fig 
-        y_colorbar_fig = layout.radius_to_fig_fraction(layout.params.r_big, option="height") * 0.3 
+        y_colorbar_fig = layout.radius_to_fig_fraction(layout.params.r_big, option="height") * 0.25
         left_colorbar_fig = x_colorbar_fig - width_colorbar_fig/2 
         bottom_colorbar_fig = y_colorbar_fig - height_colorbar_fig/2 
 
@@ -607,7 +604,7 @@ def full_circle_plot(
             mappable = big_mesh, 
             cax = ax_colorbar, 
             orientation = "horizontal") 
-        cbar.set_label(f"{isotope.label}", fontsize=14) 
+        cbar.set_label(f"{isotope.label}", fontsize=8) 
 
         # Major ticks: labeled with percentage, longer length tick 
         if config.major_ticks is not None: 
@@ -618,9 +615,9 @@ def full_circle_plot(
         ax_colorbar.tick_params(
             axis='x',
             which='major',
-            length=10, 
-            width=1.5,
-            labelsize=12  # label fontsize
+            length=6, 
+            width=1,
+            labelsize=7  # label fontsize
         )
 
         # Minor ticks: no labels, short tick  
@@ -630,7 +627,7 @@ def full_circle_plot(
             axis='x',
             which='minor',
             length=4,       
-            width=1,
+            width=0.8,
             labelsize=0  # no label
         )
 
@@ -664,7 +661,7 @@ def full_circle_plot(
                     for tick in ax_big_scale.get_yticks()
                 ],
                 va="center",
-                fontsize=14, 
+                fontsize=9, 
                 rotation=90 
             )
 
@@ -752,7 +749,7 @@ def full_circle_plot(
                     for tick in ax_small_scale.get_yticks()
                 ],
                 va="center",
-                fontsize=12, 
+                fontsize=9, 
                 rotation=90
             )
 
