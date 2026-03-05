@@ -375,7 +375,7 @@ def _(mo):
     # Create file uploader for mode 4 
 
     with mo.status.spinner(title="Creating file uploader...") as _: 
-        uploaded_file = mo.ui.file(kind="button") 
+        uploaded_file = mo.ui.file(kind="button", max_size=500_000_000) 
 
     return (uploaded_file,)
 
