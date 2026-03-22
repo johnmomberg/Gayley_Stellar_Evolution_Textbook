@@ -37,7 +37,7 @@ def to_engineering(x, num_sigfigs=3):
 
 
 def round_sigfigs(x, num_sigfigs): 
-    if x == 0:
+    if x == 0: 
         return 0.0 
     rounded_num = round(x, num_sigfigs - int(math.floor(math.log10(abs(x)))) - 1) 
     if rounded_num - math.floor(rounded_num) == 0.0: 
