@@ -188,9 +188,8 @@ def _(
 
 
         profile_str = mo.md(
-            f"Interior profile: {profile_plot_dropdown} vs {profile_plot_x_dropdown} of a "
+            f"Interior profile: {profile_plot_dropdown} vs <br/>{profile_plot_x_dropdown} of a"
             f"{src.misc.set_textcolor_css(substage_selected_str, substage_selected_color)} star" )
-
 
 
 
@@ -1159,7 +1158,7 @@ def _(
                     title_fontsize = fig2.axes[0].title.get_fontsize() 
                     src.plot.profile.profile.add_colored_title(fig2, title_str_list, title_colors_list, fontsize=title_fontsize) 
 
-            
+
                 # Face color of figure with low alpha 
                 src.misc.set_bg_color(fig2, src.misc.blend_with_white(input_color=substage_selected_color, alpha=0.06))
 
@@ -1177,7 +1176,7 @@ def _(
                 fig2.patches.append(rect)
 
 
-        
+
             return mo.mpl.interactive(fig2) 
 
 
@@ -1245,7 +1244,7 @@ async def _():
     )
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(
     HR_diagram_str,
     available_substages_tabs_title,
@@ -1337,6 +1336,109 @@ def _(
 
     full_interface 
 
+
+
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    # full_interface = mo.vstack(
+    #     [
+    #         full_title, 
+    #         userguide_text, 
+    #         "\u200b", 
+    #         mo.md("---"), 
+    #         "\u200b", 
+    #         mo.vstack(
+    #             [
+    #                 mo.hstack(
+    #                     [     
+    #                         mo.vstack( 
+    #                             [ 
+    #                                 plot_mode_title, 
+    #                                 mo.hstack(
+    #                                     [
+    #                                         plot_mode_radio, 
+    #                                         mo.vstack(
+    #                                             [
+    #                                                 HR_diagram_str, 
+    #                                                 history_str, 
+    #                                                 profile_str
+    #                                             ], 
+    #                                             gap=0)
+    #                                     ], 
+    #                                     gap=0, align="center"), 
+    #                             ]
+    #                         ), 
+    #                         secondary_plot, 
+    #                     ]
+    #                 ), 
+    #                 mo.hstack(
+    #                     [
+    #                         mo.vstack(
+    #                             [
+    #                                 comparison_mode_title, 
+    #                                 mo.hstack( 
+    #                                     [     
+    #                                     mo.hstack(
+    #                                         [
+    #                                             comparison_mode_radio, 
+    #                                             mo.vstack(
+    #                                                 [
+    #                                                     noselection_str, 
+    #                                                     massfirst_str, 
+    #                                                     stagefirst_str, 
+    #                                                     freeselection_str
+    #                                                 ], 
+    #                                                 gap=0), 
+    #                                         ],
+    #                                         gap=0, align="center"), 
+    #                                     mo.vstack([available_substages_tabs_title, model_selector])], widths=[5, 10], align="start"), 
+    #                             ]
+    #                         ), flowchart,      
+    #                     ]
+    #                 )
+    #             ] 
+    #         )
+    #     ] 
+    # )
+
+    # full_interface 
+    return
+
+
+@app.cell
+def _(
+    HR_diagram_str,
+    available_substages_tabs_title,
+    comparison_mode_radio,
+    comparison_mode_title,
+    flowchart,
+    freeselection_str,
+    history_str,
+    massfirst_str,
+    mo,
+    model_selector,
+    noselection_str,
+    plot_mode_radio,
+    plot_mode_title,
+    profile_str,
+    secondary_plot,
+    stagefirst_str,
+):
+    radio_labels = mo.vstack([HR_diagram_str, history_str, profile_str], gap=0) 
+    radio_buttons_shifted_down = mo.vstack(["", plot_mode_radio], gap=0.5)
+    radio_buttons_and_labels = mo.hstack([radio_buttons_shifted_down, radio_labels], gap=0, widths=[0,1], align="start")
+    variable_title_and_radio = mo.vstack([plot_mode_title, radio_buttons_and_labels, "\u200b"])
+
+    comparemode_labels = mo.vstack([noselection_str, massfirst_str, stagefirst_str, freeselection_str], gap=0)
+    comparemode_radio_and_labels = mo.hstack([comparison_mode_radio, comparemode_labels], gap=0, align="center")
+    compare_title_and_selector = mo.vstack(["\u200b", comparison_mode_title, comparemode_radio_and_labels, "\u200b", available_substages_tabs_title, model_selector])
+
+
+
+    mo.vstack([mo.hstack([variable_title_and_radio, secondary_plot], widths=[1,2], align="end"), mo.hstack([compare_title_and_selector, flowchart], widths=[1,2], align="start")]) 
 
 
     return
