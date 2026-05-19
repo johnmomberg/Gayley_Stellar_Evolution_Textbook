@@ -144,7 +144,7 @@ This project would also not be possible without Marimo, a python package that pr
 
 I would like to thank Ken Gayley, my PhD advisor, for support and guidance throughout this project. 
 
-Finally, I want to thank everyone who has helped me test this project and gave me feedback, including but not limited to: Andi Swirbul, Nathan Helvy, Scott Call, Chris Piker, Philip Griffin, Jerry Wang, Kaili Cao, and more. Your feedback, comments and testing have been invaluable to this project. 
+Finally, I want to thank everyone who has helped me test this project and gave me feedback, including but not limited to: Andi Swirbul, Nathan Helvy, Scott Call, Chris Piker, Philip Griffin, Jerry Wang, Kaili Cao, Paul from the Marimo discord (whose GitHub account is here: https://github.com/eckp), and more. Your feedback, comments and testing have been invaluable to this project. 
 
 ## License 
 
