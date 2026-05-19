@@ -268,21 +268,21 @@ def add_model_labels_time(ax, history, modelnum_now):
 
 
 def add_substage_highlight(
-        fig, model_selected, history, 
+        fig, selected_row, history, 
         lower_alpha=0.05, lower_border_linewidth=0, lower_border_color="none", 
-        upper_alpha=0.6, upper_border_linewidth=0, upper_border_color="none", 
+        upper_alpha=0.5, upper_border_linewidth=0, upper_border_color="none", 
         include_label=False): 
 
-    if model_selected.model_start is None: 
+    if int(selected_row["model_start"]) is None: 
         return 
 
     ax = fig.axes[0] 
     trans = mtransforms.blended_transform_factory(ax.transData, ax.transAxes)
 
-    xmin = history.star_age[model_selected.model_start-1] 
-    xmax = history.star_age[model_selected.model_end-1] 
-    color = model_selected.substage.flowchart_color 
-    label = model_selected.substage.mode1_abbrev 
+    xmin = history.star_age[selected_row["model_start"]-1] 
+    xmax = history.star_age[selected_row["model_end"]-1] 
+    color = selected_row["Color"]
+    label = selected_row["Short Name"]
 
     # Highlight inside plot 
     ax.axvspan(
@@ -292,6 +292,9 @@ def add_substage_highlight(
         linewidth = lower_border_linewidth, 
         edgecolor = lower_border_color, 
         label=label) 
+    
+    # Add a vertical line at the example plot 
+    ax.axvline(history.star_age[selected_row["model_example"]-1], color=color, ls="dashed", lw=0.8)
 
     # Add colored rectangle above plot
     rect = mpatches.Rectangle(

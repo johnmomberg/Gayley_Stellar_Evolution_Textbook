@@ -127,7 +127,7 @@ class HRDiagram:
             ) / phys_consts.L_sun 
 
             # Add line to list 
-            line = self.ax.plot(temp_range, L_range, label=f"{radius:,g} $R_{{sun}}$", color="black", alpha=0.5, lw=0.8)
+            line = self.ax.plot(temp_range, L_range, label=f"{radius:,g} $R_{{sun}}$", color='#b0b0b0', alpha=0.8, lw=0.8)
             lines.append(line[0])
 
         # Add the labels twice: Once to the left side of the plot, and once to the right side  
@@ -136,8 +136,8 @@ class HRDiagram:
         xdiff = xright - xleft
         xleft_label = xleft + xdiff*0.05 
         xright_label = xright - xdiff*0.05
-        _ = labellines.labelLines(lines, xvals=10**xleft_label, alpha=0.5) 
-        _ = labellines.labelLines(lines, xvals=10**xright_label, alpha=0.5) 
+        _ = labellines.labelLines(lines, xvals=10**xleft_label, alpha=0.5, color="black") 
+        _ = labellines.labelLines(lines, xvals=10**xright_label, alpha=0.5, color="black") 
 
         # After adding contour labels, remove the labels from each line object so that it doesn't appear in the legend 
         for line in lines: 

@@ -1,0 +1,49 @@
+﻿x,y_min,y_max,Minimum Mass,Maximum Mass,Name,Short Name,Color,Displayed Mass (for plots),model_start,model_example,model_end,MESA_folder_path
+0,0.1,0.3,0.1,6,Hayashi  track,Hayashi,#468400,0.2,1,150,225,M=0.2
+0,0.3,0.5,0.1,6,Hayashi  track,Hayashi,#468400,0.4,1,200,254,M=0.4
+0,0.5,1.5,0.1,6,Hayashi  track,Hayashi,#468400,1,1,150,202,M=1.0
+0,1.5,2,0.1,6,Hayashi  track,Hayashi,#468400,1.75,1,140,200,M=1.75
+0,2,6,0.1,6,Hayashi  track,Hayashi,#468400,3,1,150,195,M=3.0
+,,,,,,,,,,,,
+1,0.5,1.5,0.5,6,Henyey  track,Henyey,#BE0101,1,202,220,240,M=1.0
+1,1.5,2,0.5,6,Henyey  track,Henyey,#BE0101,1.75,200,235,250,M=1.75
+1,2,6,0.5,6,Henyey  track,Henyey,#BE0101,3,195,225,250,M=3.0
+,,,,,,,,,,,,
+2,0.1,0.3,0.1,0.3,Main sequence  (fully convective),MS,#0d1f95,0.2,225,273,1000,M=0.2
+,,,,,,,,,,,,
+2,0.3,0.5,0.3,1.5,Main sequence  (rad. core +  conv. env.),MS,#9e03bd,0.4,254,309,350,M=0.4
+2,0.5,1.5,0.3,1.5,Main sequence  (rad. core +  conv. env.),MS,#9e03bd,1,240,296,330,M=1.0
+,,,,,,,,,,,,
+2,1.5,2,1.5,6,Main sequence  (conv. core +  rad. env.),MS,#a77730,1.75,250,285,340,M=1.75
+2,2,6,1.5,6,Main sequence  (conv. core +  rad. env.),MS,#a77730,3,250,300,348,M=3.0
+,,,,,,,,,,,,
+3,0.3,0.5,0.3,1.5,Subgiant,Subgiant,#00b362,0.4,350,450,500,M=0.4
+3,0.5,1.5,0.3,1.5,Subgiant,Subgiant,#00b362,1,330,389,415,M=1.0
+,,,,,,,,,,,,
+3,1.5,2,1.5,6,SC Limit,SC Limit,#6600ff,1.75,340,389,420,M=1.75
+3,2,6,1.5,6,SC Limit,SC Limit,#6600ff,3,348,363,380,M=3.0
+,,,,,,,,,,,,
+4,0.3,0.5,0.3,6,Red  Giant,RG,#8E8C09,0.4,500,3000,4850,M=0.4
+4,0.5,1.5,0.3,6,Red  Giant,RG,#8E8C09,1,415,5000,9500,M=1.0
+4,1.5,2,0.3,6,Red  Giant,RG,#8E8C09,1.75,420,1000,8763,M=1.75
+4,2,6,0.3,6,Red  Giant,RG,#8E8C09,3,380,400,430,M=3.0
+,,,,,,,,,,,,
+5,0.5,1.5,0.5,2,Helium  flash,He flash,#d07d00,1,9500,9700,10500,M=1.0
+5,1.5,2,0.5,2,Helium  flash,He flash,#d07d00,1.75,8763,8802,9000,M=1.75
+,,,,,,,,,,,,
+5,2,6,2,6,Helium  ignites  stably,He stable ign.,#0299e4,3,430,433,435,M=3.0
+,,,,,,,,,,,,
+6,0.5,1.5,0.5,6,Helium  main  sequence,He MS,#04877e,1,10500,10650,10950,M=1.0
+6,1.5,2,0.5,6,Helium  main  sequence,He MS,#04877e,1.75,9000,9800,10000,M=1.75
+6,2,6,0.5,6,Helium  main  sequence,He MS,#04877e,3,435,650,950,M=3.0
+,,,,,,,,,,,,
+7,0.5,1.5,0.5,6,Asymptotic  giant,AGB,#8a420d,1,10950,12300,13600,M=1.0
+7,1.5,2,0.5,6,Asymptotic  giant,AGB,#8a420d,1.75,10000,11425,13635,M=1.75
+7,2,6,0.5,6,Asymptotic  giant,AGB,#8a420d,3,950,1700,11000,M=3.0
+,,,,,,,,,,,,
+8,0.1,0.3,0.1,0.5,Helium  white  dwarf,He WD,#db4242,0.2,1000,1200,1224,M=0.2
+8,0.3,0.5,0.1,0.5,Helium  white  dwarf,He WD,#db4242,0.4,4850,5159,5159,M=0.4
+,,,,,,,,,,,,
+8,0.5,1.5,0.5,6,Carbon +  oxygen  white dwarf,C+O WD,#005fbe,1,13600,14300,14300,M=1.0
+8,1.5,2,0.5,6,Carbon +  oxygen  white dwarf,C+O WD,#005fbe,1.75,13635,,13635,M=1.75
+8,2,6,0.5,6,Carbon +  oxygen  white dwarf,C+O WD,#005fbe,3,,,,M=3.0
