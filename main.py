@@ -127,7 +127,7 @@ def _(mo, profile_plot_dropdown, profile_plot_x_dropdown, selected_row, src):
         if selected_row is not None: 
             substage_selected_str = selected_row['Name'] 
             substage_selected_color = selected_row['Color'] 
-        
+
         profile_str = mo.md(
             f"Interior profile: {profile_plot_dropdown} vs {profile_plot_x_dropdown} of a"
             f"{src.misc.set_textcolor_css(substage_selected_str, substage_selected_color)} star" )
@@ -344,7 +344,6 @@ def _(alt, mo, np, pd):
 
         # Create dataframe used by text boxes 
         mesa_data_csv_unique = mesa_data_csv.copy().drop_duplicates(subset=["Name"], keep="first")
-        mesa_data_csv_unique["Name_lines"] = mesa_data_csv_unique["Name"].str.split("  ")
 
 
 
@@ -466,12 +465,13 @@ def _(alt, mo, np, pd):
                 align="center",
                 baseline="middle",
                 color="white",
-                fontSize=16,
+                fontSize=16, 
+                lineBreak="\n", 
             )
             .encode(
                 x=alt.X("x_mid:Q", scale=alt.Scale(domain=[-0.5, 8.5]), axis=None),
                 y=alt.Y("Text Location:Q", scale=alt.Scale(type="log")),
-                text="Name_lines:N",
+                text="Name:N",
             )
         )
 
@@ -502,7 +502,7 @@ def _(flowchart_marimo, mesa_data_csv, mo, pd, src):
             history = None 
             profile = None 
             selected_row = None 
-    
+
         # Otherwise, access data from the selected row 
         else: 
             selected_row = flowchart_marimo.apply_selection(mesa_data_csv).iloc[0]
@@ -519,7 +519,7 @@ def _(flowchart_marimo, mesa_data_csv, mo, pd, src):
     return history, profile, selected_row
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(
     history,
     history_plot_dropdown,
@@ -551,10 +551,10 @@ def _(
                 return "ERROR: HR Diagram is unavailable for current selection." 
 
             for index, row in mesa_data_csv.iterrows():
-            
+
                 if row["Displayed Mass (for plots)"] != selected_row["Displayed Mass (for plots)"] or pd.isna(row["model_start"]) or pd.isna(row["model_end"]): 
                     continue 
-            
+
                 if index == selected_row.name: 
                     hr.add_path(
                         history, 
@@ -564,10 +564,10 @@ def _(
                         lw = 3, 
                     )
                     lw=2 
-                
+
                 else: 
                     lw=1
-            
+
                 hr.add_path(
                     history, 
                     modelnum_start = row["model_start"], 
@@ -583,7 +583,7 @@ def _(
             hr.add_spectral_type_labels()  
             hr.add_radius_contours() 
             hr.ax.set_title(f"Evolutionary Path of {selected_row['Displayed Mass (for plots)']} $M_{{sun}}$", fontsize=20, pad=50)
-        
+
             # Return figure 
             fig2 = hr.fig 
             return mo.mpl.interactive(fig2) 
@@ -618,11 +618,11 @@ def _(
                     selected_row, 
                     history, 
                     include_label=True, 
-    
+
                     lower_alpha=0.08, 
                     lower_border_linewidth=0, 
                     lower_border_color="black", 
-    
+
                     upper_alpha=1.0, 
                     upper_border_linewidth=2, 
                     upper_border_color="black"
