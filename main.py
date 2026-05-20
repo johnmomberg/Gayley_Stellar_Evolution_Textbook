@@ -344,7 +344,10 @@ def _(alt, mo, np, pd):
 
         # Create dataframe used by text boxes 
         mesa_data_csv_unique = mesa_data_csv.copy().drop_duplicates(subset=["Name"], keep="first")
-
+        mesa_data_csv_unique["Flowchart_Text"] = (
+            mesa_data_csv_unique["Name"]
+            .str.replace("  ", "\n", regex=False)
+        )
 
 
         # X axis labels 
@@ -471,7 +474,7 @@ def _(alt, mo, np, pd):
             .encode(
                 x=alt.X("x_mid:Q", scale=alt.Scale(domain=[-0.5, 8.5]), axis=None),
                 y=alt.Y("Text Location:Q", scale=alt.Scale(type="log")),
-                text="Name:N",
+                text="Flowchart_Text:N",
             )
         )
 
