@@ -262,57 +262,57 @@ def _(Path, mo, src, uploaded_file, zipfile):
 def _():
     # "model_selector": either use "available_substages_tabs" or an hstack of "history_browser" and "profile_dropdown", depending on value of "comparison_mode_radio" 
 
-    '''
+    # '''
 
-    with mo.status.spinner(title="Choosing model selector...") as _: 
+    # with mo.status.spinner(title="Choosing model selector...") as _: 
 
-        first_3_options = [
-            src.data.marimo_ui_options.COMPAREMODE_NOSELECTION, 
-            src.data.marimo_ui_options.COMPAREMODE_MASSFIRST, 
-            src.data.marimo_ui_options.COMPAREMODE_STAGEFIRST
-        ]
+    #     first_3_options = [
+    #         src.data.marimo_ui_options.COMPAREMODE_NOSELECTION, 
+    #         src.data.marimo_ui_options.COMPAREMODE_MASSFIRST, 
+    #         src.data.marimo_ui_options.COMPAREMODE_STAGEFIRST
+    #     ]
 
-        if comparison_mode_radio.value in first_3_options:  
-            model_selector = available_substages_tabs 
-
-
-
-        if comparison_mode_radio.value == src.data.marimo_ui_options.COMPAREMODE_FREE: 
-
-            if profile_dropdown is not None: 
-                profile_dropdown_display = mo.vstack([f"File selected: \u200b \u200b \u200b \u200b \u200b {Path(history_browser.value[0].id)}", profile_dropdown]) 
-            if profile_dropdown is None: 
-                profile_dropdown_display = ""
-
-            model_selector = mo.vstack(
-                [
-                    mo.md("<h4>File Browser</h4>"), 
-                    history_browser, 
-                    mo.hstack(
-                        [
-                            "Upload your own MESA file:", 
-                            uploaded_file, 
-                            "(Uploaded file must be a .zip compressed MESA data folder)"
-                        ], 
-                        justify="start", 
-                        gap=0.2, 
-                        widths=[0.4, 0.2, 1]
-                    ), 
-                    "(Don’t see your file? Try refreshing the File Browser.)", 
-                    "\u200b", 
-                    profile_dropdown_display
-                ], 
-                justify='space-around'
-            ) 
+    #     if comparison_mode_radio.value in first_3_options:  
+    #         model_selector = available_substages_tabs 
 
 
 
-    '''
+    #     if comparison_mode_radio.value == src.data.marimo_ui_options.COMPAREMODE_FREE: 
+
+    #         if profile_dropdown is not None: 
+    #             profile_dropdown_display = mo.vstack([f"File selected: \u200b \u200b \u200b \u200b \u200b {Path(history_browser.value[0].id)}", profile_dropdown]) 
+    #         if profile_dropdown is None: 
+    #             profile_dropdown_display = ""
+
+    #         model_selector = mo.vstack(
+    #             [
+    #                 mo.md("<h4>File Browser</h4>"), 
+    #                 history_browser, 
+    #                 mo.hstack(
+    #                     [
+    #                         "Upload your own MESA file:", 
+    #                         uploaded_file, 
+    #                         "(Uploaded file must be a .zip compressed MESA data folder)"
+    #                     ], 
+    #                     justify="start", 
+    #                     gap=0.2, 
+    #                     widths=[0.4, 0.2, 1]
+    #                 ), 
+    #                 "(Don’t see your file? Try refreshing the File Browser.)", 
+    #                 "\u200b", 
+    #                 profile_dropdown_display
+    #             ], 
+    #             justify='space-around'
+    #         ) 
+
+
+
+    # '''
 
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(alt, mo, np, pd):
     # Load csv and draw the flowchart
 
@@ -344,6 +344,9 @@ def _(alt, mo, np, pd):
 
         # Create dataframe used by text boxes 
         mesa_data_csv_unique = mesa_data_csv.copy().drop_duplicates(subset=["Name"], keep="first")
+
+        # The text in the CSV has double spaces "  ". After importing, replace them with newline characters "\n". 
+        # Yes, I tried just typing newline characters directly into the CSV. Why would you think that would ever work? 
         mesa_data_csv_unique["Flowchart_Text"] = (
             mesa_data_csv_unique["Name"]
             .str.replace("  ", "\n", regex=False)
@@ -493,7 +496,7 @@ def _(alt, mo, np, pd):
     return flowchart_marimo, mesa_data_csv
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(flowchart_marimo, mesa_data_csv, mo, pd, src):
     # Load history and profile files 
 
@@ -522,7 +525,7 @@ def _(flowchart_marimo, mesa_data_csv, mo, pd, src):
     return history, profile, selected_row
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(
     history,
     history_plot_dropdown,
@@ -753,7 +756,7 @@ async def _():
     return Path, alt, lru_cache, mo, mpatches, np, pd, src, zipfile
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(
     HR_diagram_str,
     controls_subtitle,
