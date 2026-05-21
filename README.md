@@ -159,7 +159,13 @@ This section demonstrates a few ways this tool could be used in both educational
 
   Suppose you are teaching a lecture on energy transport inside stars, and want a way to visualize the convection and radiative transport regions in stars of different masses. Using the flowchart, you could select stars from different mass ranges and generate interior structure plots showing where convection occurs inside each star.
 
-  (Insert image: comparison of interior structure plots showing fully convective star, convective envelope star, and convective core star)
+  <p align="center">
+    <img src="Plots_for_ReadMe/Fully_Convective.png" width="32%" />
+    <img src="Plots_for_ReadMe/Convective_Envelope.png" width="32%" />
+    <img src="Plots_for_ReadMe/Convective_Core.png" width="32%" />
+  </p>
+
+  The background shading in all three plots corresponds to the currently selected region in the flowchart, indicating the associated mass range being visualized.
 
   Using these plots, we can see that:
   - Very low mass stars are fully convective.
@@ -180,10 +186,11 @@ This section demonstrates a few ways this tool could be used in both educational
   - a very low mass star that never ignites helium,
   - and a somewhat larger star that eventually undergoes helium fusion.
     
-  (Insert image: central composition vs time comparison plot)
-
-  The background shading in all three plots corresponds to the currently selected region in the flowchart, indicating the associated mass range being visualized.
-
+  <p align="center">
+    <img src="Plots_for_ReadMe/1msun_Composition_vs_time.png" width="49%" />
+    <img src="Plots_for_ReadMe/0.2msun_Composition_vs_time.png" width="49%" />
+  </p>
+  
   These plots allow students to directly visualize:
   - hydrogen gradually being converted into helium during the main sequence,
   - the onset of helium burning,
@@ -199,7 +206,9 @@ This section demonstrates a few ways this tool could be used in both educational
 
   The HR diagram is one of the most important tools in stellar astrophysics, but students are often first introduced to it using simplified schematic diagrams. This tool instead allows users to follow the evolution of actual MESA stellar evolution models across the HR diagram.
   
-  (Insert image: HR diagram evolutionary track)
+  <p align="center">
+    <img src="Plots_for_ReadMe/1msun_HR_diagram.png" width="80%" />
+  </p>
   
   For example, users can:
   - follow pre-main sequence evolution along the Hayashi and Henyey tracks,
