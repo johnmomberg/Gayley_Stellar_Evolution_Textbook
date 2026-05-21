@@ -299,7 +299,7 @@ def _(Path, history_browser, mo, profile_dropdown, uploaded_file):
             ])
         else:
             profile_dropdown_display = ""
-    
+
         model_selector = mo.vstack([
             mo.md("<h4>File Browser</h4>"),
             history_browser,
@@ -502,27 +502,27 @@ def _(alt, mo, np, pd):
 def _(flowchart_marimo, get_active_tab, mesa_data_csv, mo, pd, src):
     # Load flowchart selected history and profile 
     with mo.status.spinner(title="Choosing which history and profile file to load...") as _: 
-    
+
         if get_active_tab() == "Select evolutionary stage and mass range": 
             selected_rows = flowchart_marimo.apply_selection(mesa_data_csv) 
-        
+
             if len(selected_rows) != 1: 
                 selected_row = None 
                 flowchart_history = None 
                 flowchart_profile = None 
-                    
+
             if len(selected_rows) == 1: 
                 selected_row = selected_rows.iloc[0] 
-    
+
                 mesa_folder_path = src.data.file_paths.MESA_data_folder / selected_row["MESA_folder_path"]
                 flowchart_history = src.load_data.load_history(mesa_folder_path)
-    
+
                 if pd.isna(selected_row["model_example"]):
                     flowchart_profile = None
                 else:
                     flowchart_profile = src.load_data.load_profile(mesa_folder_path, selected_row["model_example"], flowchart_history)
-    
-        
+
+
         if get_active_tab() == "Select MESA file directly": 
             selected_rows = [] 
             selected_row = None 
@@ -545,11 +545,11 @@ def _(
 ):
     # Choose which history to use 
     with mo.status.spinner(title="Choosing history and profile file...") as _: 
-    
+
         if get_active_tab() == "Select evolutionary stage and mass range": 
             history = flowchart_history 
             profile = flowchart_profile 
-    
+
         if get_active_tab() == "Select MESA file directly": 
             history = free_exploration_history
             profile = free_exploration_profile 
@@ -617,10 +617,10 @@ def _(
             if get_active_tab() == "Select evolutionary stage and mass range":  
 
                 for index, row in mesa_data_csv.iterrows():
-    
+
                     if row["Displayed Mass (for plots)"] != selected_row["Displayed Mass (for plots)"] or pd.isna(row["model_start"]) or pd.isna(row["model_end"]): 
                         continue 
-    
+
                     if index == selected_row.name: 
                         hr.add_path(
                             history, 
@@ -630,10 +630,10 @@ def _(
                             lw = 3, 
                         )
                         lw=2 
-    
+
                     else: 
                         lw=1
-    
+
                     hr.add_path(
                         history, 
                         modelnum_start = row["model_start"], 
@@ -646,7 +646,7 @@ def _(
             if get_active_tab() == "Select MESA file directly": 
                 hr.add_path(history, color="tab:red", lw=1, label=f"{history.initial_mass_string} $M_{{sun}}$")
                 hr.add_age_labels(history)
-        
+
             # Add extra stuff 
             hr.legend(fontsize=12, loc="center left", bbox_to_anchor=(1, 0.5)) 
             hr.add_spectral_type_labels()  
@@ -679,10 +679,10 @@ def _(
                     x_stage_min = history.star_age[selected_row["model_start"]-1] 
                     x_stage_max = history.star_age[selected_row["model_end"]-1] 
                     x_stage_size = x_stage_max-x_stage_min 
-                    x_view_min = np.max([x_stage_min - x_stage_size/3, 0])
-                    x_view_max = np.min([x_stage_max + x_stage_size/3, np.max(history.star_age)])
+                    x_view_min = np.max([x_stage_min - x_stage_size*2, 0])
+                    x_view_max = np.min([x_stage_max + x_stage_size*2, np.max(history.star_age)])
                     fig2.axes[0].set_xlim(x_view_min, x_view_max)
-    
+
                 # Label all other stages with the same mass as the selected stage 
                 for index, row in mesa_data_csv.iterrows():
                     if row["Displayed Mass (for plots)"] != selected_row["Displayed Mass (for plots)"]: 
