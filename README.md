@@ -51,7 +51,7 @@ There are two ways to choose the type of star to visualize:
 
 When this mode is selected, an interactive stellar evolution flowchart will appear: 
 
-(Insert an image of the flowchart) 
+![Flowchart](Plots_for_ReadMe/Flowchart.png)
 
 The goal of this diagram is to give an overview of stellar evolution as a whole.  
 
@@ -66,7 +66,7 @@ The right side of the flowchart shows the corresponding **spectral type** for ea
 
 To select a star, simply click on one of the boxes in the flowchart. Once selected, the box will appear highlighted:
 
-(Insert image of flowchart with selected box here)
+![Flowchart with selection](Plots_for_ReadMe/Flowchart_with_selection.png)
 
 Each box in the flowchart is associated with a representative MESA model that is automatically loaded and visualized when that box is selected. These models are intended to serve as characteristic examples of stars within a particular mass range and evolutionary stage.
 
