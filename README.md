@@ -1,33 +1,45 @@
 # Interactive Stellar Evolution Visualizer 
 
 > ⚠️ **Note:** This project is under active development. Some features may be incomplete and some known issues remain. See the **Issues** page for current limitations and known issues. 
+> 
+> If you have any comments/suggestions or would like to report a bug, please reach out to me via email (john-momberg@uiowa.edu) or go ahead and add an issue to this repository's **Issues** tab. 
+> 
+> Your feedback is greatly appreciated. Thank you! -John 
 
-If you have any comments/suggestions or would like to report a bug, please reach out to me via email (john-momberg@uiowa.edu) or go ahead and add an issue to this repository's **Issues** tab. 
-
-Your feedback is greatly appreciated. Thank you! -John 
-
-<br>
+---
 
 
 
-## Get Started: Load the tool in your browser 
+## Table of Contents 
+- [Get Started: How to access the tool in your browser](#get-started)
+- [Overview: What is this tool?](#overview)
+- [User Guide](#user-guide)
+- [Examples](#examples)
+- [Acknowledgements](#acknowledgements)
+- [License](#license)
+
+---
+
+
+<h2 id="get-started">Get Started: How to access the tool in your browser</h2>
 
 Click here to load the tool in your browser: https://marimo.app/github.com/johnmomberg/Interactive_Stellar_Evolution_Visualizer/blob/main/main.py 
 - To hide the source code, click the button with **three boxes** in the bottom-right corner of the screen.
 
-<br>
+--- 
 
 
 
-## What is this tool? 
+<h2 id="overview">Overview: What is this tool?</h2>
 
 This project is an interactive tool for visualizing stellar evolution. It uses models generated with MESA to represent different types of stars, and allows users to compare properties between masses (low mass vs high mass) as well as over time/evolutionary stage (pre-MS vs main sequence vs red giant, etc). It’s designed to be a supplemental resource for students and instructors in a course on stellar evolution. The goal is to provide users a way to visualize key properties of stars. If you're interested in using this resource in your own classroom, please reach out to me via email! I would love to hear your feedback. 
 
-<br> 
+--- 
 
 
 
-## User Guide / Explanation of Controls and Features
+<details>
+<summary><h2 id="user-guide">User Guide</h2></summary> 
 
 ### Controls 
 To use the tool, first make a selection using the Controls section. Depending on the options you select, the corresponding plot will be generated and displayed in the Plot section below. 
@@ -115,19 +127,24 @@ http://user.astro.wisc.edu/~townsend/static.php?ref=mesa-web-submit
 
 After making your selections in the Controls section, the requested plot will be generated and displayed in the Plot section. 
 
-<br>
+</details>
+
+--- 
 
 
 
-## Examples 
+<details>
+<summary><h2 id="examples">Examples</h2></summary> 
 
 Examples should go here. 
 
-<br>
+</details>
+
+--- 
 
 
 
-## Acknowledgements 
+<h2 id="acknowledgements">Acknowledgements</h2>
 
 This project was funded by the OpenHawks Open Educational Resources (OER) Grant, provided by the University of Iowa Office of the Provost and the UI Libraries. 
 
@@ -139,11 +156,11 @@ I would like to thank Ken Gayley, my PhD advisor, for support and guidance throu
 
 Finally, I want to thank everyone who has helped me test this project and gave me feedback, including but not limited to: Andi Swirbul, Nathan Helvy, Scott Call, Chris Piker, Philip Griffin, Jerry Wang, Kaili Cao, Paul from the Marimo discord (whose GitHub account is here: https://github.com/eckp), and more. Your feedback, comments and testing have been invaluable to this project. 
 
-<br>
+--- 
 
 
 
-## License 
+<h2 id="license">License</h2>
 
 This open-access tool is covered by the CC BY-NC 4.0 license. This license enables reusers to distribute, remix, adapt, and build upon the material in any medium or format for noncommercial purposes only, and only so long as attribution is given to the creator. For more information, see here: https://creativecommons.org/licenses/by-nc/4.0/ 
 
