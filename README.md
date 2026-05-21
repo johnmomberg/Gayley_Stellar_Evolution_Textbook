@@ -104,11 +104,18 @@ To use the tool, first make a selection using the Controls section. Depending on
       - want to examine intermediate evolutionary states,
       - or want to analyze their own MESA simulations.
 
-    When this mode is selected, a file browser will appear. To select a MESA folder, click the icon **next to** the folder name. Do not click directly on the folder name itself, since clicking the folder name enters the folder instead of selecting it.
+    When this mode is selected, a file browser will appear.
+    <p align="center">
+    <img src="Plots_for_ReadMe/File_Browser.png" width="50%"/>
+    </p>
 
-    (Insert image of MESA file browser here) 
+    To select a MESA folder, click the icon **next to** the folder name. Do not click directly on the folder name itself, since clicking the folder name enters the folder instead of selecting it. After selecting a folder, the file browser will look like this: 
 
-    Once a MESA folder has been selected, you can choose a specific point in the star’s evolution using its model number (`modelnum`). Model numbers identify which MESA profile file should be loaded. These model numbers are not evenly spaced in time. MESA automatically outputs more models during periods of rapid stellar evolution and fewer models during long periods where the star changes slowly.
+    <p align="center">
+    <img src="Plots_for_ReadMe/File_Browser_with_Selection.png" width="50%"/>
+    </p>
+
+    Once a MESA folder has been selected, you can choose a specific point in the star’s evolution using its model number (`modelnum`). Model numbers identify which MESA profile file should be loaded. These model numbers are not evenly spaced in time. MESA automatically outputs more models during periods of rapid stellar evolution and fewer models during long periods where the star changes slowly. To select a profile, use the profile dropdown selector located below the file browser. 
 
     - ### Upload Your Own MESA Folder
 
@@ -200,7 +207,7 @@ This section demonstrates a few ways this tool could be used in both educational
 
 
 
-- ## Example 3 — Following Stellar Evolution Across the HR Diagram
+- ## Example 3: Following Stellar Evolution Across the HR Diagram
 
   The HR diagram is one of the most important tools in stellar astrophysics, but students are often first introduced to it using simplified schematic diagrams. This tool instead allows users to follow the evolution of actual MESA stellar evolution models across the HR diagram.
   
