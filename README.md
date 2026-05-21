@@ -147,9 +147,66 @@ After making your selections in the Controls section, the requested plot will be
 
 
 <details>
-<summary><h2 id="examples">Examples</h2></summary> 
+<summary><h2 id="examples">Examples</h2></summary>
 
-Examples should go here. 
+This section demonstrates a few ways this tool could be used in both educational and research contexts. These examples are intended to show how the combination of interactive plots and the stellar evolution flowchart can help users better understand and explore stellar evolution. 
+
+---
+
+
+
+- ## Example 1: Comparing Heat Transport Methods in Different Stars
+
+  Suppose you are teaching a lecture on energy transport inside stars, and want a way to visualize the convection and radiative transport regions in stars of different masses. Using the flowchart, you could select stars from different mass ranges and generate interior structure plots showing where convection occurs inside each star.
+
+  (Insert image: comparison of interior structure plots showing fully convective star, convective envelope star, and convective core star)
+
+  Using these plots, we can see that:
+  - Very low mass stars are fully convective.
+  - Solar-type stars have radiative interiors and convective envelopes.
+  - High mass stars instead have convective cores and radiative envelopes.
+  
+  Because the flowchart organizes stars by both mass and evolutionary stage, it's also to see where the transition between these behaviors occurs. By moving vertically through the Main Sequence boxes, students can directly compare how the internal structure changes as stellar mass increases.
+  
+---
+
+
+
+- ## Example 2: Comparing Stellar Lifetimes and Core Composition Evolution
+
+  How long do stars spend on the main sequence, and how does their composition change over time? This tool can be used to answer these questions by plotting quantities such as central hydrogen, helium, carbon, and oxygen abundance as a function of time.
+  
+  For example, you could compare:
+  - a very low mass star that never ignites helium,
+  - and a somewhat larger star that eventually undergoes helium fusion.
+    
+  (Insert image: central composition vs time comparison plot)
+
+  The background shading in all three plots corresponds to the currently selected region in the flowchart, indicating the associated mass range being visualized.
+
+  These plots allow students to directly visualize:
+  - hydrogen gradually being converted into helium during the main sequence,
+  - the onset of helium burning,
+  - and the eventual formation of different types of white dwarfs (helium vs carbon+oxygen, depending on if its massive enough to ignite helium). 
+  
+  They also reveal the enormous differences in stellar lifetimes: For example, a 0.2 solar mass star may require over a trillion years to fully evolve, while higher mass stars evolve dramatically faster. Seeing these timescales plotted directly helps communicate just how strongly stellar evolution depends on mass.
+  
+---
+
+
+
+- ## Example 3 — Following Stellar Evolution Across the HR Diagram
+
+  The HR diagram is one of the most important tools in stellar astrophysics, but students are often first introduced to it using simplified schematic diagrams. This tool instead allows users to follow the evolution of actual MESA stellar evolution models across the HR diagram.
+  
+  (Insert image: HR diagram evolutionary track)
+  
+  For example, users can:
+  - follow pre-main sequence evolution along the Hayashi and Henyey tracks,
+  - observe the expansion into the Red Giant branch,
+  - and compare how stars of different masses move through the HR diagram over time.
+  
+  Because these tracks come directly from stellar evolution calculations rather than hand-drawn approximations, students can compare the simplified pictures commonly shown in class with physically calculated stellar models. This helps bridge the gap between conceptual classroom diagrams and real stellar evolution data.
 
 </details>
 
