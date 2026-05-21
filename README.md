@@ -180,17 +180,15 @@ This section demonstrates a few ways this tool could be used in both educational
 
 - ## Example 2: Comparing Stellar Lifetimes and Core Composition Evolution
 
-  How long do stars spend on the main sequence, and how does their composition change over time? This tool can be used to answer these questions by plotting quantities such as central hydrogen, helium, carbon, and oxygen abundance as a function of time.
+  How long do stars spend on the main sequence, and how does their composition change over time? This tool could be used to answer questions like these by plotting the central composition as a function of time. 
   
-  For example, you could compare:
+  For instance, you could compare:
   - a very low mass star that never ignites helium,
   - and a somewhat larger star that eventually undergoes helium fusion.
     
-  <p align="center">
-    <img src="Plots_for_ReadMe/1msun_Composition_vs_time.png" width="49%" />
-    <img src="Plots_for_ReadMe/0.2msun_Composition_vs_time.png" width="49%" />
-  </p>
-  
+  <img src="Plots_for_ReadMe/0.2msun_Composition_vs_time.png"/>
+  <img src="Plots_for_ReadMe/1msun_Composition_vs_time.png"/>
+
   These plots allow students to directly visualize:
   - hydrogen gradually being converted into helium during the main sequence,
   - the onset of helium burning,
@@ -206,16 +204,14 @@ This section demonstrates a few ways this tool could be used in both educational
 
   The HR diagram is one of the most important tools in stellar astrophysics, but students are often first introduced to it using simplified schematic diagrams. This tool instead allows users to follow the evolution of actual MESA stellar evolution models across the HR diagram.
   
-  <p align="center">
-    <img src="Plots_for_ReadMe/1msun_HR_diagram.png" width="80%" />
-  </p>
-  
-  For example, users can:
+  <img src="Plots_for_ReadMe/1msun_HR_diagram.png"/>
+
+  These plots allow users to: 
   - follow pre-main sequence evolution along the Hayashi and Henyey tracks,
   - observe the expansion into the Red Giant branch,
   - and compare how stars of different masses move through the HR diagram over time.
   
-  Because these tracks come directly from stellar evolution calculations rather than hand-drawn approximations, students can compare the simplified pictures commonly shown in class with physically calculated stellar models. This helps bridge the gap between conceptual classroom diagrams and real stellar evolution data.
+  Because these tracks come directly from stellar evolution models rather than hand-drawn approximations, students can compare the simplified pictures commonly shown in class to real data from stellar models. Seeing that what they learned in class really does (approximately, at least) happen in the models, and confirming that the simplified picture they learned is justified, is always exciting. 
 
 </details>
 
