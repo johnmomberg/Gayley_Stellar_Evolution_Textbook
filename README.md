@@ -1,17 +1,21 @@
 # Interactive Stellar Evolution Visualizer 
 
-> ⚠️ **Note:** This project is under active development. Some features may be incomplete and some known issues remain. See the **Issues** page for current limitations and known issues. Your feedback is greatly appreciated. Thank you! 
+> ⚠️ **Note:** This project is under active development. Some features may be incomplete and some known issues remain. See the **Issues** page for current limitations and known issues. 
+
+If you have any comments/suggestions or would like to report a bug, please reach out to me via email (john-momberg@uiowa.edu) or go ahead and add an issue to this repository's **Issues** tab. 
+
+Your feedback is greatly appreciated. Thank you! -John 
 
 <br>
 
 
 
-## Quick Start
+## Get Started: Load the tool in your browser 
 
 Click here to load the tool in your browser: https://marimo.app/github.com/johnmomberg/Interactive_Stellar_Evolution_Visualizer/blob/main/main.py 
-- To hide the code, click the button with **three boxes** in the bottom-right corner of the screen.
+- To hide the source code, click the button with **three boxes** in the bottom-right corner of the screen.
 
-<br><br><br>
+<br>
 
 
 
@@ -19,118 +23,107 @@ Click here to load the tool in your browser: https://marimo.app/github.com/johnm
 
 This project is an interactive tool for visualizing stellar evolution. It uses models generated with MESA to represent different types of stars, and allows users to compare properties between masses (low mass vs high mass) as well as over time/evolutionary stage (pre-MS vs main sequence vs red giant, etc). It’s designed to be a supplemental resource for students and instructors in a course on stellar evolution. The goal is to provide users a way to visualize key properties of stars. If you're interested in using this resource in your own classroom, please reach out to me via email! I would love to hear your feedback. 
 
-<br><br><br>
+<br> 
 
 
 
-## How to give feedback  
-
-There are several ways that you can give feedback (report a bug, make suggestions, etc):
-- Add an issue to this repository’s **Issues** tab.  
-- Email me at john-momberg@uiowa.edu 
-- Fill out this survey about your experience using this program:  
-  https://docs.google.com/forms/d/e/1FAIpQLSfM8DIz6Jri5ruX6axiyvR9M9x5XapsTQQrbQr-yVbNdOL2TA/viewform?usp=header 
-
-<br><br><br>
-
-
-
-## Detailed Walkthrough / User Guide 
+## User Guide / Explanation of Controls and Features
 
 ### Controls 
-To use this tool, first make a selection using the Controls section. Depending on the options you select, the corresponding plot will be generated and displayed in the Plot section below. 
-
+To use the tool, first make a selection using the Controls section. Depending on the options you select, the corresponding plot will be generated and displayed in the Plot section below. 
 
 #### 1. Choose variable to plot 
 Select the type of plot you want to generate:
 
 - **HR diagram**: Shows the star’s path across the HR diagram. 
 - **History**: a variable vs. time (e.g., radius vs. time). 
-- **Interior profile**: interior structure (variable vs. location inside the star) at a snapshot in time.
+- **Interior profile**: interior structure (variable vs. location inside the star) at one snapshot in time.
 
 For **Interior profile**, you can additionally select the units used on the x-axis: 
-- **Radius**: Distance from the center (standard) 
+- **Radius**: Distance from the center (default selection) 
 - **Mass coordinate**: The amount of mass interior to each point. (For example, 'x = 1.5' means the location in the star where a sphere extending to your current radius would contain a total of 1.5 solar masses). 
 
-
 #### 2. Choose type of star 
-This tool emphasizes the ability to make comparisons. There are two types of comparisons students might want to make: 
 
-- A: Compare one star at different points in its life
-- B: Compare stars of different masses at the same point in their lives
+There are two ways to choose the type of star to visualize: 
 
-In order to allow for both types of comparison, the way that you select a star depends on what you want to compare it to. Before selecting a star, you must choose a "comparison mode" from the following options: 
+1. **Select evolutionary stage and mass range**: This mode allows you to explore stellar evolution using a pre-curated set of representative examples. I have assigned MESA models to different mass ranges (low, intermediate, and high mass stars) and evolutionary stages (main sequence, red giant, helium burning, white dwarf, etc.) in order to provide an overview of how stars of different masses evolve over time. 
 
-##### A. Select *mass* first
-Use this when you want to follow one star through its evolution. (For example: for a 1.0 solar mass star, how does the star change from the main sequence to the red giant phase?) 
+When this mode is selected, an interactive stellar evolution flowchart will appear: 
 
-1. First, select a **mass range** from the dropdown. 
-2. The UI will show the evolutionary stages your selected mass goes through. (Different masses go through different stages, so the options displayed will depend on your previous selection.) 
-3. Next, choose an **evolutionary stage** from the tabs that appear.  
+(Insert an image of the flowchart) 
 
-Use this mode to answer the question: *"How does a particular star change over time?"*
+The goal of this diagram is to give an overview of stellar evolution as a whole.  
 
-##### B. Select *stage* first
-Use this to compare how a particular evolutionary stage is experienced by stars of different masses. (For example: during the main sequence, what is the difference between a low-mass star and a high-mass star?) 
+- Y-axis: **Initial mass**. For a given value of mass, you can move horizontally to see how stars of that mass evolve. 
+- X-axis: **Evolutionary stage**. This axis can be thought of as corresponding to age, but note that it is not actually linear in time, since stars spend different amounts of time in each stage, and their lifetimes depend heavily on their mass. 
 
-1. First, select an **evolutionary stage** from the dropdown.  
-2. The UI will display which mass ranges have distinct behavior during that stage. (Different stages have different mass ranges where distinct behavior occurs, so the options displayed will depend on your previous selection.)
-3. Next, choose a **mass range** from the tabs that appear.
-
-Use this mode to answer the question: *“How do stars of different masses look at this particular stage?”*
-
-##### C. Free exploration
-
-This tool also functions as a general MESA file explorer. Rather than viewing types of stars in the context of their evolutionary stage ("main sequence", "red giant", "low mass", "high mass", etc), you can instead directly select the MESA file you would like to visualize. 
-
-1. Use the File Browser to select a MESA folder. To select a folder, click on the icon to the left of its name. (Don't click the folder name; that enters the folder) 
-2. Once a MESA folder has been selected, choose a specific point in time. Each point in time that can be selected is given a "model number" or "modelnum", which simply tells the program which MESA file to load. (Model numbers are used because models are not spaced linearly in time; more models are created during times where the star changes rapidly, and fewer models are created during times where the star goes long periods of time without changing.)
-
-##### Upload your own MESA folder 
-
-You can upload MESA run in order to apply the visualizations I've created to your own data. 
-
-1. A proper MESA folder should contain 'history.data' or 'trimmed_history.data' and a sequence of profile files like 'profile1.data', 'profile2.data', etc.  
-2. Compress your MESA folder (right-click -> compress to .zip) 
-3. Click **Upload** and select your .zip MESA folder
-
-After uploading, the folder may not immediately appear in the file browser. To fix this, follow these steps to refresh the file browser: 
-1. Click the special folder **“Click HERE to refresh file browser”** to enter it.  
-2. Inside is another fake folder labeled **“Click Back Arrow to refresh file browser”**. This folder simply exists so that its title instructs you what to do next: Click the **back arrow** to return to the parent folder.  
-3. Entering and leaving a subfolder forces the file browser to refresh, and your uploaded folder should now be visible.
-
-If you are unfamiliar with MESA, but want to try it out for yourself, there is any easy way to generate your own MESA file in your web browser. Simply go to the following website: http://user.astro.wisc.edu/~townsend/static.php?ref=mesa-web-submit 
-
-<br>
-
-### Flowchart 
-
-Below the controls section, you will see the **Evolutionary Flowchart**. This diagram gives an overview of stellar evolution as a whole and shows how stars of different masses evolve. 
-
-- Y-axis: Initial mass. For a given value of mass, you can move horizontally to see how stars of that mass evolve. 
-- X-axis: Evolutionary stage. This axis can be thought of as corresponding to age, but note that it is not actually linear in time, since stars spend different amounts of time in each stage, and their lifetimes depend heavily on their mass. 
-
-Various types of stars at different points in their lives are represented as boxes in the flowchart. The vertical extent of each box represents the range of masses that pass through this particular evolutionary stage. Moving vertically between two boxes allows users to see the boundary between two distinct types of evolution. 
+Each box represents a range of masses that exhibit similar behavior during a particular point in their lives. Moving vertically between two boxes allows users to see the boundary between two distinct types of evolution and compare how stars of different masses evolve. 
 
 Blank space represents a range of masses that does not experience a certain stage at all. (For example, stars smaller than 0.5 solar masses never get hot enough to fuse helium, so they skip directly from the Red Giant phase to the White Dwarf phase.) As you move horizontally, if you encounter a blank region, you can skip immediatly through the blank region until you reach the next box. 
 
 The right side of the flowchart shows the corresponding **spectral type** for each mass. Note that this spectral type denotes the spectral type that star has *when it's on the main sequence*, not its spectral type at any other point in its life (since spectral type can change over time). The goal of these labels is to provide a conversion between describing stars as their spectral type to what mass that correlates to. For instance, if you're reading a paper that talks about the evolution of B3 stars, you might wonder where in this flowchart do those types of stars occur? This spectral type axis provides a way to make that conversion. 
 
-The flowchart will highlight the evolutionary stages which are currently available for comparison, depending on the comparison mode selected. 
-- Select mass first: A horizontal row will be highlighted, corresponding to the mass you've selected
-- Select stage first: A vertical column will be highlighted, corresponding to the evolutionary stage you've selected
+To select a star, simply click on one of the boxes in the flowchart. Once selected, the box will appear highlighted:
 
-Either way, the specific evolutionary stage selected will be additionally highlighted, with the other stages currently available for comparison highlighted as well but to a lesser degree. 
+(Insert image of flowchart with selected box here)
 
-To minimize the flowchart, click the "Hide/show" slider. 
+Each box in the flowchart is associated with a representative MESA model that is automatically loaded and visualized when that box is selected. These models are intended to serve as characteristic examples of stars within a particular mass range and evolutionary stage.
 
-<br>
+For example, in the image above, the Main Sequence stage for stars in the 0.5–1.5 solar mass range has been selected. In this case, a MESA model with a mass of 1.0 solar masses and an age of 4.79 Gyr has been chosen to represent the typical properties of stars in this category.
+
+This mode is intended primarily as an educational tool for exploring and comparing the major pathways of stellar evolution. See the **Examples** section below for examples for how this could be used as an educational resource. 
+
+
+
+2. **Select MESA file directly**: This tool also functions as a general MESA file explorer. Rather than selecting from the curated evolutionary categories in the flowchart, this mode allows you to directly choose a MESA file to visualize.
+
+This mode is useful for users who:
+- want to explore stellar evolution beyond the curated examples,
+- want to examine intermediate evolutionary states,
+- or want to analyze their own MESA simulations.
+
+When this mode is selected, a file browser will appear. To select a MESA folder, click the icon **next to** the folder name. Do not click directly on the folder name itself, since clicking the folder name enters the folder instead of selecting it.
+
+(Insert image of MESA file browser here) 
+
+Once a MESA folder has been selected, you can choose a specific point in the star’s evolution using its model number (`modelnum`). Model numbers identify which MESA profile file should be loaded. These model numbers are not evenly spaced in time. MESA automatically outputs more models during periods of rapid stellar evolution and fewer models during long periods where the star changes slowly.
+
+##### Upload Your Own MESA Folder
+
+You can also upload your own MESA file in order to use these visualization tools with your own data.
+
+A valid MESA file looks like a `.zip` compressed folder which contains the following files: 
+- a `history.data` or `trimmed_history.data` file,
+- and a collection of profile files such as `profile1.data`, `profile2.data`, etc.
+
+To upload your own run:
+1. Compress the MESA folder into a `.zip` file.
+2. Click the Upload button and select your `.zip` file.
+
+After uploading, the folder may not immediately appear in the file browser. If this happens, refresh the browser using the following steps:
+1. Enter the special folder labeled “Click HERE to refresh file browser”.
+2. Use the back arrow to return to the parent directory.
+
+Entering and leaving a subfolder forces the file browser to refresh, and your uploaded MESA run should now appear.
+
+If you are unfamiliar with MESA but would like to experiment with your own stellar evolution models, you can generate simple MESA runs directly in your web browser using the following tool: 
+
+http://user.astro.wisc.edu/~townsend/static.php?ref=mesa-web-submit 
 
 ### Plot 
 
 After making your selections in the Controls section, the requested plot will be generated and displayed in the Plot section. 
 
-<br><br><br>
+<br>
+
+
+
+## Examples 
+
+Examples should go here. 
+
+<br>
 
 
 
@@ -145,6 +138,10 @@ This project would also not be possible without Marimo, a python package that pr
 I would like to thank Ken Gayley, my PhD advisor, for support and guidance throughout this project. 
 
 Finally, I want to thank everyone who has helped me test this project and gave me feedback, including but not limited to: Andi Swirbul, Nathan Helvy, Scott Call, Chris Piker, Philip Griffin, Jerry Wang, Kaili Cao, Paul from the Marimo discord (whose GitHub account is here: https://github.com/eckp), and more. Your feedback, comments and testing have been invaluable to this project. 
+
+<br>
+
+
 
 ## License 
 
