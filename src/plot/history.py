@@ -256,7 +256,7 @@ def add_model_labels_time(ax, history, modelnum_now):
         # Add vertical line to currently selected model number 
         if modelnum_now is not None: 
             xpos = history.star_age[modelnum_now-1] 
-            ax.axvline(xpos, color="black", ls="dashed")  
+            ax.axvline(xpos, color="black", ls="dashed", lw=0.8)  
             
 
 
@@ -270,8 +270,8 @@ def add_model_labels_time(ax, history, modelnum_now):
 def add_substage_highlight(
         fig, selected_row, history, 
         lower_alpha=0.05, lower_border_linewidth=0, lower_border_color="none", 
-        upper_alpha=0.5, upper_border_linewidth=0, upper_border_color="none", 
-        include_label=False): 
+        upper_alpha=0.3, upper_border_linewidth=0, upper_border_color="none", 
+        include_label=False, label_text_color="black"): 
 
     if int(selected_row["model_start"]) is None: 
         return 
@@ -341,7 +341,7 @@ def add_substage_highlight(
             label,
             ha="center",
             va="center",
-            color="white", 
+            color=label_text_color, 
             # weight="bold", 
             fontsize=12, 
             transform=trans )

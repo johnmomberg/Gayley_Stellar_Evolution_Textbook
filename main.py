@@ -138,7 +138,7 @@ def _(mo, profile_plot_dropdown, profile_plot_x_dropdown, selected_row, src):
     return (profile_str,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo, src):
     # Create history browser free selection mode 
 
@@ -153,42 +153,71 @@ def _(mo, src):
 
 
 
-    return
+    return (history_browser,)
 
 
-@app.cell
-def _(mo, src):
-    # Create profile dropdown for free selection mode 
+@app.cell(hide_code=True)
+def _(Path, history_browser, mo, src):
+    # Load history based on file browser selection only
+    with mo.status.spinner(title="Loading history_browser selection...") as _: 
 
-    with mo.status.spinner(title="Creating Profile data dropdown selector...") as _: 
-
-        history_selected = None 
-        if history_selected is not None: 
-
-            profile_dropdown = src.data.marimo_ui_options.create_dropdown(
-                label="Profile selected: ", 
-                options_list = [
-                    src.data.marimo_ui_options.AvailableModelnumsOption(
-                        modelnum=modelnum_, 
-                        age=history_selected.star_age[modelnum_-1], 
-                        display=f"Modelnum={modelnum_}, Age={history_selected.age_strings[modelnum_-1]}") 
-                    for modelnum_ in history_selected.model_numbers_available]
+        if len(history_browser.value) > 0:
+            free_exploration_history = src.load_data.load_history(
+                Path(history_browser.value[0].id)
             )
+        else:
+            free_exploration_history = None
 
+
+
+    return (free_exploration_history,)
+
+
+@app.cell(hide_code=True)
+def _(free_exploration_history, mo, src):
+    # Create profile dropdown for free selection mode 
+    with mo.status.spinner(title="Creating profile dropdown for free selection mode...") as _: 
+
+        if free_exploration_history is not None:
+            profile_dropdown = src.data.marimo_ui_options.create_dropdown(
+                label="Profile selected: ",
+                options_list=[
+                    src.data.marimo_ui_options.AvailableModelnumsOption(
+                        modelnum=modelnum_,
+                        age=free_exploration_history.star_age[modelnum_-1],
+                        display=f"Modelnum={modelnum_}, Age={free_exploration_history.age_strings[modelnum_-1]}"
+                    )
+                    for modelnum_ in free_exploration_history.model_numbers_available
+                ]
+            )
+        else:
+            profile_dropdown = None
+
+
+    return (profile_dropdown,)
+
+
+@app.cell(hide_code=True)
+def _(
+    Path,
+    free_exploration_history,
+    history_browser,
+    mo,
+    profile_dropdown,
+    src,
+):
+    with mo.status.spinner(title="Loading free exploration history and profile files...") as _: 
+
+        if free_exploration_history is not None: 
+            free_exploration_profile = src.load_data.load_profile(Path(history_browser.value[0].id), profile_dropdown.value.modelnum, free_exploration_history) 
         else: 
-            profile_dropdown = None  
+            free_exploration_profile = None 
+    return (free_exploration_profile,)
 
 
-
-
-
-
-    return
-
-
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
-    # Create file uploader for mode 4 
+    # Create file uploader for free selection mode  
 
     with mo.status.spinner(title="Creating file uploader...") as _: 
         uploaded_file = mo.ui.file(kind="button", max_size=500_000_000) 
@@ -196,7 +225,7 @@ def _(mo):
     return (uploaded_file,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(Path, mo, src, uploaded_file, zipfile):
     # Download the file uploaded using the file uploader 
 
@@ -258,66 +287,39 @@ def _(Path, mo, src, uploaded_file, zipfile):
     return
 
 
-@app.cell
-def _():
-    # "model_selector": either use "available_substages_tabs" or an hstack of "history_browser" and "profile_dropdown", depending on value of "comparison_mode_radio" 
+@app.cell(hide_code=True)
+def _(Path, history_browser, mo, profile_dropdown, uploaded_file):
+    # Create model selector 
+    with mo.status.spinner(title="Creating model_selector...") as _: 
 
-    # '''
-
-    # with mo.status.spinner(title="Choosing model selector...") as _: 
-
-    #     first_3_options = [
-    #         src.data.marimo_ui_options.COMPAREMODE_NOSELECTION, 
-    #         src.data.marimo_ui_options.COMPAREMODE_MASSFIRST, 
-    #         src.data.marimo_ui_options.COMPAREMODE_STAGEFIRST
-    #     ]
-
-    #     if comparison_mode_radio.value in first_3_options:  
-    #         model_selector = available_substages_tabs 
-
-
-
-    #     if comparison_mode_radio.value == src.data.marimo_ui_options.COMPAREMODE_FREE: 
-
-    #         if profile_dropdown is not None: 
-    #             profile_dropdown_display = mo.vstack([f"File selected: \u200b \u200b \u200b \u200b \u200b {Path(history_browser.value[0].id)}", profile_dropdown]) 
-    #         if profile_dropdown is None: 
-    #             profile_dropdown_display = ""
-
-    #         model_selector = mo.vstack(
-    #             [
-    #                 mo.md("<h4>File Browser</h4>"), 
-    #                 history_browser, 
-    #                 mo.hstack(
-    #                     [
-    #                         "Upload your own MESA file:", 
-    #                         uploaded_file, 
-    #                         "(Uploaded file must be a .zip compressed MESA data folder)"
-    #                     ], 
-    #                     justify="start", 
-    #                     gap=0.2, 
-    #                     widths=[0.4, 0.2, 1]
-    #                 ), 
-    #                 "(Don’t see your file? Try refreshing the File Browser.)", 
-    #                 "\u200b", 
-    #                 profile_dropdown_display
-    #             ], 
-    #             justify='space-around'
-    #         ) 
+        if profile_dropdown is not None:
+            profile_dropdown_display = mo.vstack([
+                f"File selected: {Path(history_browser.value[0].id)}",
+                profile_dropdown
+            ])
+        else:
+            profile_dropdown_display = ""
+    
+        model_selector = mo.vstack([
+            mo.md("<h4>File Browser</h4>"),
+            history_browser,
+            mo.hstack(
+                ["Upload your own MESA file:", uploaded_file, "(Must be a .zip MESA folder)"],
+                justify="start", gap=0.2, widths=[0.4, 0.2, 1]
+            ),
+            "(Don't see your file? Try refreshing the File Browser.)",
+            "\u200b",
+            profile_dropdown_display
+        ], justify='space-around')
 
 
-
-    # '''
-
-    return
+    return (model_selector,)
 
 
 @app.cell(hide_code=True)
 def _(alt, mo, np, pd):
     # Load csv and draw the flowchart
-
-
-    with mo.status.spinner(title="Drawing flowchart...") as _: 
+    with mo.status.spinner(title="Loading CSV and drawing flowchart...") as _: 
 
         # Load data 
         mesa_data_csv = pd.read_csv(
@@ -486,7 +488,7 @@ def _(alt, mo, np, pd):
 
 
         # Create figure 
-        chart = (bars + text_bg + text).properties(width=1500,height=500)
+        chart = (bars + text_bg + text).properties(width=1150,height=500)
         flowchart_marimo = mo.ui.altair_chart(chart)
 
 
@@ -497,36 +499,91 @@ def _(alt, mo, np, pd):
 
 
 @app.cell(hide_code=True)
-def _(flowchart_marimo, mesa_data_csv, mo, pd, src):
-    # Load history and profile files 
-
-    with mo.status.spinner(title="Loading selected MESA files...") as _: 
-
-        # If no box in flowchart is selected, return None for both history and profile 
-        selected_rows = flowchart_marimo.apply_selection(mesa_data_csv) 
-        if len(selected_rows) != 1: 
-            history = None 
-            profile = None 
+def _(flowchart_marimo, get_active_tab, mesa_data_csv, mo, pd, src):
+    # Load flowchart selected history and profile 
+    with mo.status.spinner(title="Choosing which history and profile file to load...") as _: 
+    
+        if get_active_tab() == "Select evolutionary stage and mass range": 
+            selected_rows = flowchart_marimo.apply_selection(mesa_data_csv) 
+        
+            if len(selected_rows) != 1: 
+                selected_row = None 
+                flowchart_history = None 
+                flowchart_profile = None 
+                    
+            if len(selected_rows) == 1: 
+                selected_row = selected_rows.iloc[0] 
+    
+                mesa_folder_path = src.data.file_paths.MESA_data_folder / selected_row["MESA_folder_path"]
+                flowchart_history = src.load_data.load_history(mesa_folder_path)
+    
+                if pd.isna(selected_row["model_example"]):
+                    flowchart_profile = None
+                else:
+                    flowchart_profile = src.load_data.load_profile(mesa_folder_path, selected_row["model_example"], flowchart_history)
+    
+        
+        if get_active_tab() == "Select MESA file directly": 
+            selected_rows = [] 
             selected_row = None 
-
-        # Otherwise, access data from the selected row 
-        else: 
-            selected_row = flowchart_marimo.apply_selection(mesa_data_csv).iloc[0]
-            mesa_folder_path = src.data.file_paths.MESA_data_folder / selected_row["MESA_folder_path"]
-            history = src.load_data.load_history(mesa_folder_path)
-
-            if pd.isna(selected_row["model_example"]): 
-                profile = None 
-
-            else: 
-                profile = src.load_data.load_profile(mesa_folder_path, selected_row["model_example"], history) 
+            flowchart_history = None 
+            flowchart_profile = None 
 
 
-    return history, profile, selected_row
+
+    return flowchart_history, flowchart_profile, selected_row
 
 
 @app.cell(hide_code=True)
 def _(
+    flowchart_history,
+    flowchart_profile,
+    free_exploration_history,
+    free_exploration_profile,
+    get_active_tab,
+    mo,
+):
+    # Choose which history to use 
+    with mo.status.spinner(title="Choosing history and profile file...") as _: 
+    
+        if get_active_tab() == "Select evolutionary stage and mass range": 
+            history = flowchart_history 
+            profile = flowchart_profile 
+    
+        if get_active_tab() == "Select MESA file directly": 
+            history = free_exploration_history
+            profile = free_exploration_profile 
+
+
+    return history, profile
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    # Tab selector 
+    get_active_tab, set_active_tab = mo.state("Select evolutionary stage and mass range")
+
+    return get_active_tab, set_active_tab
+
+
+@app.cell(hide_code=True)
+def _(flowchart_marimo, get_active_tab, mo, model_selector, set_active_tab):
+    # Tab selector 
+    with mo.status.spinner(title="Creating star selection tabs...") as _:
+        tabs = mo.ui.tabs(
+            {
+                "Select evolutionary stage and mass range": flowchart_marimo,
+                "Select MESA file directly": model_selector
+            },
+            value=get_active_tab(),
+            on_change=set_active_tab, 
+        )
+    return (tabs,)
+
+
+@app.cell(hide_code=True)
+def _(
+    get_active_tab,
     history,
     history_plot_dropdown,
     lru_cache,
@@ -537,6 +594,7 @@ def _(
     pd,
     plot_mode_radio,
     profile,
+    profile_dropdown,
     profile_plot_dropdown,
     profile_plot_x_dropdown,
     selected_row,
@@ -556,39 +614,44 @@ def _(
             if history is None: 
                 return "ERROR: HR Diagram is unavailable for current selection." 
 
-            for index, row in mesa_data_csv.iterrows():
+            if get_active_tab() == "Select evolutionary stage and mass range":  
 
-                if row["Displayed Mass (for plots)"] != selected_row["Displayed Mass (for plots)"] or pd.isna(row["model_start"]) or pd.isna(row["model_end"]): 
-                    continue 
-
-                if index == selected_row.name: 
+                for index, row in mesa_data_csv.iterrows():
+    
+                    if row["Displayed Mass (for plots)"] != selected_row["Displayed Mass (for plots)"] or pd.isna(row["model_start"]) or pd.isna(row["model_end"]): 
+                        continue 
+    
+                    if index == selected_row.name: 
+                        hr.add_path(
+                            history, 
+                            modelnum_start = row["model_start"], 
+                            modelnum_end = row["model_end"], 
+                            color = "black", 
+                            lw = 3, 
+                        )
+                        lw=2 
+    
+                    else: 
+                        lw=1
+    
                     hr.add_path(
                         history, 
                         modelnum_start = row["model_start"], 
                         modelnum_end = row["model_end"], 
-                        color = "black", 
-                        lw = 3, 
+                        color = row["Color"], 
+                        lw = lw, 
+                        label = row["Short Name"], 
                     )
-                    lw=2 
 
-                else: 
-                    lw=1
-
-                hr.add_path(
-                    history, 
-                    modelnum_start = row["model_start"], 
-                    modelnum_end = row["model_end"], 
-                    color = row["Color"], 
-                    lw = lw, 
-                    label = row["Short Name"], 
-                )
-
+            if get_active_tab() == "Select MESA file directly": 
+                hr.add_path(history, color="tab:red", lw=1, label=f"{history.initial_mass_string} $M_{{sun}}$")
+                hr.add_age_labels(history)
+        
             # Add extra stuff 
-            # hr.add_age_labels(history)
             hr.legend(fontsize=12, loc="center left", bbox_to_anchor=(1, 0.5)) 
             hr.add_spectral_type_labels()  
             hr.add_radius_contours() 
-            hr.ax.set_title(f"Evolutionary Path of {selected_row['Displayed Mass (for plots)']} $M_{{sun}}$", fontsize=20, pad=50)
+            hr.ax.set_title(f"Evolutionary Path of {history.initial_mass_string} $M_{{sun}}$", fontsize=20, pad=50)
 
             # Return figure 
             fig2 = hr.fig 
@@ -609,14 +672,30 @@ def _(
             selected_plot_func = history_plot_dropdown.value.plot_func 
             fig2 = selected_plot_func(history) 
 
-            # Set view window to center on currently selected stage 
-            if not pd.isna(selected_row["model_start"]) and not pd.isna(selected_row["model_end"]):
-                x_stage_min = history.star_age[selected_row["model_start"]-1] 
-                x_stage_max = history.star_age[selected_row["model_end"]-1] 
-                x_stage_size = x_stage_max-x_stage_min 
-                x_view_min = np.max([x_stage_min - x_stage_size/3, 0])
-                x_view_max = np.min([x_stage_max + x_stage_size/3, np.max(history.star_age)])
-                fig2.axes[0].set_xlim(x_view_min, x_view_max)
+            if get_active_tab() == "Select evolutionary stage and mass range": 
+
+                # Set view window to center on currently selected stage 
+                if not pd.isna(selected_row["model_start"]) and not pd.isna(selected_row["model_end"]):
+                    x_stage_min = history.star_age[selected_row["model_start"]-1] 
+                    x_stage_max = history.star_age[selected_row["model_end"]-1] 
+                    x_stage_size = x_stage_max-x_stage_min 
+                    x_view_min = np.max([x_stage_min - x_stage_size/3, 0])
+                    x_view_max = np.min([x_stage_max + x_stage_size/3, np.max(history.star_age)])
+                    fig2.axes[0].set_xlim(x_view_min, x_view_max)
+    
+                # Label all other stages with the same mass as the selected stage 
+                for index, row in mesa_data_csv.iterrows():
+                    if row["Displayed Mass (for plots)"] != selected_row["Displayed Mass (for plots)"]: 
+                        continue 
+                    if pd.isna(row["model_start"]) or pd.isna(row["model_end"]): 
+                        continue 
+                    if index == selected_row.name:
+                        continue
+                    src.plot.history.add_substage_highlight(
+                        fig2, 
+                        row, 
+                        history, 
+                    )
 
                 # Highlight selected stage 
                 src.plot.history.add_substage_highlight(
@@ -624,32 +703,19 @@ def _(
                     selected_row, 
                     history, 
                     include_label=True, 
-
-                    lower_alpha=0.08, 
-                    lower_border_linewidth=0, 
-                    lower_border_color="black", 
-
-                    upper_alpha=1.0, 
                     upper_border_linewidth=2, 
-                    upper_border_color="black"
+                    upper_alpha=1.0, 
+                    label_text_color="white", 
+                    upper_border_color="black", 
+                    lower_alpha=0.1
                 )
 
-            # Label all other stages with the same mass as the selected stage 
-            for index, row in mesa_data_csv.iterrows():
-                if row["Displayed Mass (for plots)"] != selected_row["Displayed Mass (for plots)"] or pd.isna(row["model_start"]) or pd.isna(row["model_end"]): 
-                    continue 
-                src.plot.history.add_substage_highlight(
-                    fig2, 
-                    row, 
-                    history, 
-                )
-
-        #     # Add model number labels (if in mode 4)
-        #     if comparison_mode_radio.value == src.data.marimo_ui_options.COMPAREMODE_FREE: 
-        #         src.plot.history.add_model_labels_time(
-        #             ax=fig2.axes[0], 
-        #             history=history, 
-        #             modelnum_now=modelnum_selected) 
+            # Add model number labels (if in mode 4)
+            if get_active_tab() == "Select MESA file directly": 
+                src.plot.history.add_model_labels_time(
+                    ax=fig2.axes[0], 
+                    history=history, 
+                    modelnum_now=profile_dropdown.value.modelnum) 
 
             return mo.mpl.interactive(fig2) 
 
@@ -669,8 +735,7 @@ def _(
             fig2 = selected_plot_func(profile = profile, xaxis = selected_x_axis, history = history)
 
             # Add colored text to title and colored background to figure 
-            # if comparison_mode_radio.value != src.data.marimo_ui_options.COMPAREMODE_FREE: 
-            if True: 
+            if get_active_tab() == "Select evolutionary stage and mass range": 
 
                 # List of strings used in the title (i.e., "Interior composition of a" + "Subgiant" (with red text) + "star")
                 profile_str = profile_plot_dropdown.value.title_str
@@ -760,7 +825,6 @@ async def _():
 def _(
     HR_diagram_str,
     controls_subtitle,
-    flowchart_marimo,
     flowchart_subtitle,
     full_title,
     history_str,
@@ -770,9 +834,10 @@ def _(
     profile_str,
     secondary_plot2,
     secondary_plot_subtitle,
+    tabs,
     userguide_text,
 ):
-    # MAIN 
+    # # MAIN 
 
 
 
@@ -801,7 +866,7 @@ def _(
             "\u200b", 
 
             flowchart_subtitle, 
-            flowchart_marimo, 
+            tabs, 
             "\u200b", 
             mo.md("---"), 
             "\u200b", 

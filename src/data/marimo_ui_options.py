@@ -12,22 +12,6 @@ from ..plot.profile import circle as circle_plotting
 
 
 
-# Comparison mode: No select, select mass first and compare stages, or select stage first and compare masses 
-@dataclass 
-class CompareModeOption(base_option.BaseOption): 
-    pass 
-
-COMPAREMODE_NOSELECTION = CompareModeOption(display="") 
-COMPAREMODE_MASSFIRST = CompareModeOption(display=" ") 
-COMPAREMODE_STAGEFIRST = CompareModeOption(display="  ") 
-COMPAREMODE_FREE = CompareModeOption(display="   ") 
-
-COMPAREMODE_OPTIONS = [COMPAREMODE_NOSELECTION, COMPAREMODE_MASSFIRST, COMPAREMODE_STAGEFIRST, COMPAREMODE_FREE]
-
-
-
-
-
 # Plot mode: HR diagram, history vs time at fixed location in star, or profile vs interior at fixed point in time 
 @dataclass 
 class PlotModeOption(base_option.BaseOption): 
