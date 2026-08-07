@@ -1,3 +1,5 @@
+<a href="https://doi.org/10.5281/zenodo.21842731"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.21842731.svg" alt="DOI"></a>
+
 # Interactive Stellar Evolution Visualizer 
 
 > ⚠️ **Note:** This project is under active development. Some features may be incomplete and some known issues remain. See the **Issues** page for current limitations and known issues. 
