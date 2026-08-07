@@ -1,4 +1,4 @@
-<a href="https://doi.org/10.5281/zenodo.21842731"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.21842731.svg" alt="DOI"></a>
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21842731.svg)](https://doi.org/10.5281/zenodo.21842731)
 
 # Interactive Stellar Evolution Visualizer 
 
@@ -18,7 +18,6 @@
 - [User Guide](#user-guide)
 - [Examples](#examples)
 - [Acknowledgements](#acknowledgements)
-- [License](#license)
 
 ---
 
@@ -239,13 +238,3 @@ This project would also not be possible without Marimo, a python package that pr
 I would like to thank Ken Gayley, my PhD advisor, for support and guidance throughout this project. 
 
 Finally, I want to thank everyone who has helped me test this project and gave me feedback, including but not limited to: Andi Swirbul, Nathan Helvy, Scott Call, Chris Piker, Philip Griffin, Jerry Wang, Kaili Cao, Paul from the Marimo discord (whose GitHub account is here: https://github.com/eckp), and more. Your feedback, comments and testing have been invaluable to this project. 
-
---- 
-
-
-
-<h2 id="license">License</h2>
-
-This open-access tool is covered by the CC BY-NC 4.0 license. This license enables reusers to distribute, remix, adapt, and build upon the material in any medium or format for noncommercial purposes only, and only so long as attribution is given to the creator. For more information, see here: https://creativecommons.org/licenses/by-nc/4.0/ 
-
-
