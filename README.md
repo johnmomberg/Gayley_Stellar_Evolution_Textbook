@@ -33,7 +33,15 @@ Click here to load the tool in your browser: https://marimo.app/github.com/johnm
 
 <h2 id="overview">Overview: What is this tool?</h2>
 
-This project is an interactive tool for visualizing stellar evolution. It uses models generated with MESA to represent different types of stars, and allows users to compare properties between masses (low mass vs high mass) as well as over time/evolutionary stage (pre-MS vs main sequence vs red giant, etc). It’s designed to be a supplemental resource for students and instructors in a course on stellar evolution. The goal is to provide users a way to visualize key properties of stars. If you're interested in using this resource in your own classroom, please reach out to me via email! I would love to hear your feedback. 
+This project is an interactive educational tool designed to help students and instructors explore and visualize stellar evolution. It uses stellar evolution models generated with [MESA](https://mesastar.org/) to produce interactive plots of the internal structure and physical properties of stars throughout their evolution.
+
+The primary goal of the tool is to make it easy to visualize the concepts encountered when learning about stars. Rather than providing a fixed collection of pre-selected figures, like those found in a textbook, the tool allows users to choose what type of star, what evolutionary stage, and what physical property they want to examine. This interactivity makes it possible to generate a much larger number of visualizations than could reasonably be included in a textbook or lecture. It also allows users to follow their own curiosity and explore questions that may not be addressed by the figures provided in a textbook or lecture. Another benefit of this approach is that it allows users to explore stellar evolution through comparison. Users can examine the same property for stars of different masses or follow how a property changes as a star evolves. Exploring these differences can help students better understand what causes different stars to evolve differently and why they follow different evolutionary paths.
+
+The tool is designed primarily as a supplemental resource for students taking courses on stars and stellar evolution. Students can use it to explore questions that arise during or after class, revisit concepts they have learned, or investigate how the properties of one type of star differ from another. The tool can also be used by instructors to create visualizations for lectures and other instructional materials. See the [Examples](#examples) section for several examples of the types of plots this tool can generate.
+
+Ultimately, the goal of this project is to provide a flexible way for students and instructors to explore stellar evolution through visualization, allowing users to generate the plots they need to investigate the questions they are interested in. See the [User Guide](#user-guide) for detailed instructions on how to use this tool.
+
+If you are interested in using this resource in your own classroom, have suggestions for additional features or visualizations, or encounter any issues, I would be happy to hear from you. Please contact me at john-momberg@uiowa.edu.
 
 --- 
 
